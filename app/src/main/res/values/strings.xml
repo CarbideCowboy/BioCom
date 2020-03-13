@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">BioCom</string>
+
+    <!--ScanPrompt-->
+    <string name="nfc_logo">nfc_logo</string>
+    <string name="scanPrompt_textBox">Scan an NDEF formatted NFC tag</string>
+
+    <!--NdefRead-->
+    <string name="ndefRead_empty_record">No text record detected</string>
+</resources>
