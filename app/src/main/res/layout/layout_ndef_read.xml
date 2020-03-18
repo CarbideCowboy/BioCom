@@ -19,6 +19,7 @@
             android:id="@+id/uxNdefTextbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/ibmplexmono_semibold"
             android:text="@string/ndefRead_empty_record"
             android:textColor="@color/colorTextPrimary"
             android:textSize="20sp" />

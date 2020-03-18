@@ -6,10 +6,10 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.util.Log;
+
+import java.util.Objects;
 
 public class ScanPrompt extends AppCompatActivity
 {
@@ -21,7 +21,7 @@ public class ScanPrompt extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.scan_prompt);
+        setContentView(R.layout.layout_scan_prompt);
 
         nfcPrimer();
     }
@@ -74,7 +74,7 @@ public class ScanPrompt extends AppCompatActivity
 
     public void handleActionNdefDiscovered(Intent intent)
     {
-        if(intent.getAction() == NfcAdapter.ACTION_NDEF_DISCOVERED)
+        if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
         {
             String ndefStringMessage = TagHandler.parseStringNdefPayload(intent);
             Log.d("TEST MESSAGE", ndefStringMessage);

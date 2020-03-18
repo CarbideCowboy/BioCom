@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:text="@string/scanPrompt_textBox"
         android:textAlignment="center"
+        android:fontFamily="@font/ibmplexmono_semibold"
         android:textColor="@color/colorTextPrimary"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -3,7 +3,6 @@ package com.hoker.biocom;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -23,7 +22,7 @@ public class NdefRead extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ndef_read);
+        setContentView(R.layout.layout_ndef_read);
 
         //set up views
         mUxNdefTextbox = findViewById(R.id.uxNdefTextbox);
