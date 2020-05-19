@@ -1,4 +1,4 @@
-package com.hoker.biocom;
+package com.hoker.biocom.utilities;
 
 import android.content.Intent;
 import android.nfc.NdefMessage;

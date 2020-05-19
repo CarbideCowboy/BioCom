@@ -1,4 +1,4 @@
-package com.hoker.biocom;
+package com.hoker.biocom.pages;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.hoker.biocom.R;
 
 public class NdefRead extends AppCompatActivity
 {

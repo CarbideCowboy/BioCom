@@ -1,4 +1,4 @@
-package com.hoker.biocom;
+package com.hoker.biocom.pages;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,9 @@ import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.hoker.biocom.R;
+import com.hoker.biocom.utilities.TagHandler;
 
 import java.util.Objects;
 
