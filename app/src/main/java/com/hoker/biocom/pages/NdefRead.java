@@ -9,8 +9,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
@@ -29,6 +33,7 @@ public class NdefRead extends AppCompatActivity
         //set up views
         mUxNdefTextbox = findViewById(R.id.uxNdefTextbox);
 
+        setStatusBarColor();
         pullNdefRecord();
         checkEncryption();
     }
@@ -106,5 +111,14 @@ public class NdefRead extends AppCompatActivity
             //display dialog
             alertDialog.show();
         }
+    }
+
+    public void setStatusBarColor()
+    {
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.parseColor("#FFFFFF"));
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }

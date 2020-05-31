@@ -5,13 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.hoker.biocom.R;
 import com.hoker.biocom.utilities.TagHandler;
 
+import java.util.Collection;
 import java.util.Objects;
 
 public class ScanPrompt extends AppCompatActivity
@@ -26,6 +31,7 @@ public class ScanPrompt extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_scan_prompt);
 
+        setStatusBarColor();
         nfcPrimer();
     }
 
@@ -73,6 +79,15 @@ public class ScanPrompt extends AppCompatActivity
     {
         super.onNewIntent(intent);
         handleActionNdefDiscovered(intent);
+    }
+
+    public void setStatusBarColor()
+    {
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.parseColor("#FFFFFF"));
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
     public void handleActionNdefDiscovered(Intent intent)
