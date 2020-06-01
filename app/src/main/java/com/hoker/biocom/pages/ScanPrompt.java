@@ -1,6 +1,7 @@
 package com.hoker.biocom.pages;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -24,6 +25,7 @@ public class ScanPrompt extends AppCompatActivity
     IntentFilter[] intentFiltersArray;
     PendingIntent pendingIntent;
     NfcAdapter adapter;
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -32,7 +34,23 @@ public class ScanPrompt extends AppCompatActivity
         setContentView(R.layout.layout_scan_prompt);
 
         setStatusBarColor();
+        setTitleBar();
         nfcPrimer();
+    }
+
+    private void setTitleBar()
+    {
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp()
+    {
+        onBackPressed();
+        return true;
     }
 
     public void nfcPrimer()
