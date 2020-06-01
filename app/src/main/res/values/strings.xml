@@ -7,4 +7,8 @@
 
     <!--NdefRead-->
     <string name="ndefRead_empty_record">No text record detected</string>
+    <string name="ndef_operations">NDEF Operations</string>
+    <string name="read_ndef_records">Read NDEF Records</string>
+    <string name="drawer_toggle_open">Drawer Open</string>
+    <string name="drawer_toggle_close">Drawer Close</string>
 </resources>

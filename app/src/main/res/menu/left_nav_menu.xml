@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none">
+        <item
+            android:title="@string/ndef_operations">
+            <menu>
+                <group
+                    android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_ndef_read"
+                        android:icon="@drawable/ic_dash"
+                        android:title="@string/read_ndef_records"/>
+                </group>
+            </menu>
+        </item>
+    </group>
+</menu>
