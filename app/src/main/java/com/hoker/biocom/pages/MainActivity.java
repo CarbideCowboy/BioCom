@@ -15,7 +15,6 @@ import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -169,7 +168,7 @@ public class MainActivity extends AppCompatActivity
         switch(menuItem.getItemId())
         {
             case R.id.nav_ndef_read:
-                Intent intent = new Intent(this, ScanPrompt.class);
+                Intent intent = new Intent(this, NdefScanPrompt.class);
                 startActivity(intent);
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;

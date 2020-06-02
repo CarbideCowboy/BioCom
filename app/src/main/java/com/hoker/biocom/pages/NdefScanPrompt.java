@@ -20,7 +20,7 @@ import com.hoker.biocom.utilities.TagHandler;
 import java.util.Collection;
 import java.util.Objects;
 
-public class ScanPrompt extends AppCompatActivity
+public class NdefScanPrompt extends AppCompatActivity
 {
     IntentFilter[] intentFiltersArray;
     PendingIntent pendingIntent;

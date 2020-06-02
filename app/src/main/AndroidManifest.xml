@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".pages.NdefRead" />
-        <activity android:name=".pages.ScanPrompt"/>
+        <activity android:name=".pages.NdefScanPrompt"/>
     </application>
 
     <uses-permission android:name="android.permission.NFC" />
