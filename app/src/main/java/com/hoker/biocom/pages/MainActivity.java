@@ -79,11 +79,39 @@ public class MainActivity extends AppCompatActivity
         if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
         {
             String ndefStringMessage = TagHandler.parseStringNdefPayload(intent);
-            Log.d("TEST MESSAGE", ndefStringMessage);
-            Intent ndefReadIntent = new Intent(this, NdefRead.class);
-            ndefReadIntent.putExtra("StringNDEF", ndefStringMessage);
-            startActivity(ndefReadIntent);
+
+            //check for minimum length for encrypted payload
+            if(ndefStringMessage.length() < 27)
+            {
+                pushToNdefRead(ndefStringMessage);
+            }
+            else
+            {
+                //check for pgp message header
+                if(ndefStringMessage.substring(0,27).equals("-----BEGIN PGP MESSAGE-----"))
+                {
+                    pushToDecrypt(ndefStringMessage);
+                }
+                else
+                {
+                    pushToNdefRead(ndefStringMessage);
+                }
+            }
         }
+    }
+
+    private void pushToNdefRead(String ndefStringMessage)
+    {
+        Intent ndefReadIntent = new Intent(this, NdefRead.class);
+        ndefReadIntent.putExtra("StringNDEF", ndefStringMessage);
+        startActivity(ndefReadIntent);
+    }
+
+    private void pushToDecrypt(String ndefStringMessage)
+    {
+        Intent ndefDecryptIntent = new Intent(this, NdefDecrypt.class);
+        ndefDecryptIntent.putExtra("StringNDEF", ndefStringMessage);
+        startActivity(ndefDecryptIntent);
     }
 
     @Override
@@ -168,8 +196,13 @@ public class MainActivity extends AppCompatActivity
         switch(menuItem.getItemId())
         {
             case R.id.nav_ndef_read:
-                Intent intent = new Intent(this, NdefScanPrompt.class);
-                startActivity(intent);
+                Intent ndefReadIntent = new Intent(this, NdefScanPrompt.class);
+                startActivity(ndefReadIntent);
+                mDrawer.closeDrawer(GravityCompat.START);
+                break;
+            case R.id.nav_ndef_decrypt:
+                Intent ndefDecryptIntent = new Intent(this, NdefDecrypt.class);
+                startActivity(ndefDecryptIntent);
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;
         }

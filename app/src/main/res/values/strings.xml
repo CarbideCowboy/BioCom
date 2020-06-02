@@ -1,11 +1,7 @@
 <resources>
     <string name="app_name">BioCom</string>
-
-    <!--ScanPrompt-->
     <string name="nfc_logo">nfc_logo</string>
     <string name="scanPrompt_textBox">Scan an NDEF formatted NFC tag</string>
-
-    <!--NdefRead-->
     <string name="ndefRead_empty_record">No text record detected</string>
     <string name="ndef_operations">NDEF Operations</string>
     <string name="read_ndef_records">Read NDEF Records</string>
@@ -13,4 +9,7 @@
     <string name="drawer_toggle_close">Drawer Close</string>
     <string name="nfc_device_manager">NFC Device Manager</string>
     <string name="scan_an_nfc_device_or_choose_an_operation_from_the_left_panel">Scan an NFC device or choose an operation from the left panel</string>
+    <string name="scan_encrypted">Scan an NFC tag containing an encrypted NDEF record</string>
+    <string name="cryptographic_operations">Cryptographic Operations</string>
+    <string name="decrypt_tag_contents">Decrypt Tag Contents</string>
 </resources>
