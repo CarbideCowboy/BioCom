@@ -11,4 +11,6 @@
     <string name="read_ndef_records">Read NDEF Records</string>
     <string name="drawer_toggle_open">Drawer Open</string>
     <string name="drawer_toggle_close">Drawer Close</string>
+    <string name="nfc_device_manager">NFC Device Manager</string>
+    <string name="scan_an_nfc_device_or_choose_an_operation_from_the_left_panel">Scan an NFC device or choose an operation from the left panel</string>
 </resources>
