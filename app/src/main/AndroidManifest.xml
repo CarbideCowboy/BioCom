@@ -15,10 +15,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".pages.NdefRead" />
-        <activity android:name=".pages.ScanPrompt">
-           <intent-filter>
+            <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -26,6 +23,8 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+        <activity android:name=".pages.NdefRead" />
+        <activity android:name=".pages.ScanPrompt"/>
     </application>
 
     <uses-permission android:name="android.permission.NFC" />

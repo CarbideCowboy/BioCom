@@ -10,7 +10,7 @@
                     android:checkableBehavior="single">
                     <item
                         android:id="@+id/nav_ndef_read"
-                        android:icon="@drawable/ic_dash"
+                        android:icon="@drawable/ic_arrow_right"
                         android:title="@string/read_ndef_records"/>
                 </group>
             </menu>
