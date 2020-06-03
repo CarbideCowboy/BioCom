@@ -4,7 +4,7 @@
     <string name="scanPrompt_textBox">Scan an NDEF formatted NFC tag</string>
     <string name="ndefRead_empty_record">No text record detected</string>
     <string name="ndef_operations">NDEF Operations</string>
-    <string name="read_ndef_records">Read NDEF Records</string>
+    <string name="read_ndef_records">Read NDEF Text Records</string>
     <string name="drawer_toggle_open">Drawer Open</string>
     <string name="drawer_toggle_close">Drawer Close</string>
     <string name="nfc_device_manager">NFC Device Manager</string>
@@ -12,4 +12,6 @@
     <string name="scan_encrypted">Scan an NFC tag containing an encrypted NDEF record</string>
     <string name="cryptographic_operations">Cryptographic Operations</string>
     <string name="decrypt_tag_contents">Decrypt Tag Contents</string>
+    <string name="read_ndef_records_in_edit_mode">Read NDEF Text Records as Editing</string>
+    <string name="write_ndef_text_records">Write NDEF Text Records</string>
 </resources>

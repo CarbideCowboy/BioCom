@@ -17,10 +17,9 @@ import android.view.WindowManager;
 import com.hoker.biocom.R;
 import com.hoker.biocom.utilities.TagHandler;
 
-import java.util.Collection;
 import java.util.Objects;
 
-public class NdefScanPrompt extends AppCompatActivity
+public class NdefScanTextPrompt extends AppCompatActivity
 {
     IntentFilter[] intentFiltersArray;
     PendingIntent pendingIntent;
@@ -114,7 +113,7 @@ public class NdefScanPrompt extends AppCompatActivity
         {
             String ndefStringMessage = TagHandler.parseStringNdefPayload(intent);
             Log.d("TEST MESSAGE", ndefStringMessage);
-            Intent ndefReadIntent = new Intent(this, NdefRead.class);
+            Intent ndefReadIntent = new Intent(this, NdefReadText.class);
             ndefReadIntent.putExtra("StringNDEF", ndefStringMessage);
             startActivity(ndefReadIntent);
         }

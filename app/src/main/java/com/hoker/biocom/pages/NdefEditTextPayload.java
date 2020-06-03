@@ -1,54 +1,55 @@
 package com.hoker.biocom.pages;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hoker.biocom.R;
 
-public class NdefRead extends AppCompatActivity
+public class NdefEditTextPayload extends AppCompatActivity
 {
-    private TextView mUxNdefTextbox;
-    private String _stringPayload;
-    private Toolbar mToolbar;
+    String _stringPayload;
+    EditText mEditText;
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_ndef_read);
+        setContentView(R.layout.layout_ndef_edit_text);
 
-        //set up views
-        mUxNdefTextbox = findViewById(R.id.uxNdefTextbox);
+        mEditText = findViewById(R.id.ndef_edit_text);
 
         setStatusBarColor();
         setTitleBar();
-        pullNdefRecord();
+        setupTextView();
     }
 
-    public void pullNdefRecord()
+    private void setupTextView()
     {
-        Intent NdefIntent = getIntent();
-        Bundle bundle = NdefIntent.getExtras();
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
         if(bundle != null)
         {
             _stringPayload = bundle.getString("StringNDEF");
-            mUxNdefTextbox.setText(_stringPayload);
+            mEditText.setText(_stringPayload);
         }
+    }
+
+    public void writeButton_Clicked(View view)
+    {
+        Intent intent = new Intent(this, NdefWriteText.class);
+        intent.putExtra("StringNDEF", mEditText.getText().toString());
+        startActivity(intent);
     }
 
     @Override
