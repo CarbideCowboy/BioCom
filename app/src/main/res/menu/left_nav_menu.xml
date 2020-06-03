@@ -10,8 +10,20 @@
                     android:checkableBehavior="single">
                     <item
                         android:id="@+id/nav_ndef_read"
-                        android:icon="@drawable/ic_arrow_right"
+                        android:icon="@drawable/ic_arrow_forward"
                         android:title="@string/read_ndef_records"/>
+                </group>
+            </menu>
+        </item>
+        <item
+            android:title="@string/cryptographic_operations">
+            <menu>
+                <group
+                    android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_ndef_decrypt"
+                        android:icon="@drawable/ic_arrow_forward"
+                        android:title="@string/decrypt_tag_contents"/>
                 </group>
             </menu>
         </item>

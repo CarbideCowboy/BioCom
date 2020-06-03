@@ -2,6 +2,7 @@ package com.hoker.biocom.pages;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -23,6 +24,7 @@ public class NdefRead extends AppCompatActivity
 {
     private TextView mUxNdefTextbox;
     private String _stringPayload;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -34,8 +36,8 @@ public class NdefRead extends AppCompatActivity
         mUxNdefTextbox = findViewById(R.id.uxNdefTextbox);
 
         setStatusBarColor();
+        setTitleBar();
         pullNdefRecord();
-        checkEncryption();
     }
 
     public void pullNdefRecord()
@@ -49,68 +51,19 @@ public class NdefRead extends AppCompatActivity
         }
     }
 
-    public void checkEncryption()
+    @Override
+    public boolean onSupportNavigateUp()
     {
-        //check for minimum length
-        if(_stringPayload.length() < 27)
-        {
-            return;
-        }
-        //check for pgp header
-        else if(!_stringPayload.substring(0,27).equals("-----BEGIN PGP MESSAGE-----"))
-        {
-            return;
-        }
-        else
-        {
-            //set title, message and yes/no functionality for the dialog
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            dialogBuilder
-                    .setTitle("Encrypted payload detected")
-                    .setMessage("Would you like to attempt decryption with OpenKeychain?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            //copy string ndef payload to system clipboard
-                            ClipboardManager clipboard = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-                            ClipData clipData = ClipData.newPlainText("payload", _stringPayload);
-                            clipboard.setPrimaryClip(clipData);
+        onBackPressed();
+        return true;
+    }
 
-                            //create new intent to open OpenKeychain
-                            PackageManager manager = getBaseContext().getPackageManager();
-                            Intent decryptionIntent = manager.getLaunchIntentForPackage("org.sufficientlysecure.keychain");
-
-                            if(decryptionIntent != null)
-                            {
-                                decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(decryptionIntent);
-                            }
-                            else
-                            {
-                                decryptionIntent = new Intent(Intent.ACTION_VIEW);
-                                decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                decryptionIntent.setData(Uri.parse("https://f-droid.org/en/packages/org.sufficientlysecure.keychain/"));
-                                startActivity(decryptionIntent);
-                            }
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            dialog.cancel();
-                        }
-                    });
-
-            //create alert dialog
-            AlertDialog alertDialog = dialogBuilder.create();
-
-            //display dialog
-            alertDialog.show();
-        }
+    private void setTitleBar()
+    {
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     public void setStatusBarColor()
