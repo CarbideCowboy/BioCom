@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Selection;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -50,6 +52,9 @@ public class NdefEditTextPayload extends AppCompatActivity
         mEditText.requestFocus();
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.showSoftInput(mEditText, InputMethodManager.SHOW_IMPLICIT);
+        int position = mEditText.length();
+        Editable editable = mEditText.getText();
+        Selection.setSelection(editable, position);
     }
 
     private void setupTextView()
