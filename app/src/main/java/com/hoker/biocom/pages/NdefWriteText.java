@@ -116,6 +116,7 @@ public class NdefWriteText extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which)
                     {
                         dialog.cancel();
+                        popBack();
                     }
                 });
                 AlertDialog alert = builder.create();
@@ -138,6 +139,11 @@ public class NdefWriteText extends AppCompatActivity
                 alert.show();
             }
         }
+    }
+
+    public void popBack()
+    {
+        this.finish();
     }
 
     public void setStatusBarColor()

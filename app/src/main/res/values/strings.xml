@@ -14,4 +14,7 @@
     <string name="decrypt_tag_contents">Decrypt Tag Contents</string>
     <string name="read_ndef_records_in_edit_mode">Read NDEF Text Records as Editing</string>
     <string name="write_ndef_text_records">Write NDEF Text Records</string>
+    <string name="type_ndef_string_payload_here">Type NDEF String payload here</string>
+    <string name="scan_write_tag">Scan a writeable NFC tag</string>
+    <string name="scan_write_warning">WARNING: This will erase the tag\'s existing records</string>
 </resources>

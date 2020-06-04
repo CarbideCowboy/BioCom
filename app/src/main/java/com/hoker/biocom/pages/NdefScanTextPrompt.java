@@ -25,12 +25,15 @@ public class NdefScanTextPrompt extends AppCompatActivity
     PendingIntent pendingIntent;
     NfcAdapter adapter;
     Toolbar mToolbar;
+    boolean isEdit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_scan_prompt);
+
+        isEdit = getIntent().getExtras().getBoolean("IsEdit");
 
         setStatusBarColor();
         setTitleBar();
@@ -112,10 +115,18 @@ public class NdefScanTextPrompt extends AppCompatActivity
         if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
         {
             String ndefStringMessage = TagHandler.parseStringNdefPayload(intent);
-            Log.d("TEST MESSAGE", ndefStringMessage);
-            Intent ndefReadIntent = new Intent(this, NdefReadText.class);
-            ndefReadIntent.putExtra("StringNDEF", ndefStringMessage);
-            startActivity(ndefReadIntent);
+            if(isEdit)
+            {
+                Intent ndefEditIntent = new Intent(this, NdefEditTextPayload.class);
+                ndefEditIntent.putExtra("StringNDEF", ndefStringMessage);
+                startActivity(ndefEditIntent);
+            }
+            else
+            {
+                Intent ndefReadIntent = new Intent(this, NdefReadText.class);
+                ndefReadIntent.putExtra("StringNDEF", ndefStringMessage);
+                startActivity(ndefReadIntent);
+            }
         }
     }
 }
