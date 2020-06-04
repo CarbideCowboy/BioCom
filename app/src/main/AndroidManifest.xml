@@ -9,7 +9,9 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".pages.NdefDecrypt"></activity>
+        <activity android:name=".pages.NdefEditTextPayload"></activity>
+        <activity android:name=".pages.NdefWriteText" />
+        <activity android:name=".pages.NdefDecrypt" />
         <activity android:name=".pages.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,8 +26,8 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name=".pages.NdefRead" />
-        <activity android:name=".pages.NdefScanPrompt" />
+        <activity android:name=".pages.NdefReadText" />
+        <activity android:name=".pages.NdefScanTextPrompt" />
     </application>
 
     <uses-permission android:name="android.permission.NFC" />

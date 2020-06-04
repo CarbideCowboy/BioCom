@@ -14,7 +14,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity
 
     private void pushToNdefRead(String ndefStringMessage)
     {
-        Intent ndefReadIntent = new Intent(this, NdefRead.class);
+        Intent ndefReadIntent = new Intent(this, NdefReadText.class);
         ndefReadIntent.putExtra("StringNDEF", ndefStringMessage);
         startActivity(ndefReadIntent);
     }
@@ -196,13 +195,25 @@ public class MainActivity extends AppCompatActivity
         switch(menuItem.getItemId())
         {
             case R.id.nav_ndef_read:
-                Intent ndefReadIntent = new Intent(this, NdefScanPrompt.class);
+                Intent ndefReadIntent = new Intent(this, NdefScanTextPrompt.class);
+                ndefReadIntent.putExtra("IsEdit", false);
                 startActivity(ndefReadIntent);
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;
             case R.id.nav_ndef_decrypt:
                 Intent ndefDecryptIntent = new Intent(this, NdefDecrypt.class);
                 startActivity(ndefDecryptIntent);
+                mDrawer.closeDrawer(GravityCompat.START);
+                break;
+            case R.id.nav_ndef_write:
+                Intent ndefWriteIntent = new Intent(this, NdefEditTextPayload.class);
+                startActivity(ndefWriteIntent);
+                mDrawer.closeDrawer(GravityCompat.START);
+                break;
+            case R.id.nav_ndef_read_edit:
+                Intent ndefReadEditIntent = new Intent(this, NdefScanTextPrompt.class);
+                ndefReadEditIntent.putExtra("IsEdit", true);
+                startActivity(ndefReadEditIntent);
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;
         }

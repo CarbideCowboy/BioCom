@@ -10,8 +10,13 @@
                     android:checkableBehavior="single">
                     <item
                         android:id="@+id/nav_ndef_read"
-                        android:icon="@drawable/ic_arrow_forward"
                         android:title="@string/read_ndef_records"/>
+                    <item
+                        android:id="@+id/nav_ndef_read_edit"
+                        android:title="@string/read_ndef_records_in_edit_mode"/>
+                    <item
+                        android:id="@+id/nav_ndef_write"
+                        android:title="@string/write_ndef_text_records"/>
                 </group>
             </menu>
         </item>
@@ -22,7 +27,6 @@
                     android:checkableBehavior="single">
                     <item
                         android:id="@+id/nav_ndef_decrypt"
-                        android:icon="@drawable/ic_arrow_forward"
                         android:title="@string/decrypt_tag_contents"/>
                 </group>
             </menu>

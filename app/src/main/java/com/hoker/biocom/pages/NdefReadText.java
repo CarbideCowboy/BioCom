@@ -20,9 +20,9 @@ import android.widget.TextView;
 
 import com.hoker.biocom.R;
 
-public class NdefRead extends AppCompatActivity
+public class NdefReadText extends AppCompatActivity
 {
-    private TextView mUxNdefTextbox;
+    private TextView mReadTextbox;
     private String _stringPayload;
     private Toolbar mToolbar;
 
@@ -33,7 +33,7 @@ public class NdefRead extends AppCompatActivity
         setContentView(R.layout.layout_ndef_read);
 
         //set up views
-        mUxNdefTextbox = findViewById(R.id.uxNdefTextbox);
+        mReadTextbox = findViewById(R.id.read_textbox);
 
         setStatusBarColor();
         setTitleBar();
@@ -47,7 +47,7 @@ public class NdefRead extends AppCompatActivity
         if(bundle != null)
         {
             _stringPayload = bundle.getString("StringNDEF");
-            mUxNdefTextbox.setText(_stringPayload);
+            mReadTextbox.setText(_stringPayload);
         }
     }
 
