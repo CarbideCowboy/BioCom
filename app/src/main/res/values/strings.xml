@@ -17,4 +17,6 @@
     <string name="type_ndef_string_payload_here">Type NDEF String payload here</string>
     <string name="scan_write_tag">Scan a writeable NFC tag</string>
     <string name="scan_write_warning">WARNING: This will erase the tag\'s existing records</string>
+    <string name="nfc_tag_operations">NFC Tag Operations</string>
+    <string name="erase_tag_contents">Erase Tag Contents</string>
 </resources>

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
 
 public class TagHandler
 {
@@ -82,6 +83,48 @@ public class TagHandler
         System.arraycopy(langBytes, 0, payload, 1, langLength);
         System.arraycopy(textBytes, 0, payload, 1 + langLength, textLength);
         return new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload);
+    }
+
+    private static NdefRecord createRandomByteRecord(int maxTagCapacity) throws UnsupportedEncodingException
+    {
+        String lang = "en";
+        byte[] langBytes = lang.getBytes("US-ASCII");
+        byte[] randomByteArray = new byte[maxTagCapacity];
+        Random random = new Random();
+        random.nextBytes(randomByteArray);
+        byte[] payload = new byte[1 + langBytes.length + randomByteArray.length];
+        payload[0] = (byte)langBytes.length;
+        System.arraycopy(langBytes, 0, payload, 1, langBytes.length);
+        System.arraycopy(randomByteArray, 0, payload, 1 + langBytes.length, randomByteArray.length);
+        return new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload);
+    }
+
+    public static boolean eraseNfcTag(Tag tag)
+    {
+        try
+        {
+            Ndef ndef = Ndef.get(tag);
+            if(ndef != null)
+            {
+                NdefRecord[] randomByteRecord = { createRandomByteRecord(ndef.getMaxSize()-10) };
+                NdefMessage message = new NdefMessage(randomByteRecord);
+                String result = new AsyncConnectWrite().doInBackground(message, ndef);
+                if(result.equals("Message written"))
+                {
+                    return writeNdefText("", tag);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        catch(UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
     }
 }
 

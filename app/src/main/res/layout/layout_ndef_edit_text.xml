@@ -48,7 +48,8 @@
                 android:ems="10"
                 android:hint="@string/type_ndef_string_payload_here"
                 android:inputType="textMultiLine|textPersonName"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="@color/colorPrimary" />
         </LinearLayout>
     </ScrollView>
 
