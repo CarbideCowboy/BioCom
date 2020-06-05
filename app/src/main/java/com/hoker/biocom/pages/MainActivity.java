@@ -197,6 +197,7 @@ public class MainActivity extends AppCompatActivity
         );
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setUpSwipeHandler()
     {
         mMainConstraintLayout.setOnTouchListener(new OnSwipeTouchListener(this)
