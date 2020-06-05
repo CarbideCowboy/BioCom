@@ -53,8 +53,15 @@ public class TagHandler
             NdefRecord[] records = { createTextRecord(text) };
             NdefMessage message = new NdefMessage(records);
             Ndef ndef = Ndef.get(tag);
-            new AsyncConnectWrite().execute(message, ndef);
-            return true;
+            String result = new AsyncConnectWrite().doInBackground(message, ndef);
+            if(result.equals("Message written"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         catch(UnsupportedEncodingException e)
         {
@@ -100,14 +107,53 @@ class AsyncConnectWrite extends AsyncTask<Object, Void, String>
         catch(FormatException e)
         {
             result = "FormatException while writing";
+            try
+            {
+                if(ndef != null)
+                {
+                    ndef.close();
+                    return result;
+                }
+            }
+            catch(IOException ex)
+            {
+                result = "IOException while closing";
+                return result;
+            }
         }
         catch(TagLostException e)
         {
             result = "TagLostException while writing";
+            try
+            {
+                if(ndef != null)
+                {
+                    ndef.close();
+                    return result;
+                }
+            }
+            catch(IOException ex)
+            {
+                result = "IOException while closing";
+                return result;
+            }
         }
         catch(IOException e)
         {
             result = "IOException while writing";
+            try
+            {
+                if(ndef != null)
+                {
+                    ndef.close();
+                    return result;
+                }
+            }
+            catch(IOException ex)
+            {
+                result = "IOException while closing";
+                return result;
+            }
         }
         finally
         {
