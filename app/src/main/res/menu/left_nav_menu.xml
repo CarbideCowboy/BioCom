@@ -28,5 +28,16 @@
                 </group>
             </menu>
         </item>
+        <item
+            android:title="@string/nfc_tag_operations">
+            <menu>
+                <group
+                    android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_erase_tag"
+                        android:title="@string/erase_tag_contents"/>
+                </group>
+            </menu>
+        </item>
     </group>
 </menu>

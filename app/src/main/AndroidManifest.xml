@@ -9,7 +9,8 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".pages.NdefEditTextPayload"></activity>
+        <activity android:name=".pages.EraseTag"></activity>
+        <activity android:name=".pages.NdefEditTextPayload" />
         <activity android:name=".pages.NdefWriteText" />
         <activity android:name=".pages.NdefDecrypt" />
         <activity android:name=".pages.MainActivity">

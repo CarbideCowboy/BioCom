@@ -4,9 +4,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -21,6 +23,7 @@ import android.view.WindowManager;
 
 import com.google.android.material.navigation.NavigationView;
 import com.hoker.biocom.R;
+import com.hoker.biocom.utilities.OnSwipeTouchListener;
 import com.hoker.biocom.utilities.TagHandler;
 
 import java.util.Objects;
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private NavigationView mNavigationView;
     private ActionBarDrawerToggle mDrawerToggle;
+    private ConstraintLayout mMainConstraintLayout;
     //intent filter and foreground dispatch
     IntentFilter[] intentFiltersArray;
     PendingIntent pendingIntent;
@@ -43,8 +47,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main_activity);
 
+        mMainConstraintLayout = findViewById(R.id.main_constraint_layout);
+
         setStatusBarColor();
         setUpNavigationDrawer();
+        setUpSwipeHandler();
         nfcPrimer();
     }
 
@@ -190,6 +197,18 @@ public class MainActivity extends AppCompatActivity
         );
     }
 
+    private void setUpSwipeHandler()
+    {
+        mMainConstraintLayout.setOnTouchListener(new OnSwipeTouchListener(this)
+        {
+            @Override
+            public void onSwipeRight()
+            {
+                mDrawer.openDrawer(GravityCompat.START);
+            }
+        });
+    }
+
     private void selectDrawerItem(MenuItem menuItem)
     {
         switch(menuItem.getItemId())
@@ -208,6 +227,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_ndef_write:
                 Intent ndefWriteIntent = new Intent(this, NdefEditTextPayload.class);
                 startActivity(ndefWriteIntent);
+                mDrawer.closeDrawer(GravityCompat.START);
+                break;
+            case R.id.nav_erase_tag:
+                Intent tagEraseIntent = new Intent(this, EraseTag.class);
+                startActivity(tagEraseIntent);
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;
         }
