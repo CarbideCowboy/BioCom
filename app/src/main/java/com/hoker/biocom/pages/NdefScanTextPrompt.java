@@ -119,12 +119,14 @@ public class NdefScanTextPrompt extends AppCompatActivity
             {
                 Intent ndefEditIntent = new Intent(this, NdefEditTextPayload.class);
                 ndefEditIntent.putExtra("StringNDEF", ndefStringMessage);
+                finish();
                 startActivity(ndefEditIntent);
             }
             else
             {
                 Intent ndefReadIntent = new Intent(this, NdefReadText.class);
                 ndefReadIntent.putExtra("StringNDEF", ndefStringMessage);
+                finish();
                 startActivity(ndefReadIntent);
             }
         }

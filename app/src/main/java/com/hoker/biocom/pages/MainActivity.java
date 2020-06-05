@@ -210,12 +210,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(ndefWriteIntent);
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;
-            case R.id.nav_ndef_read_edit:
-                Intent ndefReadEditIntent = new Intent(this, NdefScanTextPrompt.class);
-                ndefReadEditIntent.putExtra("IsEdit", true);
-                startActivity(ndefReadEditIntent);
-                mDrawer.closeDrawer(GravityCompat.START);
-                break;
         }
     }
 

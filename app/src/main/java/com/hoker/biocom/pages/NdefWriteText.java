@@ -143,7 +143,9 @@ public class NdefWriteText extends AppCompatActivity
 
     public void popBack()
     {
-        this.finish();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     public void setStatusBarColor()

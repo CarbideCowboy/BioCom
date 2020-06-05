@@ -3,6 +3,7 @@ package com.hoker.biocom.pages;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -16,6 +17,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
@@ -25,6 +28,7 @@ public class NdefReadText extends AppCompatActivity
     private TextView mReadTextbox;
     private String _stringPayload;
     private Toolbar mToolbar;
+    private ImageButton mToolbarWriteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -34,9 +38,11 @@ public class NdefReadText extends AppCompatActivity
 
         //set up views
         mReadTextbox = findViewById(R.id.read_textbox);
+        mToolbarWriteButton = findViewById(R.id.toolbar_write_button);
 
         setStatusBarColor();
         setTitleBar();
+        setUpToolbarButton();
         pullNdefRecord();
     }
 
@@ -51,6 +57,21 @@ public class NdefReadText extends AppCompatActivity
         }
     }
 
+    private void setUpToolbarButton()
+    {
+        mToolbarWriteButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(getApplicationContext(), NdefEditTextPayload.class);
+                intent.putExtra("StringNDEF", _stringPayload);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
     @Override
     public boolean onSupportNavigateUp()
     {
@@ -60,7 +81,7 @@ public class NdefReadText extends AppCompatActivity
 
     private void setTitleBar()
     {
-        mToolbar = findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar_write);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
