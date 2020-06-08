@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hoker.biocom.R;
@@ -32,6 +34,7 @@ public class NdefEditTextPayload extends AppCompatActivity
     Toolbar mToolbar;
     ScrollView mScrollView;
     LinearLayout mLinearLayout;
+    TextView mPayloadSizeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,10 +46,42 @@ public class NdefEditTextPayload extends AppCompatActivity
         mEditText = findViewById(R.id.ndef_edit_text);
         mScrollView = findViewById(R.id.edit_text_scroll);
         mLinearLayout = findViewById(R.id.edit_text_linear);
+        mPayloadSizeText = findViewById(R.id.edit_payload_size);
 
         setStatusBarColor();
         setTitleBar();
+        setEditTextChangeEvent();
         setupTextView();
+        getPayloadBytes();
+    }
+
+    private void setEditTextChangeEvent()
+    {
+        mEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                getPayloadBytes();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+            }
+        });
+    }
+
+    private void getPayloadBytes()
+    {
+        int byteSize = mEditText.getText().toString().getBytes().length + 7;
+        String payloadSize = getString(R.string.payload_size) + byteSize + getString(R.string.bytes);
+        mPayloadSizeText.setText(payloadSize);
     }
 
     public void focusEntry(View view)
