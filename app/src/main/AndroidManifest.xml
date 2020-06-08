@@ -9,11 +9,16 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".pages.EraseTag"></activity>
-        <activity android:name=".pages.NdefEditTextPayload" />
-        <activity android:name=".pages.NdefWriteText" />
-        <activity android:name=".pages.NdefDecrypt" />
-        <activity android:name=".pages.MainActivity">
+        <activity android:name=".pages.EraseTag"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".pages.NdefEditTextPayload"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".pages.NdefWriteText"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".pages.NdefDecrypt"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".pages.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,8 +32,10 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name=".pages.NdefReadText" />
-        <activity android:name=".pages.NdefScanTextPrompt" />
+        <activity android:name=".pages.NdefReadText"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".pages.NdefScanTextPrompt"
+            android:screenOrientation="portrait"/>
     </application>
 
     <uses-permission android:name="android.permission.NFC" />
