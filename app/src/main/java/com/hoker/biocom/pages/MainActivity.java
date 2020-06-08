@@ -13,6 +13,8 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
@@ -21,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.hoker.biocom.R;
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView mNavigationView;
     private ActionBarDrawerToggle mDrawerToggle;
     private ConstraintLayout mMainConstraintLayout;
+    private TextView mVersionTextView;
     //intent filter and foreground dispatch
     IntentFilter[] intentFiltersArray;
     PendingIntent pendingIntent;
@@ -54,7 +58,23 @@ public class MainActivity extends AppCompatActivity
         setStatusBarColor();
         setUpNavigationDrawer();
         setUpSwipeHandler();
+        setVersionNumber();
         nfcPrimer();
+    }
+
+    private void setVersionNumber()
+    {
+        mVersionTextView = findViewById(R.id.main_version_text);
+        try
+        {
+            PackageInfo pInfo = getBaseContext().getPackageManager().getPackageInfo(getPackageName(), 0);
+            String versionText = "R" + pInfo.versionName;
+            mVersionTextView.setText(versionText);
+        }
+        catch(PackageManager.NameNotFoundException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void nfcPrimer()
