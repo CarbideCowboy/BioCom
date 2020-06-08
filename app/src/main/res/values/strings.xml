@@ -19,4 +19,5 @@
     <string name="scan_write_warning">WARNING: This will erase the tag\'s existing records</string>
     <string name="nfc_tag_operations">NFC Tag Operations</string>
     <string name="erase_tag_contents">Erase Tag Contents</string>
+    <string name="application_logo">Application Icon</string>
 </resources>
