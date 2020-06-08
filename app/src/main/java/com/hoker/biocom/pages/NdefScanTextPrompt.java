@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class NdefScanTextPrompt extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_scan_prompt);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         isEdit = getIntent().getExtras().getBoolean("IsEdit");
 
