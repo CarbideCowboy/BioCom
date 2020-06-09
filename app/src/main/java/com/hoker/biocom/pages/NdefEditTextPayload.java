@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
@@ -26,6 +28,9 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hoker.biocom.R;
+import com.hoker.biocom.utilities.TagHandler;
+
+import java.io.IOException;
 
 public class NdefEditTextPayload extends AppCompatActivity
 {
@@ -79,9 +84,18 @@ public class NdefEditTextPayload extends AppCompatActivity
 
     private void getPayloadBytes()
     {
-        int byteSize = mEditText.getText().toString().getBytes().length + 7;
-        String payloadSize = getString(R.string.payload_size) + byteSize + getString(R.string.bytes);
-        mPayloadSizeText.setText(payloadSize);
+        try
+        {
+            NdefRecord[] record = { TagHandler.createTextRecord(mEditText.getText().toString()) };
+            NdefMessage message = new NdefMessage(record);
+            int byteSize = message.getByteArrayLength();
+            String payloadSize = getString(R.string.payload_size) + byteSize + getString(R.string.bytes);
+            mPayloadSizeText.setText(payloadSize);
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void focusEntry(View view)

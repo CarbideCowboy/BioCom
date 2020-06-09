@@ -71,7 +71,7 @@ public class TagHandler
         }
     }
 
-    private static NdefRecord createTextRecord(String text) throws UnsupportedEncodingException
+    public static NdefRecord createTextRecord(String text) throws UnsupportedEncodingException
     {
         byte[] textBytes = text.getBytes();
         int textLength = textBytes.length;
