@@ -123,7 +123,8 @@ public class NdefEditTextPayload extends AppCompatActivity
     {
         if(!mEditText.getText().toString().isEmpty())
         {
-            Intent intent = new Intent(this, NdefWriteText.class);
+            Intent intent = new Intent(this, ScanTagPrompt.class);
+            intent.putExtra("ScanType", 3);
             intent.putExtra("StringNDEF", mEditText.getText().toString());
             startActivity(intent);
         }

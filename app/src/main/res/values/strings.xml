@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BioCom</string>
     <string name="nfc_logo">nfc_logo</string>
-    <string name="scanPrompt_textBox">Scan an NDEF formatted NFC tag</string>
+    <string name="scan_text_ndef_read">Scan an NDEF formatted NFC tag</string>
     <string name="ndefRead_empty_record">No text record detected</string>
     <string name="ndef_operations">NDEF Operations</string>
     <string name="read_ndef_records">Read NDEF Text Records</string>
@@ -9,17 +9,22 @@
     <string name="drawer_toggle_close">Drawer Close</string>
     <string name="nfc_device_manager">NFC Device Manager</string>
     <string name="scan_an_nfc_device_or_choose_an_operation_from_the_left_panel">Scan an NFC device or choose an operation from the left panel</string>
-    <string name="scan_encrypted">Scan an NFC tag containing an encrypted NDEF record</string>
+    <string name="scan_text_encrypted">Scan an NFC tag containing an encrypted NDEF record</string>
     <string name="cryptographic_operations">Cryptographic Operations</string>
     <string name="decrypt_tag_contents">Decrypt Tag Contents</string>
     <string name="read_ndef_records_in_edit_mode">Read NDEF Text Records as Editing</string>
     <string name="write_ndef_text_records">Write NDEF Text Records</string>
     <string name="type_ndef_string_payload_here">Type NDEF String payload here</string>
-    <string name="scan_write_tag">Scan a writeable NFC tag</string>
-    <string name="scan_write_warning">WARNING: This will erase the tag\'s existing records</string>
+    <string name="scan_text_writable">Scan a writeable NFC tag</string>
+    <string name="scan_text_write_warning">WARNING: This will erase the tag\'s existing records</string>
     <string name="nfc_tag_operations">NFC Tag Operations</string>
     <string name="erase_tag_contents">Erase Tag Contents</string>
     <string name="payload_size">"Payload Size: "</string>
     <string name="bytes">" Bytes"</string>
     <string name="application_logo">Application Icon</string>
+    <string name="ic_info">IC Info</string>
+    <string name="raw_bytes">Raw Bytes</string>
+    <string name="tag_info">Tag Info:</string>
+    <string name="get_tag_info">Tag Info</string>
+    <string name="nfc_com">NFC Communication Symbol</string>
 </resources>
