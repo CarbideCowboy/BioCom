@@ -7,7 +7,7 @@
             android:title="@string/ndef_operations">
             <menu>
                 <group
-                    android:checkableBehavior="single">
+                    android:checkableBehavior="none">
                     <item
                         android:id="@+id/nav_ndef_read"
                         android:title="@string/read_ndef_records"/>
@@ -21,7 +21,7 @@
             android:title="@string/cryptographic_operations">
             <menu>
                 <group
-                    android:checkableBehavior="single">
+                    android:checkableBehavior="none">
                     <item
                         android:id="@+id/nav_ndef_decrypt"
                         android:title="@string/decrypt_tag_contents"/>
@@ -32,7 +32,7 @@
             android:title="@string/nfc_tag_operations">
             <menu>
                 <group
-                    android:checkableBehavior="single">
+                    android:checkableBehavior="none">
                     <item
                         android:id="@+id/nav_erase_tag"
                         android:title="@string/erase_tag_contents"/>
