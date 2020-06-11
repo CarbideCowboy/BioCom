@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:textAlignment="center"
-    tools:context=".pages.NdefScanTextPrompt">
+    tools:context=".pages.ScanTagPrompt">
 
     <include
         android:id="@+id/toolbar"
@@ -32,16 +32,29 @@
         app:srcCompat="@drawable/nfc_logo" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/scan_text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/scanPrompt_textBox"
-        android:textAlignment="center"
         android:fontFamily="@font/ibmplexmono_semibold"
+        android:textAlignment="center"
         android:textColor="@color/colorTextPrimary"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.26" />
+
+    <TextView
+        android:id="@+id/scan_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ibmplexmono_semibold"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scan_text1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

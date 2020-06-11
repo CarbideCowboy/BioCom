@@ -2,6 +2,7 @@ package com.hoker.biocom.pages;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -10,6 +11,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
@@ -17,6 +22,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -45,6 +51,7 @@ public class MainActivity extends AppCompatActivity
     IntentFilter[] intentFiltersArray;
     PendingIntent pendingIntent;
     NfcAdapter adapter;
+    String _stringPayload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -99,10 +106,10 @@ public class MainActivity extends AppCompatActivity
         intentFiltersArray = new IntentFilter[] {ndef, };
 
         //checks to see if the launch intent is NDEF_DISCOVERED
-        handleActionNdefDiscovered(this.getIntent());
+        handleActionDiscovered(this.getIntent());
     }
 
-    public void handleActionNdefDiscovered(Intent intent)
+    public void handleActionDiscovered(Intent intent)
     {
         if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
         {
@@ -118,7 +125,8 @@ public class MainActivity extends AppCompatActivity
                 //check for pgp message header
                 if(ndefStringMessage.substring(0,27).equals("-----BEGIN PGP MESSAGE-----"))
                 {
-                    pushToDecrypt(ndefStringMessage);
+                    _stringPayload = ndefStringMessage;
+                    attemptDecryption();
                 }
                 else
                 {
@@ -128,18 +136,62 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void attemptDecryption()
+    {
+        //set title, message and yes/no functionality for the dialog
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder
+                .setTitle("Encrypted payload detected")
+                .setMessage("Would you like to attempt decryption with OpenKeychain?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        //copy string ndef payload to system clipboard
+                        ClipboardManager clipboard = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clipData = ClipData.newPlainText("payload", _stringPayload);
+                        clipboard.setPrimaryClip(clipData);
+
+                        //create new intent to open OpenKeychain
+                        PackageManager manager = getBaseContext().getPackageManager();
+                        Intent decryptionIntent = manager.getLaunchIntentForPackage("org.sufficientlysecure.keychain");
+
+                        if(decryptionIntent != null)
+                        {
+                            decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(decryptionIntent);
+                        }
+                        else
+                        {
+                            decryptionIntent = new Intent(Intent.ACTION_VIEW);
+                            decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            decryptionIntent.setData(Uri.parse("https://f-droid.org/en/packages/org.sufficientlysecure.keychain/"));
+                            startActivity(decryptionIntent);
+                        }
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.cancel();
+                    }
+                });
+
+        //create alert dialog
+        AlertDialog alertDialog = dialogBuilder.create();
+
+        //display dialog
+        alertDialog.show();
+    }
+
     private void pushToNdefRead(String ndefStringMessage)
     {
         Intent ndefReadIntent = new Intent(this, NdefReadText.class);
         ndefReadIntent.putExtra("StringNDEF", ndefStringMessage);
         startActivity(ndefReadIntent);
-    }
-
-    private void pushToDecrypt(String ndefStringMessage)
-    {
-        Intent ndefDecryptIntent = new Intent(this, NdefDecrypt.class);
-        ndefDecryptIntent.putExtra("StringNDEF", ndefStringMessage);
-        startActivity(ndefDecryptIntent);
     }
 
     @Override
@@ -160,7 +212,7 @@ public class MainActivity extends AppCompatActivity
     public void onNewIntent(Intent intent)
     {
         super.onNewIntent(intent);
-        handleActionNdefDiscovered(intent);
+        handleActionDiscovered(intent);
     }
 
     private void setUpNavigationDrawer()
@@ -237,13 +289,14 @@ public class MainActivity extends AppCompatActivity
         switch(menuItem.getItemId())
         {
             case R.id.nav_ndef_read:
-                Intent ndefReadIntent = new Intent(this, NdefScanTextPrompt.class);
-                ndefReadIntent.putExtra("IsEdit", false);
+                Intent ndefReadIntent = new Intent(this, ScanTagPrompt.class);
+                ndefReadIntent.putExtra("ScanType", 0);
                 startActivity(ndefReadIntent);
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;
             case R.id.nav_ndef_decrypt:
-                Intent ndefDecryptIntent = new Intent(this, NdefDecrypt.class);
+                Intent ndefDecryptIntent = new Intent(this, ScanTagPrompt.class);
+                ndefDecryptIntent.putExtra("ScanType", 1);
                 startActivity(ndefDecryptIntent);
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;
@@ -253,7 +306,8 @@ public class MainActivity extends AppCompatActivity
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;
             case R.id.nav_erase_tag:
-                Intent tagEraseIntent = new Intent(this, EraseTag.class);
+                Intent tagEraseIntent = new Intent(this, ScanTagPrompt.class);
+                tagEraseIntent.putExtra("ScanType", 2);
                 startActivity(tagEraseIntent);
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;
