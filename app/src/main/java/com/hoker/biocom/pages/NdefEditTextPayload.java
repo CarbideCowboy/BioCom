@@ -18,15 +18,12 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hoker.biocom.R;
 import com.hoker.biocom.utilities.TagHandler;
 
@@ -46,7 +43,6 @@ public class NdefEditTextPayload extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_ndef_edit_text);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mEditText = findViewById(R.id.ndef_edit_text);
         mScrollView = findViewById(R.id.edit_text_scroll);

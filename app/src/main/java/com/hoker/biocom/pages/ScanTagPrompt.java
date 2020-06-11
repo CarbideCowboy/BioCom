@@ -18,7 +18,6 @@ import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -45,7 +44,6 @@ public class ScanTagPrompt extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_scan_prompt);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         _scanType = (int)getIntent().getExtras().get("ScanType");
         _stringPayload = getIntent().getStringExtra("StringNDEF");

@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main_activity);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mMainConstraintLayout = findViewById(R.id.main_constraint_layout);
 
