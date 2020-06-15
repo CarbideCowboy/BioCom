@@ -27,4 +27,6 @@
     <string name="tag_info">Tag Info:</string>
     <string name="get_tag_info">Tag Info</string>
     <string name="nfc_com">NFC Communication Symbol</string>
+    <string name="scan_nfc">Scan an NFC Tag</string>
+    <string name="uid">UID:</string>
 </resources>

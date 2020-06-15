@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
@@ -346,6 +345,20 @@ public class ScanTagPrompt extends AppCompatActivity
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TECH_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TAG_DISCOVERED))
             {
                 writeToTag(intent);
+            }
+        }
+
+        else if(_scanType == 4)
+        {
+            mTextView1.setText(R.string.scan_nfc);
+            mTextView2.setText("");
+
+            if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TECH_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TAG_DISCOVERED))
+            {
+                Intent tagInfoIntent = new Intent(this, TagInfo.class);
+                tagInfoIntent.putExtras(intent);
+                finish();
+                startActivity(tagInfoIntent);
             }
         }
     }
