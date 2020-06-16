@@ -29,4 +29,6 @@
     <string name="nfc_com">NFC Communication Symbol</string>
     <string name="scan_nfc">Scan an NFC Tag</string>
     <string name="uid">UID:</string>
+    <string name="tag_type">Tag Type:</string>
+    <string name="tag_tech">Tag Tech:</string>
 </resources>
