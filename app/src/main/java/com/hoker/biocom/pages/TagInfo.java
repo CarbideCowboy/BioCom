@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.IsoDep;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NfcA;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -22,10 +24,9 @@ import com.hoker.biocom.R;
 public class TagInfo extends AppCompatActivity
 {
     Tag _tag;
+    Intent _intent;
     Toolbar mToolbar;
     TextView mUIDTextView;
-    TextView mTypeISOTextView;
-    TextView mTypeNFCTextView;
     TextView mTechTextView;
 
     @Override
@@ -34,8 +35,8 @@ public class TagInfo extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_tag_info);
 
-        Intent intent = getIntent();
-        _tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        _intent = getIntent();
+        _tag = _intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
         mUIDTextView = findViewById(R.id.info_uid);
         mTechTextView = findViewById(R.id.info_tag_tech);
@@ -43,12 +44,17 @@ public class TagInfo extends AppCompatActivity
         setTitleBar();
         setStatusBarColor();
         getTagInfo();
+        getTagCapacity();
     }
 
     private void getTagInfo()
     {
         mUIDTextView.setText(bytesToHexString(_tag.getId()));
         mTechTextView.setText(getNFCType(_tag.getTechList()));
+    }
+
+    private void getTagCapacity()
+    {
     }
 
     private String getNFCType(String[] techList)
@@ -64,6 +70,7 @@ public class TagInfo extends AppCompatActivity
                     case MifareClassic.TYPE_CLASSIC:
                         //Type classic
                         buffer = buffer + "Mifare Classic" + "\n";
+                        _techType = MifareClassic;
                         break;
                     case MifareClassic.TYPE_PLUS:
                         //Type plus
@@ -93,6 +100,10 @@ public class TagInfo extends AppCompatActivity
             else if(techList[i].equals(Ndef.class.getName()))
             {
                 buffer = buffer + "NDEF Formattable" + "\n";
+            }
+            else if(techList[i].equals(IsoDep.class.getName()))
+            {
+                buffer = buffer + "IsoDep" + "\n";
             }
         }
         if(buffer.length() > 0)

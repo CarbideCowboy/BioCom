@@ -31,4 +31,5 @@
     <string name="uid">UID:</string>
     <string name="tag_type">Tag Type:</string>
     <string name="tag_tech">Tag Tech:</string>
+    <string name="tag_capacity">Tag Capacity:</string>
 </resources>
