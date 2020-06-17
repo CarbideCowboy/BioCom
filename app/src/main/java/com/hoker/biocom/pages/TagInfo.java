@@ -11,9 +11,8 @@ import android.nfc.tech.IsoDep;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.nfc.tech.Ndef;
-import android.nfc.tech.NfcA;
+import android.nfc.tech.NdefFormatable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,6 +27,10 @@ public class TagInfo extends AppCompatActivity
     Toolbar mToolbar;
     TextView mUIDTextView;
     TextView mTechTextView;
+    TextView mManufacturerTextView;
+    TextView mModelTextView;
+    TextView mIsWriteTextView;
+    TextView mCanReadOnlyTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,28 +41,57 @@ public class TagInfo extends AppCompatActivity
         _intent = getIntent();
         _tag = _intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-        mUIDTextView = findViewById(R.id.info_uid);
-        mTechTextView = findViewById(R.id.info_tag_tech);
-
+        findViewsById();
         setTitleBar();
         setStatusBarColor();
         getTagInfo();
-        getTagCapacity();
+    }
+
+    private void findViewsById()
+    {
+        mUIDTextView = findViewById(R.id.info_uid);
+        mTechTextView = findViewById(R.id.info_tag_tech);
+        mManufacturerTextView = findViewById(R.id.info_manufacturer);
+        mModelTextView = findViewById(R.id.info_tag_model);
+        mIsWriteTextView = findViewById(R.id.info_tag_is_write);
+        mCanReadOnlyTextView = findViewById(R.id.info_tag_can_be_read_only);
     }
 
     private void getTagInfo()
     {
-        mUIDTextView.setText(bytesToHexString(_tag.getId()));
-        mTechTextView.setText(getNFCType(_tag.getTechList()));
+        String[] tagInfo = fingerprintTag(_tag.getTechList());
+        mUIDTextView.setText(tagInfo[0]);
+        mManufacturerTextView.setText(tagInfo[1]);
+        mTechTextView.setText(tagInfo[2]);
+        mModelTextView.setText(tagInfo[3]);
+        mIsWriteTextView.setText(tagInfo[4]);
+        mCanReadOnlyTextView.setText(tagInfo[5]);
     }
 
-    private void getTagCapacity()
+    private String[] fingerprintTag(String[] techList)
     {
-    }
+        String[] info = new String[7];
+        /*
+         * Info index breakdown:
+         * 0: UID
+         * 1: Tag Manufacturer
+         * 2: Tag Type
+         * 3: Tag Model
+         * 4: Is Writeable
+         * 5: Can be Made Read Only
+         */
+        info[2] = "Unknown Tag Type";
+        info[3] = "Unknown Tag Model";
+        info[4] = "Tag is read only";
 
-    private String getNFCType(String[] techList)
-    {
-        String buffer = "";
+        //get manufacturer
+        byte[] UIDBytes = _tag.getId();
+        byte manufacturerByte = UIDBytes[0];
+        info[1] = getManufacturerFromByte(manufacturerByte);
+
+        //get UID
+        info[0] = bytesToHexString(UIDBytes);
+
         for(int i=0; i<techList.length; i++)
         {
             if(techList[i].equals(MifareClassic.class.getName()))
@@ -69,16 +101,15 @@ public class TagInfo extends AppCompatActivity
                 {
                     case MifareClassic.TYPE_CLASSIC:
                         //Type classic
-                        buffer = buffer + "Mifare Classic" + "\n";
-                        _techType = MifareClassic;
+                        info[2] = "Mifare Classic";
                         break;
                     case MifareClassic.TYPE_PLUS:
                         //Type plus
-                        buffer = buffer + "Mifare Classic Plus" + "\n";
+                        info[2] = "Mifare Classic Plus";
                         break;
                     case MifareClassic.TYPE_PRO:
                         //Type pro
-                        buffer = buffer + "Mifare Classic Pro" + "\n";
+                        info[2] = "Mifare Classic Pro";
                         break;
                 }
             }
@@ -89,29 +120,52 @@ public class TagInfo extends AppCompatActivity
                 {
                     case MifareUltralight.TYPE_ULTRALIGHT:
                         //Type ultralight
-                        buffer = buffer + "Mifare Ultralight" + "\n";
+                        info[2] = "Mifare Ultralight";
                         break;
                     case MifareUltralight.TYPE_ULTRALIGHT_C:
                         //Type ultralight c
-                        buffer = buffer + "Mifare Ultralight C" + "\n";
+                        info[2] = "Mifare Ultralight C";
                         break;
                 }
             }
             else if(techList[i].equals(Ndef.class.getName()))
             {
-                buffer = buffer + "NDEF Formattable" + "\n";
+                Ndef ndefTag = Ndef.get(_tag);
+                if(ndefTag.isWritable())
+                {
+                    info[4] = "True";
+                }
+                else
+                {
+                    info[4] = "False";
+                }
+                if(ndefTag.canMakeReadOnly())
+                {
+                    info[5] = "True";
+                }
+                else
+                {
+                    info[5] = "False";
+                }
             }
             else if(techList[i].equals(IsoDep.class.getName()))
             {
-                buffer = buffer + "IsoDep" + "\n";
+                info[2] = "IsoDep";
             }
         }
-        if(buffer.length() > 0)
+        return info;
+    }
+
+    private String getManufacturerFromByte(byte manufacturerByte)
+    {
+        if(manufacturerByte == (byte)0x04)
         {
-            buffer = buffer.substring(0, buffer.length() - 1);
-            return buffer;
+            return "NXP Semiconductors";
         }
-        return buffer;
+        else
+        {
+            return "Unknown Tag Manufacturer";
+        }
     }
 
     private String bytesToHexString(byte[] src)

@@ -32,13 +32,43 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/white_rounded_background"
                     android:fontFamily="@font/ibmplexmono_semibold"
                     android:text="@string/uid"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="22sp" />
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/info_uid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/ibmplexmono_semibold"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16sp"
+                android:layout_marginTop="16sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/info_manufacturer_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/white_rounded_background"
+                    android:fontFamily="@font/ibmplexmono_semibold"
+                    android:text="@string/ic_manufacturer"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/info_manufacturer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -60,10 +90,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/white_rounded_background"
                     android:fontFamily="@font/ibmplexmono_semibold"
                     android:text="@string/tag_tech"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="22sp" />
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/info_tag_tech"
@@ -83,17 +114,74 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/info_tag_size_title"
+                    android:id="@+id/info_tag_model_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/white_rounded_background"
                     android:fontFamily="@font/ibmplexmono_semibold"
-                    android:text="@string/tag_capacity"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="22sp" />
+                    android:text="@string/tag_model"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/info_tag_size"
+                    android:id="@+id/info_tag_model"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/ibmplexmono_semibold"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16sp"
+                android:layout_marginTop="16sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/info_tag_is_write_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/white_rounded_background"
+                    android:fontFamily="@font/ibmplexmono_semibold"
+                    android:text="@string/tag_model"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/info_tag_is_write"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/ibmplexmono_semibold"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16sp"
+                android:layout_marginTop="16sp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/info_tag_can_be_read_only_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/white_rounded_background"
+                    android:fontFamily="@font/ibmplexmono_semibold"
+                    android:text="@string/can_be_read_only"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/info_tag_can_be_read_only"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
