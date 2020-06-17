@@ -148,7 +148,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/white_rounded_background"
                     android:fontFamily="@font/ibmplexmono_semibold"
-                    android:text="@string/tag_model"
+                    android:text="@string/is_writeable"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp" />
 
