@@ -28,7 +28,6 @@ public class TagInfo extends AppCompatActivity
     TextView mUIDTextView;
     TextView mTechTextView;
     TextView mManufacturerTextView;
-    TextView mModelTextView;
     TextView mIsWriteTextView;
     TextView mCanReadOnlyTextView;
 
@@ -52,7 +51,6 @@ public class TagInfo extends AppCompatActivity
         mUIDTextView = findViewById(R.id.info_uid);
         mTechTextView = findViewById(R.id.info_tag_tech);
         mManufacturerTextView = findViewById(R.id.info_manufacturer);
-        mModelTextView = findViewById(R.id.info_tag_model);
         mIsWriteTextView = findViewById(R.id.info_tag_is_write);
         mCanReadOnlyTextView = findViewById(R.id.info_tag_can_be_read_only);
     }
@@ -63,26 +61,23 @@ public class TagInfo extends AppCompatActivity
         mUIDTextView.setText(tagInfo[0]);
         mManufacturerTextView.setText(tagInfo[1]);
         mTechTextView.setText(tagInfo[2]);
-        mModelTextView.setText(tagInfo[3]);
-        mIsWriteTextView.setText(tagInfo[4]);
-        mCanReadOnlyTextView.setText(tagInfo[5]);
+        mIsWriteTextView.setText(tagInfo[3]);
+        mCanReadOnlyTextView.setText(tagInfo[4]);
     }
 
     private String[] fingerprintTag(String[] techList)
     {
-        String[] info = new String[7];
+        String[] info = new String[5];
         /*
          * Info index breakdown:
          * 0: UID
          * 1: Tag Manufacturer
          * 2: Tag Type
-         * 3: Tag Model
-         * 4: Is Writeable
-         * 5: Can be Made Read Only
+         * 3: Is Writeable
+         * 4: Can be Made Read Only
          */
         info[2] = "Unknown Tag Type";
-        info[3] = "Unknown Tag Model";
-        info[4] = "Tag is read only";
+        info[3] = "Tag is read only";
 
         //get manufacturer
         byte[] UIDBytes = _tag.getId();
@@ -102,14 +97,17 @@ public class TagInfo extends AppCompatActivity
                     case MifareClassic.TYPE_CLASSIC:
                         //Type classic
                         info[2] = "Mifare Classic";
+                        info[1] = "NXP Semiconductors";
                         break;
                     case MifareClassic.TYPE_PLUS:
                         //Type plus
                         info[2] = "Mifare Classic Plus";
+                        info[1] = "NXP Semiconductors";
                         break;
                     case MifareClassic.TYPE_PRO:
                         //Type pro
                         info[2] = "Mifare Classic Pro";
+                        info[1] = "NXP Semiconductors";
                         break;
                 }
             }
@@ -121,10 +119,12 @@ public class TagInfo extends AppCompatActivity
                     case MifareUltralight.TYPE_ULTRALIGHT:
                         //Type ultralight
                         info[2] = "Mifare Ultralight";
+                        info[1] = "NXP Semiconductors";
                         break;
                     case MifareUltralight.TYPE_ULTRALIGHT_C:
                         //Type ultralight c
                         info[2] = "Mifare Ultralight C";
+                        info[1] = "NXP Semiconductors";
                         break;
                 }
             }
@@ -133,19 +133,19 @@ public class TagInfo extends AppCompatActivity
                 Ndef ndefTag = Ndef.get(_tag);
                 if(ndefTag.isWritable())
                 {
+                    info[3] = "True";
+                }
+                else
+                {
+                    info[3] = "False";
+                }
+                if(ndefTag.canMakeReadOnly())
+                {
                     info[4] = "True";
                 }
                 else
                 {
                     info[4] = "False";
-                }
-                if(ndefTag.canMakeReadOnly())
-                {
-                    info[5] = "True";
-                }
-                else
-                {
-                    info[5] = "False";
                 }
             }
             else if(techList[i].equals(IsoDep.class.getName()))
