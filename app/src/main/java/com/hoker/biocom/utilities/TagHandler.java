@@ -1,9 +1,6 @@
 package com.hoker.biocom.utilities;
 
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -13,11 +10,9 @@ import android.nfc.TagLostException;
 import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Parcelable;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 public class TagHandler

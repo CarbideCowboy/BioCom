@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main_activity);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mMainConstraintLayout = findViewById(R.id.main_constraint_layout);
 
@@ -309,6 +308,12 @@ public class MainActivity extends AppCompatActivity
                 Intent tagEraseIntent = new Intent(this, ScanTagPrompt.class);
                 tagEraseIntent.putExtra("ScanType", 2);
                 startActivity(tagEraseIntent);
+                mDrawer.closeDrawer(GravityCompat.START);
+                break;
+            case R.id.nav_tag_info:
+                Intent tagInfoIntent = new Intent(this, ScanTagPrompt.class);
+                tagInfoIntent.putExtra("ScanType", 4);
+                startActivity(tagInfoIntent);
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;
         }

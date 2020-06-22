@@ -27,4 +27,12 @@
     <string name="tag_info">Tag Info:</string>
     <string name="get_tag_info">Tag Info</string>
     <string name="nfc_com">NFC Communication Symbol</string>
+    <string name="scan_nfc">Scan an NFC Tag</string>
+    <string name="uid">UID:</string>
+    <string name="tag_type">Tag Type:</string>
+    <string name="tag_tech">Tag Tech:</string>
+    <string name="tag_model">Tag Model:</string>
+    <string name="ic_manufacturer">IC Manufacturer:</string>
+    <string name="is_writeable">Is Writeable:</string>
+    <string name="can_be_read_only">Can be made Read-Only:</string>
 </resources>

@@ -3,26 +3,24 @@ package com.hoker.biocom.pages;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.webkit.URLUtil;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class NdefReadText extends AppCompatActivity
 {
@@ -36,7 +34,6 @@ public class NdefReadText extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_ndef_read);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         //set up views
         mReadTextbox = findViewById(R.id.read_textbox);
@@ -56,8 +53,36 @@ public class NdefReadText extends AppCompatActivity
         {
             _stringPayload = bundle.getString("StringNDEF");
             mReadTextbox.setText(_stringPayload);
+            if(URLUtil.isValidUrl(_stringPayload))
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Would you like to open encoded URL externally?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        Intent openURL = new Intent(Intent.ACTION_VIEW);
+                        openURL.setData(Uri.parse(_stringPayload));
+                        startActivity(openURL);
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
         }
     }
+
+
 
     private void setUpToolbarButton()
     {
