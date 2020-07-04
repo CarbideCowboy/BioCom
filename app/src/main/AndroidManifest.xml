@@ -20,6 +20,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".pages.TagScanner"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
@@ -28,12 +32,6 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".pages.NdefReadText"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".pages.ScanTagPrompt"
-            android:screenOrientation="portrait" />
     </application>
 
     <uses-permission android:name="android.permission.NFC" />

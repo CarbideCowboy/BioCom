@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -28,6 +27,7 @@ import com.hoker.biocom.R;
 import com.hoker.biocom.utilities.TagHandler;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class NdefEditTextPayload extends AppCompatActivity
 {
@@ -98,6 +98,7 @@ public class NdefEditTextPayload extends AppCompatActivity
     {
         mEditText.requestFocus();
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert inputMethodManager != null;
         inputMethodManager.showSoftInput(mEditText, InputMethodManager.SHOW_IMPLICIT);
         int position = mEditText.length();
         Editable editable = mEditText.getText();
@@ -119,7 +120,7 @@ public class NdefEditTextPayload extends AppCompatActivity
     {
         if(!mEditText.getText().toString().isEmpty())
         {
-            Intent intent = new Intent(this, ScanTagPrompt.class);
+            Intent intent = new Intent(this, TagScanner.class);
             intent.putExtra("ScanType", 3);
             intent.putExtra("StringNDEF", mEditText.getText().toString());
             startActivity(intent);
@@ -153,7 +154,7 @@ public class NdefEditTextPayload extends AppCompatActivity
     {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 

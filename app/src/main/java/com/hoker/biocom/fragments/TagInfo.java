@@ -9,7 +9,7 @@ import android.nfc.tech.MifareUltralight;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
 
-import androidx.appcompat.widget.Toolbar;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -18,20 +18,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
-import com.hoker.biocom.pages.ScanTagPrompt;
 
 import java.util.Objects;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TagInfo#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TagInfo extends Fragment
 {
     Tag _tag;
     Intent _intent;
-    Toolbar mToolbar;
     TextView mUIDTextView;
     TextView mTechTextView;
     TextView mManufacturerTextView;
@@ -43,7 +36,9 @@ public class TagInfo extends Fragment
     {
         super.onCreate(savedInstanceState);
 
+        assert getArguments() != null;
         _intent = getArguments().getParcelable("Intent");
+        assert _intent != null;
         _tag = _intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
     }
 
@@ -54,7 +49,7 @@ public class TagInfo extends Fragment
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
         findViewsById();
         getTagInfo();
@@ -101,12 +96,12 @@ public class TagInfo extends Fragment
         //get UID
         info[0] = bytesToHexString(UIDBytes);
 
-        for(int i=0; i<techList.length; i++)
+        for (String s : techList)
         {
-            if(techList[i].equals(MifareClassic.class.getName()))
+            if (s.equals(MifareClassic.class.getName()))
             {
                 MifareClassic mifareClassicTag = MifareClassic.get(_tag);
-                switch(mifareClassicTag.getType())
+                switch (mifareClassicTag.getType())
                 {
                     case MifareClassic.TYPE_CLASSIC:
                         //Type classic
@@ -125,10 +120,10 @@ public class TagInfo extends Fragment
                         break;
                 }
             }
-            else if(techList[i].equals(MifareUltralight.class.getName()))
+            else if (s.equals(MifareUltralight.class.getName()))
             {
                 MifareUltralight mifareUltralightTag = MifareUltralight.get(_tag);
-                switch(mifareUltralightTag.getType())
+                switch (mifareUltralightTag.getType())
                 {
                     case MifareUltralight.TYPE_ULTRALIGHT:
                         //Type ultralight
@@ -142,27 +137,25 @@ public class TagInfo extends Fragment
                         break;
                 }
             }
-            else if(techList[i].equals(Ndef.class.getName()))
+            else if (s.equals(Ndef.class.getName()))
             {
                 Ndef ndefTag = Ndef.get(_tag);
-                if(ndefTag.isWritable())
+                if (ndefTag.isWritable())
                 {
                     info[3] = "True";
-                }
-                else
+                } else
                 {
                     info[3] = "False";
                 }
-                if(ndefTag.canMakeReadOnly())
+                if (ndefTag.canMakeReadOnly())
                 {
                     info[4] = "True";
-                }
-                else
+                } else
                 {
                     info[4] = "False";
                 }
             }
-            else if(techList[i].equals(IsoDep.class.getName()))
+            else if (s.equals(IsoDep.class.getName()))
             {
                 info[2] = "IsoDep";
             }
@@ -190,10 +183,10 @@ public class TagInfo extends Fragment
             return null;
         }
         char[] buffer = new char[2];
-        for(int i=0; i<src.length; i++)
+        for (byte b : src)
         {
-            buffer[0] = Character.forDigit((src[i] >>> 4) & 0x0F, 16);
-            buffer[1] = Character.forDigit(src[i] & 0x0F, 16);
+            buffer[0] = Character.forDigit((b >>> 4) & 0x0F, 16);
+            buffer[1] = Character.forDigit(b & 0x0F, 16);
             stringBuilder.append(buffer);
         }
         return stringBuilder.toString();

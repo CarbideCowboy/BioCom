@@ -26,12 +26,14 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
+import com.hoker.biocom.fragments.NdefReadText;
 import com.hoker.biocom.fragments.TagInfo;
+import com.hoker.biocom.fragments.WriteToolbar;
 import com.hoker.biocom.utilities.TagHandler;
 
 import java.util.Objects;
 
-public class ScanTagPrompt extends AppCompatActivity
+public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditButton
 {
     IntentFilter[] intentFiltersArray;
     PendingIntent pendingIntent;
@@ -46,24 +48,36 @@ public class ScanTagPrompt extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_scan_prompt);
+        setContentView(R.layout.activity_scan_prompt);
 
-        _scanType = (int)getIntent().getExtras().get("ScanType");
         _stringPayload = getIntent().getStringExtra("StringNDEF");
 
         mTextView1 = findViewById(R.id.scan_text1);
         mTextView2 = findViewById(R.id.scan_text2);
 
+        getScanType();
         setStatusBarColor();
         setTitleBar();
         nfcPrimer();
+    }
+
+    private void getScanType()
+    {
+        try
+        {
+            _scanType = (int)Objects.requireNonNull(getIntent().getExtras()).get("ScanType");
+        }
+        catch(NullPointerException e)
+        {
+            _scanType = -1;
+        }
     }
 
     private void setTitleBar()
     {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
@@ -74,9 +88,17 @@ public class ScanTagPrompt extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void buttonClicked()
+    {
+        Intent intent = new Intent(this, NdefEditTextPayload.class);
+        intent.putExtra("StringNDEF", _stringPayload);
+        startActivity(intent);
+        finish();
+    }
+
     public void nfcPrimer()
     {
-
         //setup the physical nfc interface
         adapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -240,6 +262,7 @@ public class ScanTagPrompt extends AppCompatActivity
                         //copy string ndef payload to system clipboard
                         ClipboardManager clipboard = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clipData = ClipData.newPlainText("payload", _stringPayload);
+                        assert clipboard != null;
                         clipboard.setPrimaryClip(clipData);
 
                         //create new intent to open OpenKeychain
@@ -249,15 +272,14 @@ public class ScanTagPrompt extends AppCompatActivity
                         if(decryptionIntent != null)
                         {
                             decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(decryptionIntent);
                         }
                         else
                         {
                             decryptionIntent = new Intent(Intent.ACTION_VIEW);
                             decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             decryptionIntent.setData(Uri.parse("https://f-droid.org/en/packages/org.sufficientlysecure.keychain/"));
-                            startActivity(decryptionIntent);
                         }
+                        startActivity(decryptionIntent);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener()
@@ -283,22 +305,52 @@ public class ScanTagPrompt extends AppCompatActivity
         startActivity(intent);
     }
 
+    private void readTextRecord(Intent intent)
+    {
+        if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
+        {
+            Bundle bundle = new Bundle();
+            String payload = TagHandler.parseStringNdefPayload(intent);
+            bundle.putString("StringNDEF", payload);
+
+            NdefReadText readText = new NdefReadText();
+            readText.setArguments(bundle);
+
+            WriteToolbar writeToolbar = new WriteToolbar();
+            writeToolbar.setInterface(this);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.scan_prompt_frame, readText);
+            fragmentTransaction.replace(R.id.toolbar_frame, writeToolbar);
+            fragmentTransaction.commit();
+        }
+    }
+
     public void handleActionDiscovered(Intent intent)
     {
+        if(_scanType == -1)
+        {
+            if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
+            {
+                readTextRecord(intent);
+                String ndefStringMessage = TagHandler.parseStringNdefPayload(intent);
+                if (ndefStringMessage.length() > 27)
+                {
+                    if (ndefStringMessage.substring(0, 27).equals("-----BEGIN PGP MESSAGE-----"))
+                    {
+                        attemptDecryption();
+                    }
+                }
+            }
+        }
         //NDEF Read Operation
         if(_scanType == 0)
         {
             mTextView1.setText(R.string.scan_text_ndef_read);
             mTextView2.setText("");
 
-            if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
-            {
-                String ndefStringMessage = TagHandler.parseStringNdefPayload(intent);
-                Intent ndefReadIntent = new Intent(this, NdefReadText.class);
-                ndefReadIntent.putExtra("StringNDEF", ndefStringMessage);
-                finish();
-                startActivity(ndefReadIntent);
-            }
+            readTextRecord(intent);
         }
 
         //NDEF Decrypt Operation
@@ -309,6 +361,7 @@ public class ScanTagPrompt extends AppCompatActivity
 
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
             {
+                readTextRecord(intent);
                 String ndefStringMessage = TagHandler.parseStringNdefPayload(intent);
                 if(ndefStringMessage.length() > 27)
                 {
@@ -370,12 +423,6 @@ public class ScanTagPrompt extends AppCompatActivity
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.scan_prompt_frame, tagInfo);
                 fragmentTransaction.commit();
-                /*
-                Intent tagInfoIntent = new Intent(this, TagInfo.class);
-                tagInfoIntent.putExtras(intent);
-                finish();
-                startActivity(tagInfoIntent);
-                */
             }
         }
     }

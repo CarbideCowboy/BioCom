@@ -9,12 +9,14 @@ android:fitsSystemWindows="true"
 android:minHeight="?attr/actionBarSize"
 app:theme="@style/ToolBarStyle"
 android:background="?attr/colorPrimary">
+
     <ImageButton
         android:id="@+id/toolbar_write_button"
-        android:background="@color/colorPrimary"
-        android:layout_gravity="end"
-        android:layout_marginEnd="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_write"/>
+        android:layout_gravity="end"
+        android:layout_marginEnd="15dp"
+        android:background="@color/colorPrimary"
+        android:contentDescription="@string/edit_icon"
+        android:src="@drawable/ic_write" />
 </androidx.appcompat.widget.Toolbar>
