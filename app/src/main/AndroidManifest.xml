@@ -9,7 +9,6 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".pages.TagInfo"></activity>
         <activity
             android:name=".pages.NdefEditTextPayload"
             android:screenOrientation="portrait" />

@@ -1,26 +1,33 @@
-package com.hoker.biocom.pages;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+package com.hoker.biocom.fragments;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.nfc.tech.Ndef;
-import android.nfc.tech.NdefFormatable;
 import android.os.Bundle;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
+import com.hoker.biocom.pages.ScanTagPrompt;
 
-public class TagInfo extends AppCompatActivity
+import java.util.Objects;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link TagInfo#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class TagInfo extends Fragment
 {
     Tag _tag;
     Intent _intent;
@@ -32,27 +39,34 @@ public class TagInfo extends AppCompatActivity
     TextView mCanReadOnlyTextView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_tag_info);
 
-        _intent = getIntent();
+        _intent = getArguments().getParcelable("Intent");
         _tag = _intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        return inflater.inflate(R.layout.fragment_tag_info, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
         findViewsById();
-        setTitleBar();
-        setStatusBarColor();
         getTagInfo();
     }
 
     private void findViewsById()
     {
-        mUIDTextView = findViewById(R.id.info_uid);
-        mTechTextView = findViewById(R.id.info_tag_tech);
-        mManufacturerTextView = findViewById(R.id.info_manufacturer);
-        mIsWriteTextView = findViewById(R.id.info_tag_is_write);
-        mCanReadOnlyTextView = findViewById(R.id.info_tag_can_be_read_only);
+        mUIDTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_uid);
+        mTechTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_tech);
+        mManufacturerTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_manufacturer);
+        mIsWriteTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_is_write);
+        mCanReadOnlyTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_can_be_read_only);
     }
 
     private void getTagInfo()
@@ -183,29 +197,5 @@ public class TagInfo extends AppCompatActivity
             stringBuilder.append(buffer);
         }
         return stringBuilder.toString();
-    }
-
-    private void setTitleBar()
-    {
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-    }
-
-    public void setStatusBarColor()
-    {
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(Color.parseColor("#FFFFFF"));
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp()
-    {
-        onBackPressed();
-        return true;
     }
 }

@@ -3,6 +3,9 @@ package com.hoker.biocom.pages;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.PendingIntent;
 import android.content.ClipData;
@@ -23,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
+import com.hoker.biocom.fragments.TagInfo;
 import com.hoker.biocom.utilities.TagHandler;
 
 import java.util.Objects;
@@ -348,6 +352,7 @@ public class ScanTagPrompt extends AppCompatActivity
             }
         }
 
+        //Tag Info Operation
         else if(_scanType == 4)
         {
             mTextView1.setText(R.string.scan_nfc);
@@ -355,10 +360,22 @@ public class ScanTagPrompt extends AppCompatActivity
 
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TECH_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TAG_DISCOVERED))
             {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("Intent", intent);
+
+                Fragment tagInfo = new TagInfo();
+                tagInfo.setArguments(bundle);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.scan_prompt_frame, tagInfo);
+                fragmentTransaction.commit();
+                /*
                 Intent tagInfoIntent = new Intent(this, TagInfo.class);
                 tagInfoIntent.putExtras(intent);
                 finish();
                 startActivity(tagInfoIntent);
+                */
             }
         }
     }
