@@ -50,8 +50,6 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_prompt);
 
-        _stringPayload = getIntent().getStringExtra("StringNDEF");
-
         mTextView1 = findViewById(R.id.scan_text1);
         mTextView2 = findViewById(R.id.scan_text2);
 
@@ -310,8 +308,8 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
         {
             Bundle bundle = new Bundle();
-            String payload = TagHandler.parseStringNdefPayload(intent);
-            bundle.putString("StringNDEF", payload);
+            _stringPayload = TagHandler.parseStringNdefPayload(intent);
+            bundle.putString("StringNDEF", _stringPayload);
 
             NdefReadText readText = new NdefReadText();
             readText.setArguments(bundle);
@@ -329,6 +327,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
 
     public void handleActionDiscovered(Intent intent)
     {
+        //if the foreground dispatch system intercept an NFC intent
         if(_scanType == -1)
         {
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
@@ -362,10 +361,9 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
             {
                 readTextRecord(intent);
-                String ndefStringMessage = TagHandler.parseStringNdefPayload(intent);
-                if(ndefStringMessage.length() > 27)
+                if(_stringPayload.length() > 27)
                 {
-                    if(ndefStringMessage.substring(0,27).equals("-----BEGIN PGP MESSAGE-----"))
+                    if(_stringPayload.substring(0,27).equals("-----BEGIN PGP MESSAGE-----"))
                     {
                         attemptDecryption();
                     }
@@ -398,6 +396,8 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         {
             mTextView1.setText(R.string.scan_text_writable);
             mTextView2.setText(R.string.scan_text_write_warning);
+
+            _stringPayload = getIntent().getStringExtra("StringNDEF");
 
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TECH_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TAG_DISCOVERED))
             {
