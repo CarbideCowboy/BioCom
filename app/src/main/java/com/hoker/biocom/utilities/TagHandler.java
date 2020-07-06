@@ -12,7 +12,7 @@ import android.os.AsyncTask;
 import android.os.Parcelable;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 public class TagHandler
@@ -28,7 +28,7 @@ public class TagHandler
                 NdefRecord ndefRecord = ndefMessage.getRecords()[0];
                 byte[] payload = ndefRecord.getPayload();
                 String textEncoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTF-16";
-                int languageCodelength = payload[0] & 0063;
+                int languageCodelength = payload[0] & 51;
                 try
                 {
                     return new String(payload, languageCodelength + 1, payload.length - languageCodelength - 1, textEncoding);
@@ -44,34 +44,19 @@ public class TagHandler
 
     public static boolean writeNdefText(String text, Tag tag)
     {
-        try
-        {
-            NdefRecord[] records = { createTextRecord(text) };
-            NdefMessage message = new NdefMessage(records);
-            Ndef ndef = Ndef.get(tag);
-            String result = new AsyncConnectWrite().doInBackground(message, ndef);
-            if(result.equals("Message written"))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        catch(UnsupportedEncodingException e)
-        {
-            e.printStackTrace();
-            return false;
-        }
+        NdefRecord[] records = { createTextRecord(text) };
+        NdefMessage message = new NdefMessage(records);
+        Ndef ndef = Ndef.get(tag);
+        String result = new AsyncConnectWrite().doInBackground(message, ndef);
+        return result.equals("Message written");
     }
 
-    public static NdefRecord createTextRecord(String text) throws UnsupportedEncodingException
+    public static NdefRecord createTextRecord(String text)
     {
         byte[] textBytes = text.getBytes();
         int textLength = textBytes.length;
         String lang = "en";
-        byte[] langBytes = lang.getBytes("US-ASCII");
+        byte[] langBytes = lang.getBytes(StandardCharsets.US_ASCII);
         int langLength = langBytes.length;
         byte[] payload = new byte[1 + textLength + langLength];
         payload[0] = (byte)langLength;
@@ -80,10 +65,10 @@ public class TagHandler
         return new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload);
     }
 
-    private static NdefRecord createRandomByteRecord(int maxTagCapacity) throws UnsupportedEncodingException
+    private static NdefRecord createRandomByteRecord(int maxTagCapacity)
     {
         String lang = "en";
-        byte[] langBytes = lang.getBytes("US-ASCII");
+        byte[] langBytes = lang.getBytes(StandardCharsets.US_ASCII);
         byte[] randomByteArray = new byte[maxTagCapacity];
         Random random = new Random();
         random.nextBytes(randomByteArray);
@@ -96,28 +81,20 @@ public class TagHandler
 
     public static boolean eraseNfcTag(Tag tag)
     {
-        try
+        Ndef ndef = Ndef.get(tag);
+        if(ndef != null)
         {
-            Ndef ndef = Ndef.get(tag);
-            if(ndef != null)
+            NdefRecord[] randomByteRecord = { createRandomByteRecord(ndef.getMaxSize()-10) };
+            NdefMessage message = new NdefMessage(randomByteRecord);
+            String result = new AsyncConnectWrite().doInBackground(message, ndef);
+            if(result.equals("Message written"))
             {
-                NdefRecord[] randomByteRecord = { createRandomByteRecord(ndef.getMaxSize()-10) };
-                NdefMessage message = new NdefMessage(randomByteRecord);
-                String result = new AsyncConnectWrite().doInBackground(message, ndef);
-                if(result.equals("Message written"))
-                {
-                    return writeNdefText("", tag);
-                }
-                else
-                {
-                    return false;
-                }
+                return writeNdefText("", tag);
             }
-        }
-        catch(UnsupportedEncodingException e)
-        {
-            e.printStackTrace();
-            return false;
+            else
+            {
+                return false;
+            }
         }
         return false;
     }
@@ -147,11 +124,8 @@ class AsyncConnectWrite extends AsyncTask<Object, Void, String>
             result = "FormatException while writing";
             try
             {
-                if(ndef != null)
-                {
-                    ndef.close();
-                    return result;
-                }
+                ndef.close();
+                return result;
             }
             catch(IOException ex)
             {
@@ -164,11 +138,8 @@ class AsyncConnectWrite extends AsyncTask<Object, Void, String>
             result = "TagLostException while writing";
             try
             {
-                if(ndef != null)
-                {
-                    ndef.close();
-                    return result;
-                }
+                ndef.close();
+                return result;
             }
             catch(IOException ex)
             {
@@ -181,11 +152,8 @@ class AsyncConnectWrite extends AsyncTask<Object, Void, String>
             result = "IOException while writing";
             try
             {
-                if(ndef != null)
-                {
-                    ndef.close();
-                    return result;
-                }
+                ndef.close();
+                return result;
             }
             catch(IOException ex)
             {

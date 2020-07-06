@@ -1,30 +1,30 @@
-package com.hoker.biocom.pages;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+package com.hoker.biocom.fragments;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.nfc.tech.Ndef;
-import android.nfc.tech.NdefFormatable;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
 
-public class TagInfo extends AppCompatActivity
+import java.util.Objects;
+
+public class TagInfo extends Fragment
 {
     Tag _tag;
     Intent _intent;
-    Toolbar mToolbar;
     TextView mUIDTextView;
     TextView mTechTextView;
     TextView mManufacturerTextView;
@@ -32,27 +32,36 @@ public class TagInfo extends AppCompatActivity
     TextView mCanReadOnlyTextView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_tag_info);
 
-        _intent = getIntent();
+        assert getArguments() != null;
+        _intent = getArguments().getParcelable("Intent");
+        assert _intent != null;
         _tag = _intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        return inflater.inflate(R.layout.fragment_tag_info, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
+    {
         findViewsById();
-        setTitleBar();
-        setStatusBarColor();
         getTagInfo();
     }
 
     private void findViewsById()
     {
-        mUIDTextView = findViewById(R.id.info_uid);
-        mTechTextView = findViewById(R.id.info_tag_tech);
-        mManufacturerTextView = findViewById(R.id.info_manufacturer);
-        mIsWriteTextView = findViewById(R.id.info_tag_is_write);
-        mCanReadOnlyTextView = findViewById(R.id.info_tag_can_be_read_only);
+        mUIDTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_uid);
+        mTechTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_tech);
+        mManufacturerTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_manufacturer);
+        mIsWriteTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_is_write);
+        mCanReadOnlyTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_can_be_read_only);
     }
 
     private void getTagInfo()
@@ -87,12 +96,12 @@ public class TagInfo extends AppCompatActivity
         //get UID
         info[0] = bytesToHexString(UIDBytes);
 
-        for(int i=0; i<techList.length; i++)
+        for (String s : techList)
         {
-            if(techList[i].equals(MifareClassic.class.getName()))
+            if (s.equals(MifareClassic.class.getName()))
             {
                 MifareClassic mifareClassicTag = MifareClassic.get(_tag);
-                switch(mifareClassicTag.getType())
+                switch (mifareClassicTag.getType())
                 {
                     case MifareClassic.TYPE_CLASSIC:
                         //Type classic
@@ -111,10 +120,10 @@ public class TagInfo extends AppCompatActivity
                         break;
                 }
             }
-            else if(techList[i].equals(MifareUltralight.class.getName()))
+            else if (s.equals(MifareUltralight.class.getName()))
             {
                 MifareUltralight mifareUltralightTag = MifareUltralight.get(_tag);
-                switch(mifareUltralightTag.getType())
+                switch (mifareUltralightTag.getType())
                 {
                     case MifareUltralight.TYPE_ULTRALIGHT:
                         //Type ultralight
@@ -128,27 +137,25 @@ public class TagInfo extends AppCompatActivity
                         break;
                 }
             }
-            else if(techList[i].equals(Ndef.class.getName()))
+            else if (s.equals(Ndef.class.getName()))
             {
                 Ndef ndefTag = Ndef.get(_tag);
-                if(ndefTag.isWritable())
+                if (ndefTag.isWritable())
                 {
                     info[3] = "True";
-                }
-                else
+                } else
                 {
                     info[3] = "False";
                 }
-                if(ndefTag.canMakeReadOnly())
+                if (ndefTag.canMakeReadOnly())
                 {
                     info[4] = "True";
-                }
-                else
+                } else
                 {
                     info[4] = "False";
                 }
             }
-            else if(techList[i].equals(IsoDep.class.getName()))
+            else if (s.equals(IsoDep.class.getName()))
             {
                 info[2] = "IsoDep";
             }
@@ -176,36 +183,12 @@ public class TagInfo extends AppCompatActivity
             return null;
         }
         char[] buffer = new char[2];
-        for(int i=0; i<src.length; i++)
+        for (byte b : src)
         {
-            buffer[0] = Character.forDigit((src[i] >>> 4) & 0x0F, 16);
-            buffer[1] = Character.forDigit(src[i] & 0x0F, 16);
+            buffer[0] = Character.forDigit((b >>> 4) & 0x0F, 16);
+            buffer[1] = Character.forDigit(b & 0x0F, 16);
             stringBuilder.append(buffer);
         }
         return stringBuilder.toString();
-    }
-
-    private void setTitleBar()
-    {
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-    }
-
-    public void setStatusBarColor()
-    {
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(Color.parseColor("#FFFFFF"));
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp()
-    {
-        onBackPressed();
-        return true;
     }
 }
