@@ -19,7 +19,7 @@ import com.hoker.biocom.R;
 
 import java.util.Objects;
 
-public class NdefReadText extends Fragment
+public class ReadText extends Fragment
 {
     private TextView mReadTextbox;
     private String _stringPayload;
@@ -35,7 +35,7 @@ public class NdefReadText extends Fragment
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ndef_read_text, container, false);
+        return inflater.inflate(R.layout.fragment_read_text, container, false);
     }
 
     @Override

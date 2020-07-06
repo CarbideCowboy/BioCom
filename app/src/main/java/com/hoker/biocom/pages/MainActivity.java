@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;
             case R.id.nav_ndef_write:
-                Intent ndefWriteIntent = new Intent(this, NdefEditTextPayload.class);
+                Intent ndefWriteIntent = new Intent(this, EditNdefPayload.class);
                 startActivity(ndefWriteIntent);
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;

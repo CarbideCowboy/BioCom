@@ -26,7 +26,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
-import com.hoker.biocom.fragments.NdefReadText;
+import com.hoker.biocom.fragments.ReadText;
 import com.hoker.biocom.fragments.TagInfo;
 import com.hoker.biocom.fragments.WriteToolbar;
 import com.hoker.biocom.utilities.TagHandler;
@@ -89,7 +89,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
     @Override
     public void buttonClicked()
     {
-        Intent intent = new Intent(this, NdefEditTextPayload.class);
+        Intent intent = new Intent(this, EditNdefPayload.class);
         intent.putExtra("StringNDEF", _stringPayload);
         startActivity(intent);
         finish();
@@ -311,7 +311,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
             _stringPayload = TagHandler.parseStringNdefPayload(intent);
             bundle.putString("StringNDEF", _stringPayload);
 
-            NdefReadText readText = new NdefReadText();
+            ReadText readText = new ReadText();
             readText.setArguments(bundle);
 
             WriteToolbar writeToolbar = new WriteToolbar();

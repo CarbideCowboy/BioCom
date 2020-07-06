@@ -8,7 +8,7 @@
     <string name="drawer_toggle_open">Drawer Open</string>
     <string name="drawer_toggle_close">Drawer Close</string>
     <string name="nfc_device_manager">NFC Device Manager</string>
-    <string name="scan_an_nfc_device_or_choose_an_operation_from_the_left_panel">Scan an NFC device or choose an operation from the left panel</string>
+    <string name="main_instructions">Choose an NFC operation from the left panel</string>
     <string name="scan_text_encrypted">Scan an NFC tag containing an encrypted NDEF record</string>
     <string name="cryptographic_operations">Cryptographic Operations</string>
     <string name="decrypt_tag_contents">Decrypt Tag Contents</string>
@@ -35,7 +35,5 @@
     <string name="ic_manufacturer">IC Manufacturer:</string>
     <string name="is_writeable">Is Writeable:</string>
     <string name="can_be_read_only">Can be made Read-Only:</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="edit_icon">Edit Icon</string>
 </resources>
