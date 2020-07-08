@@ -301,6 +301,9 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        Intent broadcastIntent = new Intent("finish_edit_activity");
+        sendBroadcast(broadcastIntent);
+        finish();
     }
 
     private void readTextRecord(Intent intent)

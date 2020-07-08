@@ -7,8 +7,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -37,6 +40,7 @@ public class EditNdefPayload extends AppCompatActivity
         startEditTextFragment();
         setStatusBarColor();
         setTitleBar();
+        setBroadcastReceiver();
     }
 
     private void startEditTextFragment()
@@ -63,6 +67,24 @@ public class EditNdefPayload extends AppCompatActivity
         {
             _stringPayload = "";
         }
+    }
+
+    private void setBroadcastReceiver()
+    {
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(Context context, Intent intent)
+            {
+                String action = intent.getAction();
+                assert action != null;
+                if(action.equals("finish_edit_activity"))
+                {
+                    finish();
+                }
+            }
+        };
+        registerReceiver(broadcastReceiver, new IntentFilter("finish_edit_activity"));
     }
 
     public void writeButton_Clicked(View view)
