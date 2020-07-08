@@ -93,7 +93,7 @@ public class EditNdefPayload extends AppCompatActivity
         if(!_stringPayload.isEmpty())
         {
             Intent intent = new Intent(this, TagScanner.class);
-            intent.putExtra("ScanType", 3);
+            intent.putExtra("ScanType", TagScanner.scanType.writeNdef);
             intent.putExtra("StringNDEF", _stringPayload);
             startActivity(intent);
         }
