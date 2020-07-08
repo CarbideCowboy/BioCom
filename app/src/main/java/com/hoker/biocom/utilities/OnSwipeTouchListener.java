@@ -1,5 +1,6 @@
 package com.hoker.biocom.utilities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -18,6 +19,7 @@ public class OnSwipeTouchListener implements View.OnTouchListener
     {
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent event)
     {
@@ -38,7 +40,6 @@ public class OnSwipeTouchListener implements View.OnTouchListener
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
         {
-            boolean result = false;
             try
             {
                 float diffX = e2.getX() - e1.getX();
@@ -55,7 +56,7 @@ public class OnSwipeTouchListener implements View.OnTouchListener
             {
                 exception.printStackTrace();
             }
-            return result;
+            return false;
         }
 
     }

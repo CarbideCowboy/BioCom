@@ -72,11 +72,8 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
 
     private void getScanType()
     {
-        try
-        {
-            _scanType = (scanType)Objects.requireNonNull(getIntent().getExtras()).get("ScanType");
-        }
-        catch(NullPointerException e)
+        _scanType = (scanType)Objects.requireNonNull(getIntent().getExtras()).get("ScanType");
+        if(_scanType == null)
         {
             _scanType = scanType.foreGroundDispatch;
         }

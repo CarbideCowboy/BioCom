@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.hoker.biocom.R;
 
+import java.util.EnumMap;
 import java.util.Objects;
 
 public class TagInfo extends Fragment
@@ -26,10 +27,19 @@ public class TagInfo extends Fragment
     Tag _tag;
     Intent _intent;
     TextView mUIDTextView;
-    TextView mTechTextView;
+    TextView mTypeTextView;
     TextView mManufacturerTextView;
     TextView mIsWriteTextView;
     TextView mCanReadOnlyTextView;
+
+    public enum infoType
+    {
+        UID,
+        tagManufacturer,
+        tagType,
+        isWriteable,
+        canBeMadeReadOnly
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -58,7 +68,7 @@ public class TagInfo extends Fragment
     private void findViewsById()
     {
         mUIDTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_uid);
-        mTechTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_tech);
+        mTypeTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_type);
         mManufacturerTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_manufacturer);
         mIsWriteTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_is_write);
         mCanReadOnlyTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_can_be_read_only);
@@ -66,35 +76,28 @@ public class TagInfo extends Fragment
 
     private void getTagInfo()
     {
-        String[] tagInfo = fingerprintTag(_tag.getTechList());
-        mUIDTextView.setText(tagInfo[0]);
-        mManufacturerTextView.setText(tagInfo[1]);
-        mTechTextView.setText(tagInfo[2]);
-        mIsWriteTextView.setText(tagInfo[3]);
-        mCanReadOnlyTextView.setText(tagInfo[4]);
+        EnumMap<infoType, String> tagInfo = fingerprintTag(_tag.getTechList());
+        mUIDTextView.setText(tagInfo.get(infoType.UID));
+        mManufacturerTextView.setText(tagInfo.get(infoType.tagManufacturer));
+        mTypeTextView.setText(tagInfo.get(infoType.tagType));
+        mIsWriteTextView.setText(tagInfo.get(infoType.isWriteable));
+        mCanReadOnlyTextView.setText(tagInfo.get(infoType.canBeMadeReadOnly));
     }
 
-    private String[] fingerprintTag(String[] techList)
+    private EnumMap<infoType, String> fingerprintTag(String[] techList)
     {
-        String[] info = new String[5];
-        /*
-         * Info index breakdown:
-         * 0: UID
-         * 1: Tag Manufacturer
-         * 2: Tag Type
-         * 3: Is Writeable
-         * 4: Can be Made Read Only
-         */
-        info[2] = "Unknown Tag Type";
-        info[3] = "Tag is read only";
+        // String[] info = new String[5];
+        EnumMap<infoType, String> info = new EnumMap<>(infoType.class);
+        info.put(infoType.tagType, "Unknown Tag Type");
+        info.put(infoType.isWriteable, "Tag is read only");
 
         //get manufacturer
         byte[] UIDBytes = _tag.getId();
         byte manufacturerByte = UIDBytes[0];
-        info[1] = getManufacturerFromByte(manufacturerByte);
+        info.put(infoType.tagManufacturer, getManufacturerFromByte(manufacturerByte));
 
         //get UID
-        info[0] = bytesToHexString(UIDBytes);
+        info.put(infoType.UID, bytesToHexString(UIDBytes));
 
         for (String s : techList)
         {
@@ -105,18 +108,18 @@ public class TagInfo extends Fragment
                 {
                     case MifareClassic.TYPE_CLASSIC:
                         //Type classic
-                        info[2] = "Mifare Classic";
-                        info[1] = "NXP Semiconductors";
+                        info.put(infoType.tagType, "Mifare Classic");
+                        info.put(infoType.tagManufacturer, "NXP Semiconductors");
                         break;
                     case MifareClassic.TYPE_PLUS:
                         //Type plus
-                        info[2] = "Mifare Classic Plus";
-                        info[1] = "NXP Semiconductors";
+                        info.put(infoType.tagType, "Mifare Classic Plus");
+                        info.put(infoType.tagManufacturer, "NXP Semiconductors");
                         break;
                     case MifareClassic.TYPE_PRO:
                         //Type pro
-                        info[2] = "Mifare Classic Pro";
-                        info[1] = "NXP Semiconductors";
+                        info.put(infoType.tagType, "Mifare Classic Pro");
+                        info.put(infoType.tagManufacturer, "NXP Semiconductors");
                         break;
                 }
             }
@@ -127,13 +130,13 @@ public class TagInfo extends Fragment
                 {
                     case MifareUltralight.TYPE_ULTRALIGHT:
                         //Type ultralight
-                        info[2] = "Mifare Ultralight";
-                        info[1] = "NXP Semiconductors";
+                        info.put(infoType.tagType, "Mifare Ultralight");
+                        info.put(infoType.tagManufacturer, "NXP Semiconductors");
                         break;
                     case MifareUltralight.TYPE_ULTRALIGHT_C:
                         //Type ultralight c
-                        info[2] = "Mifare Ultralight C";
-                        info[1] = "NXP Semiconductors";
+                        info.put(infoType.tagType, "Mifare Ultralight C");
+                        info.put(infoType.tagManufacturer, "NXP Semiconductors");
                         break;
                 }
             }
@@ -142,22 +145,22 @@ public class TagInfo extends Fragment
                 Ndef ndefTag = Ndef.get(_tag);
                 if (ndefTag.isWritable())
                 {
-                    info[3] = "True";
+                    info.put(infoType.isWriteable, "True");
                 } else
                 {
-                    info[3] = "False";
+                    info.put(infoType.isWriteable, "False");
                 }
                 if (ndefTag.canMakeReadOnly())
                 {
-                    info[4] = "True";
+                    info.put(infoType.canBeMadeReadOnly, "True");
                 } else
                 {
-                    info[4] = "False";
+                    info.put(infoType.canBeMadeReadOnly, "False");
                 }
             }
             else if (s.equals(IsoDep.class.getName()))
             {
-                info[2] = "IsoDep";
+                info.put(infoType.tagType, "IsoDep");
             }
         }
         return info;
