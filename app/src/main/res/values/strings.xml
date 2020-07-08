@@ -8,7 +8,7 @@
     <string name="drawer_toggle_open">Drawer Open</string>
     <string name="drawer_toggle_close">Drawer Close</string>
     <string name="nfc_device_manager">NFC Device Manager</string>
-    <string name="main_instructions">Choose an NFC operation from the left panel</string>
+    <string name="main_instructions">Scan an NFC device or choose an NFC operation from the left panel</string>
     <string name="scan_text_encrypted">Scan an NFC tag containing an encrypted NDEF record</string>
     <string name="cryptographic_operations">Cryptographic Operations</string>
     <string name="decrypt_tag_contents">Decrypt Tag Contents</string>
@@ -30,7 +30,6 @@
     <string name="scan_nfc">Scan an NFC Tag</string>
     <string name="uid">UID:</string>
     <string name="tag_type">Tag Type:</string>
-    <string name="tag_tech">Tag Tech:</string>
     <string name="tag_model">Tag Model:</string>
     <string name="ic_manufacturer">IC Manufacturer:</string>
     <string name="is_writeable">Is Writeable:</string>
