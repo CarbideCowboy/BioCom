@@ -103,7 +103,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         finish();
     }
 
-    public void nfcPrimer()
+    private void nfcPrimer()
     {
         //setup the physical nfc interface
         adapter = NfcAdapter.getDefaultAdapter(this);
@@ -151,7 +151,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         handleActionDiscovered(intent);
     }
 
-    public void setStatusBarColor()
+    private void setStatusBarColor()
     {
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -177,7 +177,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         alert.show();
     }
 
-    public void writeToTag(Intent intent)
+    private void writeToTag(Intent intent)
     {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if(TagHandler.writeNdefText(_stringPayload, tag))
@@ -215,7 +215,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         }
     }
 
-    public void eraseTag(Intent intent)
+    private void eraseTag(Intent intent)
     {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if(TagHandler.eraseNfcTag(tag))
@@ -253,58 +253,61 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         }
     }
 
-    public void attemptDecryption()
+    private void attemptDecryption()
     {
         //set title, message and yes/no functionality for the dialog
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder
-                .setTitle("Encrypted payload detected")
-                .setMessage("Would you like to attempt decryption with OpenKeychain?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        //copy string ndef payload to system clipboard
-                        ClipboardManager clipboard = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clipData = ClipData.newPlainText("payload", _stringPayload);
-                        assert clipboard != null;
-                        clipboard.setPrimaryClip(clipData);
-
-                        //create new intent to open OpenKeychain
-                        PackageManager manager = getBaseContext().getPackageManager();
-                        Intent decryptionIntent = manager.getLaunchIntentForPackage("org.sufficientlysecure.keychain");
-
-                        if(decryptionIntent != null)
+        if(_stringPayload.length() > 27)
+        {
+            if (_stringPayload.substring(0, 27).equals("-----BEGIN PGP MESSAGE-----"))
+            {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+                dialogBuilder
+                        .setTitle("Encrypted payload detected")
+                        .setMessage("Would you like to attempt decryption with OpenKeychain?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
                         {
-                            decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        }
-                        else
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                //copy string ndef payload to system clipboard
+                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clipData = ClipData.newPlainText("payload", _stringPayload);
+                                assert clipboard != null;
+                                clipboard.setPrimaryClip(clipData);
+
+                                //create new intent to open OpenKeychain
+                                PackageManager manager = getBaseContext().getPackageManager();
+                                Intent decryptionIntent = manager.getLaunchIntentForPackage("org.sufficientlysecure.keychain");
+
+                                if (decryptionIntent != null) {
+                                    decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                } else {
+                                    decryptionIntent = new Intent(Intent.ACTION_VIEW);
+                                    decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    decryptionIntent.setData(Uri.parse("https://f-droid.org/en/packages/org.sufficientlysecure.keychain/"));
+                                }
+                                startActivity(decryptionIntent);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener()
                         {
-                            decryptionIntent = new Intent(Intent.ACTION_VIEW);
-                            decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            decryptionIntent.setData(Uri.parse("https://f-droid.org/en/packages/org.sufficientlysecure.keychain/"));
-                        }
-                        startActivity(decryptionIntent);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.cancel();
-                    }
-                });
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                dialog.cancel();
+                            }
+                        });
 
-        //create alert dialog
-        AlertDialog alertDialog = dialogBuilder.create();
+                //create alert dialog
+                AlertDialog alertDialog = dialogBuilder.create();
 
-        //display dialog
-        alertDialog.show();
+                //display dialog
+                alertDialog.show();
+            }
+        }
     }
 
-    public void popBack()
+    private void popBack()
     {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -332,12 +335,13 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         fragmentTransaction.commit();
     }
 
-    public void handleActionDiscovered(Intent intent)
+    private void handleActionDiscovered(Intent intent)
     {
         if(_scanType == scanType.mainActivity)
         {
             _stringPayload = getIntent().getStringExtra("StringNDEF");
             readTextRecord(_stringPayload);
+            attemptDecryption();
         }
 
         if(_scanType == scanType.foreGroundDispatch)
@@ -346,14 +350,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
             {
                 _stringPayload = TagHandler.parseStringNdefPayload(intent);
                 readTextRecord(_stringPayload);
-                String ndefStringMessage = TagHandler.parseStringNdefPayload(intent);
-                if (ndefStringMessage.length() > 27)
-                {
-                    if (ndefStringMessage.substring(0, 27).equals("-----BEGIN PGP MESSAGE-----"))
-                    {
-                        attemptDecryption();
-                    }
-                }
+                attemptDecryption();
             }
         }
 

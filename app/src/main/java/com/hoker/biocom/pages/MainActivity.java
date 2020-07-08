@@ -109,8 +109,6 @@ public class MainActivity extends AppCompatActivity
 
         //set up NDEF_DISCOVERED filter for the foreground dispatch system
         IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
-        IntentFilter tech = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
-        IntentFilter tag = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         try
         {
             ndef.addDataType("text/plain");
@@ -121,7 +119,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         //create a filter array for the foreground dispatch system
-        intentFiltersArray = new IntentFilter[] {ndef, tech, tag};
+        intentFiltersArray = new IntentFilter[] {ndef};
 
         //checks to see if the launch intent is NDEF_DISCOVERED
         handleActionDiscovered(this.getIntent());
