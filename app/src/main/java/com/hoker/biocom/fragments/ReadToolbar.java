@@ -13,10 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.hoker.biocom.R;
+import com.hoker.biocom.interfaces.IEditButton;
 
 import java.util.Objects;
 
-public class WriteToolbar extends Fragment
+public class ReadToolbar extends Fragment
 {
     Toolbar mToolbar;
     ImageButton mToolbarWriteButton;
@@ -32,7 +33,7 @@ public class WriteToolbar extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.toolbar_write, container, false);
+        return inflater.inflate(R.layout.toolbar_read, container, false);
     }
 
     @Override
@@ -66,10 +67,5 @@ public class WriteToolbar extends Fragment
                 buttonInterface.buttonClicked();
             }
         });
-    }
-
-    public interface IEditButton
-    {
-        void buttonClicked();
     }
 }

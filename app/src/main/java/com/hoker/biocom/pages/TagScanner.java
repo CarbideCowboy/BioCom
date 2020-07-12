@@ -28,12 +28,13 @@ import android.widget.TextView;
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.ReadText;
 import com.hoker.biocom.fragments.TagInfo;
-import com.hoker.biocom.fragments.WriteToolbar;
+import com.hoker.biocom.fragments.ReadToolbar;
+import com.hoker.biocom.interfaces.IEditButton;
 import com.hoker.biocom.utilities.TagHandler;
 
 import java.util.Objects;
 
-public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditButton
+public class TagScanner extends AppCompatActivity implements IEditButton
 {
     IntentFilter[] intentFiltersArray;
     PendingIntent pendingIntent;
@@ -325,7 +326,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         ReadText readText = new ReadText();
         readText.setArguments(bundle);
 
-        WriteToolbar writeToolbar = new WriteToolbar();
+        ReadToolbar writeToolbar = new ReadToolbar();
         writeToolbar.setInterface(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();

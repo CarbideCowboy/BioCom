@@ -35,4 +35,8 @@
     <string name="is_writeable">Is Writeable:</string>
     <string name="can_be_read_only">Can be made Read-Only:</string>
     <string name="edit_icon">Edit Icon</string>
+    <string-array name="mime_type_options_array">
+        <item>Plain Text</item>
+        <item>Markdown</item>
+    </string-array>
 </resources>

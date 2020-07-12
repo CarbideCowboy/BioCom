@@ -17,6 +17,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.EditText;
@@ -24,10 +27,11 @@ import com.hoker.biocom.interfaces.IEditFragment;
 
 import java.util.Objects;
 
-public class EditNdefPayload extends AppCompatActivity
+public class EditNdefPayload extends AppCompatActivity implements AdapterView.OnItemSelectedListener
 {
     String _stringPayload;
     Toolbar mToolbar;
+    Spinner mToolbarSpinner;
     IEditFragment _fragment;
 
     @Override
@@ -124,7 +128,12 @@ public class EditNdefPayload extends AppCompatActivity
 
     private void setTitleBar()
     {
-        mToolbar = findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar_edit);
+        mToolbarSpinner = findViewById(R.id.toolbar_edit_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.mime_type_options_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mToolbarSpinner.setAdapter(adapter);
+        mToolbarSpinner.setOnItemSelectedListener(this);
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -137,5 +146,23 @@ public class EditNdefPayload extends AppCompatActivity
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.parseColor("#FFFFFF"));
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    {
+        String selectedOption = (String) parent.getItemAtPosition(position);
+        fragmentSwitcher(selectedOption);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent)
+    {
+
+    }
+
+    public void fragmentSwitcher(String selectedOption)
+    {
+
     }
 }
