@@ -23,6 +23,7 @@ import android.widget.Spinner;
 
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.EditText;
+import com.hoker.biocom.fragments.EditUri;
 import com.hoker.biocom.interfaces.IEditFragment;
 
 import java.nio.charset.StandardCharsets;
@@ -42,7 +43,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         setContentView(R.layout.activity_edit_payload);
 
         setStringPayload();
-        startEditTextFragment();
+        //startEditTextFragment();
         setStatusBarColor();
         setTitleBar();
         setBroadcastReceiver();
@@ -99,7 +100,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         {
             Intent intent = new Intent(this, TagScanner.class);
             intent.putExtra("ScanType", TagScanner.scanType.writeNdef);
-            intent.putExtra("StringNDEF", _payload);
+            intent.putExtra("StringNDEF", new String(_payload, StandardCharsets.UTF_8));
             startActivity(intent);
         }
         else
@@ -164,6 +165,26 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
 
     public void fragmentSwitcher(String selectedOption)
     {
+        if(selectedOption.equals("Plain Text"))
+        {
+            _fragment = new EditText();
+            Bundle bundle = new Bundle();
+            bundle.putString("StringNDEF", new String(_payload, StandardCharsets.UTF_8));
+            ((EditText)_fragment).setArguments(bundle);
+            updateFragment();
+        }
+        else if(selectedOption.equals("URI"))
+        {
+            _fragment = new EditUri();
+            updateFragment();
+        }
+    }
 
+    private void updateFragment()
+    {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.edit_payload_frame, (Fragment)_fragment);
+        fragmentTransaction.commit();
     }
 }

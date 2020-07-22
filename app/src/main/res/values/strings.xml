@@ -36,9 +36,10 @@
     <string name="can_be_read_only">Can be made Read-Only:</string>
     <string name="edit_icon">Edit Icon</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="uri">URI:</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string-array name="mime_type_options_array">
         <item>Plain Text</item>
-        <item>Markdown</item>
+        <item>URI</item>
     </string-array>
 </resources>

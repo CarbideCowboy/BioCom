@@ -10,8 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hoker.biocom.R;
+import com.hoker.biocom.interfaces.IEditFragment;
 
-public class EditUri extends Fragment
+public class EditUri extends Fragment implements IEditFragment
 {
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -31,5 +32,11 @@ public class EditUri extends Fragment
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
 
+    }
+
+    @Override
+    public byte[] getPayload()
+    {
+        return new byte[0];
     }
 }
