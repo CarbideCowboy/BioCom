@@ -25,11 +25,12 @@ import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.EditText;
 import com.hoker.biocom.interfaces.IEditFragment;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class EditNdefPayload extends AppCompatActivity implements AdapterView.OnItemSelectedListener
 {
-    String _stringPayload;
+    byte[] _payload;
     Toolbar mToolbar;
     Spinner mToolbarSpinner;
     IEditFragment _fragment;
@@ -50,7 +51,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     private void startEditTextFragment()
     {
         Bundle bundle = new Bundle();
-        bundle.putString("StringNDEF", _stringPayload);
+        bundle.putString("StringNDEF", new String(_payload, StandardCharsets.UTF_8));
 
         _fragment = new EditText();
         ((EditText)_fragment).setArguments(bundle);
@@ -65,11 +66,11 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     {
         if(getIntent().getExtras() != null)
         {
-            _stringPayload = getIntent().getExtras().getString("StringNDEF");
+            _payload = getIntent().getExtras().getString("StringNDEF").getBytes();
         }
         else
         {
-            _stringPayload = "";
+            _payload = "".getBytes();
         }
     }
 
@@ -93,12 +94,12 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
 
     public void writeButton_Clicked(View view)
     {
-        _stringPayload = _fragment.getPayload();
-        if(!_stringPayload.isEmpty())
+        _payload = _fragment.getPayload();
+        if(!(new String(_payload, StandardCharsets.UTF_8).isEmpty()))
         {
             Intent intent = new Intent(this, TagScanner.class);
             intent.putExtra("ScanType", TagScanner.scanType.writeNdef);
-            intent.putExtra("StringNDEF", _stringPayload);
+            intent.putExtra("StringNDEF", _payload);
             startActivity(intent);
         }
         else

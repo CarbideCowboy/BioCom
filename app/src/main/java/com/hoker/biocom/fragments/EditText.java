@@ -71,9 +71,9 @@ public class EditText extends Fragment implements IEditFragment
     };
 
     @Override
-    public String getPayload()
+    public byte[] getPayload()
     {
-        return mEditText.getText().toString();
+        return mEditText.getText().toString().getBytes();
     }
 
     private void setEditTextChangeEvent()
