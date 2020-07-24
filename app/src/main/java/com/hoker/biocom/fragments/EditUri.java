@@ -1,5 +1,6 @@
 package com.hoker.biocom.fragments;
 
+import android.nfc.NdefRecord;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -35,8 +36,8 @@ public class EditUri extends Fragment implements IEditFragment
     }
 
     @Override
-    public byte[] getPayload()
+    public NdefRecord getPayload()
     {
-        return new byte[0];
+        return NdefRecord.createUri("https://forum.dangerousthings.com");
     }
 }

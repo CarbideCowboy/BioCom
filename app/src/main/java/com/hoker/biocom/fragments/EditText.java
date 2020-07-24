@@ -71,9 +71,9 @@ public class EditText extends Fragment implements IEditFragment
     };
 
     @Override
-    public byte[] getPayload()
+    public NdefRecord getPayload()
     {
-        return mEditText.getText().toString().getBytes();
+        return NdefRecord.createMime("text/plain", mEditText.getText().toString().getBytes());
     }
 
     private void setEditTextChangeEvent()

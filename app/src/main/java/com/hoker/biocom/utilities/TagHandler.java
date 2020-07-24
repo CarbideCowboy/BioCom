@@ -51,6 +51,13 @@ public class TagHandler
         return result.equals("Message written");
     }
 
+    public static boolean writeNdefMessage(Tag tag, NdefMessage ndefMessage)
+    {
+        Ndef ndef = Ndef.get(tag);
+        String result = new AsyncConnectWrite().doInBackground(ndefMessage, ndef);
+        return result.equals("Message written");
+    }
+
     public static NdefRecord createTextRecord(String text)
     {
         byte[] textBytes = text.getBytes();

@@ -17,6 +17,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -181,7 +182,8 @@ public class TagScanner extends AppCompatActivity implements IEditButton
     private void writeToTag(Intent intent)
     {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        if(TagHandler.writeNdefText(_stringPayload, tag))
+        NdefMessage ndefMessage = intent.getParcelableExtra("NdefMessage");
+        if(TagHandler.writeNdefMessage(tag, ndefMessage))
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("NDEF write operation successful");
@@ -409,8 +411,6 @@ public class TagScanner extends AppCompatActivity implements IEditButton
         {
             mTextView1.setText(R.string.scan_text_writable);
             mTextView2.setText(R.string.scan_text_write_warning);
-
-            _stringPayload = getIntent().getStringExtra("StringNDEF");
 
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TECH_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TAG_DISCOVERED))
             {

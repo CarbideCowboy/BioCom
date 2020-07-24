@@ -13,6 +13,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -27,11 +29,13 @@ import com.hoker.biocom.fragments.EditUri;
 import com.hoker.biocom.interfaces.IEditFragment;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class EditNdefPayload extends AppCompatActivity implements AdapterView.OnItemSelectedListener
 {
-    byte[] _payload;
+    NdefRecord _ndefRecord;
+    byte[] _bytePayload;
     Toolbar mToolbar;
     Spinner mToolbarSpinner;
     IEditFragment _fragment;
@@ -43,7 +47,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         setContentView(R.layout.activity_edit_payload);
 
         setStringPayload();
-        //startEditTextFragment();
+        startEditTextFragment();
         setStatusBarColor();
         setTitleBar();
         setBroadcastReceiver();
@@ -52,7 +56,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     private void startEditTextFragment()
     {
         Bundle bundle = new Bundle();
-        bundle.putString("StringNDEF", new String(_payload, StandardCharsets.UTF_8));
+        bundle.putString("StringNDEF", new String(_bytePayload, StandardCharsets.UTF_8));
 
         _fragment = new EditText();
         ((EditText)_fragment).setArguments(bundle);
@@ -67,11 +71,11 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     {
         if(getIntent().getExtras() != null)
         {
-            _payload = getIntent().getExtras().getString("StringNDEF").getBytes();
+            _bytePayload = getIntent().getExtras().getString("StringNDEF").getBytes();
         }
         else
         {
-            _payload = "".getBytes();
+            _bytePayload = "".getBytes();
         }
     }
 
@@ -95,12 +99,12 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
 
     public void writeButton_Clicked(View view)
     {
-        _payload = _fragment.getPayload();
-        if(!(new String(_payload, StandardCharsets.UTF_8).isEmpty()))
+        _ndefRecord = _fragment.getPayload();
+        if(_ndefRecord != null)
         {
             Intent intent = new Intent(this, TagScanner.class);
             intent.putExtra("ScanType", TagScanner.scanType.writeNdef);
-            intent.putExtra("StringNDEF", new String(_payload, StandardCharsets.UTF_8));
+            intent.putExtra("NdefMessage", new NdefMessage(_ndefRecord));
             startActivity(intent);
         }
         else
@@ -135,6 +139,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.mime_type_options_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mToolbarSpinner.setAdapter(adapter);
+        mToolbarSpinner.setSelection(0, false);
         mToolbarSpinner.setOnItemSelectedListener(this);
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -169,7 +174,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         {
             _fragment = new EditText();
             Bundle bundle = new Bundle();
-            bundle.putString("StringNDEF", new String(_payload, StandardCharsets.UTF_8));
+            bundle.putString("StringNDEF", new String(_bytePayload, StandardCharsets.UTF_8));
             ((EditText)_fragment).setArguments(bundle);
             updateFragment();
         }
