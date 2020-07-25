@@ -13,8 +13,12 @@ import android.view.ViewGroup;
 import com.hoker.biocom.R;
 import com.hoker.biocom.interfaces.IEditFragment;
 
+import java.util.Objects;
+
 public class EditUri extends Fragment implements IEditFragment
 {
+    android.widget.EditText mUriEditText;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -32,12 +36,13 @@ public class EditUri extends Fragment implements IEditFragment
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-
+        mUriEditText = Objects.requireNonNull(getView()).findViewById(R.id.edit_uri_entry);
     }
 
     @Override
     public NdefRecord getPayload()
     {
-        return NdefRecord.createUri("https://forum.dangerousthings.com");
+        String uri = mUriEditText.getText().toString();
+        return NdefRecord.createUri(uri);
     }
 }

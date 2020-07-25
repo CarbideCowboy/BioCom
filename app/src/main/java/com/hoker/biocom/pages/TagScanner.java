@@ -45,6 +45,7 @@ public class TagScanner extends AppCompatActivity implements IEditButton
     TextView mTextView2;
     scanType _scanType;
     String _stringPayload;
+    NdefMessage ndefMessage = null;
 
     public enum scanType
     {
@@ -179,10 +180,9 @@ public class TagScanner extends AppCompatActivity implements IEditButton
         alert.show();
     }
 
-    private void writeToTag(Intent intent)
+    private void writeToTag(Intent intent, NdefMessage ndefMessage)
     {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        NdefMessage ndefMessage = intent.getParcelableExtra("NdefMessage");
         if(TagHandler.writeNdefMessage(tag, ndefMessage))
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -414,7 +414,11 @@ public class TagScanner extends AppCompatActivity implements IEditButton
 
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TECH_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TAG_DISCOVERED))
             {
-                writeToTag(intent);
+                writeToTag(intent, ndefMessage);
+            }
+            else
+            {
+                ndefMessage = intent.getParcelableExtra("NdefMessage");
             }
         }
 
