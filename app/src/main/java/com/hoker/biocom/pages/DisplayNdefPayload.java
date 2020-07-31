@@ -15,7 +15,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.hoker.biocom.R;
-import com.hoker.biocom.fragments.EditUri;
 import com.hoker.biocom.fragments.ReadText;
 import com.hoker.biocom.fragments.ReadToolbar;
 import com.hoker.biocom.interfaces.IEditButton;
@@ -83,10 +82,6 @@ public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
         {
             _fragment = new ReadText();
         }
-        else if(_recordDataType == recordDataType.Uri)
-        {
-            _fragment = new EditUri();
-        }
 
         bundle = new Bundle();
         bundle.putByteArray("Payload", _ndefMessage.getRecords()[0].getPayload());
@@ -135,10 +130,8 @@ public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
                     return recordDataType.plainText;
                 }
             case NdefRecord.TNF_UNKNOWN:
-                //unknown payload
-                break;
+                return recordDataType.Unknown;
             case NdefRecord.TNF_WELL_KNOWN:
-                //well-known
                 if(record.toUri()!=null)
                 {
                     return recordDataType.Uri;

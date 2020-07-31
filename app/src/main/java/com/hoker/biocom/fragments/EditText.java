@@ -1,7 +1,6 @@
 package com.hoker.biocom.fragments;
 
 import android.content.Context;
-import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.os.Bundle;
 
@@ -21,7 +20,7 @@ import android.widget.TextView;
 
 import com.hoker.biocom.R;
 import com.hoker.biocom.interfaces.IEditFragment;
-import com.hoker.biocom.utilities.TagHandler;
+import com.hoker.biocom.interfaces.ITracksPayload;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -33,6 +32,7 @@ public class EditText extends Fragment implements IEditFragment
     ScrollView mScrollView;
     LinearLayout mLinearLayout;
     TextView mPayloadSizeText;
+    ITracksPayload payloadInterface;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -57,9 +57,8 @@ public class EditText extends Fragment implements IEditFragment
 
         mLinearLayout.setOnClickListener(mLinearLayout_Clicked);
 
-        setEditTextChangeEvent();
         setupTextView();
-        getPayloadBytes();
+        setupTextChangedEvent();
     }
 
     private final View.OnClickListener mLinearLayout_Clicked = new View.OnClickListener()
@@ -71,41 +70,46 @@ public class EditText extends Fragment implements IEditFragment
         }
     };
 
-    @Override
-    public NdefRecord getRecord()
+    public void setPayloadInterface(ITracksPayload iTracksPayload)
     {
-        return NdefRecord.createMime("text/plain", mEditText.getText().toString().getBytes());
+        this.payloadInterface = iTracksPayload;
     }
 
-    private void setEditTextChangeEvent()
+    public void setupTextChangedEvent()
     {
         mEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count)
             {
-                getPayloadBytes();
+                payloadInterface.payloadChanged();
             }
 
             @Override
-            public void afterTextChanged(Editable s)
-            {
-            }
+            public void afterTextChanged(Editable s) { }
         });
     }
 
-    private void getPayloadBytes()
+    @Override
+    public NdefRecord getRecord()
     {
-        NdefRecord[] record = { TagHandler.createTextRecord(mEditText.getText().toString()) };
-        NdefMessage message = new NdefMessage(record);
-        int byteSize = message.getByteArrayLength();
-        String payloadSize = getString(R.string.payload_size) + byteSize + getString(R.string.bytes);
-        mPayloadSizeText.setText(payloadSize);
+        if(mEditText == null)
+        {
+            assert getArguments() != null;
+            byte[] payload = getArguments().getByteArray("Payload");
+            if(payload != null)
+            {
+                return NdefRecord.createMime("text/plain", payload);
+            }
+            else
+            {
+                return NdefRecord.createMime("text/plain", "".getBytes());
+            }
+        }
+        return NdefRecord.createMime("text/plain", mEditText.getText().toString().getBytes());
     }
 
     public void focusEntry()

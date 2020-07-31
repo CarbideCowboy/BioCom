@@ -22,20 +22,23 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.EditText;
 import com.hoker.biocom.fragments.EditUri;
+import com.hoker.biocom.interfaces.ITracksPayload;
 import com.hoker.biocom.interfaces.IEditFragment;
 
 import java.util.Objects;
 
-public class EditNdefPayload extends AppCompatActivity implements AdapterView.OnItemSelectedListener
+public class EditNdefPayload extends AppCompatActivity implements AdapterView.OnItemSelectedListener, ITracksPayload
 {
     NdefRecord _ndefRecord;
     byte[] _bytePayload;
     Toolbar mToolbar;
     Spinner mToolbarSpinner;
+    TextView mPayloadSizeText;
     IEditFragment _fragment;
     DisplayNdefPayload.recordDataType _dataType;
 
@@ -44,12 +47,22 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_payload);
+        mPayloadSizeText = findViewById(R.id.edit_payload_size);
 
         setStatusBarColor();
         setTitleBar();
         setStringPayload();
         fragmentSwitcher();
         setBroadcastReceiver();
+    }
+
+    @Override
+    public void payloadChanged()
+    {
+        NdefMessage ndefMessage = new NdefMessage(_fragment.getRecord());
+        int byteSize = ndefMessage.getByteArrayLength();
+        String payloadSize = getString(R.string.payload_size) + byteSize + getString(R.string.bytes);
+        mPayloadSizeText.setText(payloadSize);
     }
 
     private void setStringPayload()
@@ -158,10 +171,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent)
-    {
-
-    }
+    public void onNothingSelected(AdapterView<?> parent) { }
 
     public void fragmentSwitcher()
     {
@@ -172,11 +182,13 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
             bundle.putByteArray("Payload", _bytePayload);
             ((EditText)_fragment).setArguments(bundle);
             updateFragment();
+            ((EditText) _fragment).setPayloadInterface(this);
         }
         else if(_dataType.equals(DisplayNdefPayload.recordDataType.Uri))
         {
             _fragment = new EditUri();
             updateFragment();
+            ((EditUri) _fragment).setPayloadInterface(this);
         }
     }
 
@@ -186,5 +198,6 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.edit_payload_frame, (Fragment)_fragment);
         fragmentTransaction.commit();
+        payloadChanged();
     }
 }
