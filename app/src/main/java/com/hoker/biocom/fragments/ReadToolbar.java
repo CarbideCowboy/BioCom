@@ -50,8 +50,8 @@ public class ReadToolbar extends Fragment
 
     private void setTitleBar()
     {
-        mToolbar = Objects.requireNonNull(getView()).findViewById(R.id.toolbar_write);
-        mToolbarWriteButton = Objects.requireNonNull(getView()).findViewById(R.id.toolbar_write_button);
+        mToolbar = Objects.requireNonNull(getView()).findViewById(R.id.toolbar_read);
+        mToolbarWriteButton = Objects.requireNonNull(getView()).findViewById(R.id.toolbar_edit_button);
         ((AppCompatActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(mToolbar);
         Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setDisplayShowHomeEnabled(true);

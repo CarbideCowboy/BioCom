@@ -29,7 +29,6 @@ public class EditUri extends Fragment implements IEditFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_edit_uri, container, false);
     }
 

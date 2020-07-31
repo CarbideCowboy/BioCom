@@ -23,6 +23,7 @@ import com.hoker.biocom.R;
 import com.hoker.biocom.interfaces.IEditFragment;
 import com.hoker.biocom.utilities.TagHandler;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class EditText extends Fragment implements IEditFragment
@@ -121,7 +122,15 @@ public class EditText extends Fragment implements IEditFragment
     private void setupTextView()
     {
         assert getArguments() != null;
-        _stringPayload = getArguments().getString("StringNDEF");
+        byte[] payload = getArguments().getByteArray("Payload");
+        if(payload != null)
+        {
+            _stringPayload = new String(payload, StandardCharsets.UTF_8);
+        }
+        else
+        {
+            _stringPayload = "";
+        }
         mEditText.setText(_stringPayload);
     }
 }

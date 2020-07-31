@@ -45,7 +45,7 @@ public class TagScanner extends AppCompatActivity implements IEditButton
     TextView mTextView2;
     scanType _scanType;
     String _stringPayload;
-    NdefMessage ndefMessage = null;
+    NdefMessage _ndefMessage = null;
 
     public enum scanType
     {
@@ -342,18 +342,33 @@ public class TagScanner extends AppCompatActivity implements IEditButton
     {
         if(_scanType == scanType.mainActivity)
         {
+            /*
             _stringPayload = getIntent().getStringExtra("StringNDEF");
             readTextRecord(_stringPayload);
             attemptDecryption();
+            */
+
+            Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
+            _ndefMessage = (NdefMessage)Objects.requireNonNull(getIntent().getExtras()).get("NdefMessage");
+            displayNdefIntent.putExtra("NdefMessage", _ndefMessage);
+            startActivity(displayNdefIntent);
+            finish();
         }
 
         if(_scanType == scanType.foreGroundDispatch)
         {
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
             {
+                /*
                 _stringPayload = TagHandler.parseStringNdefPayload(intent);
                 readTextRecord(_stringPayload);
                 attemptDecryption();
+                */
+
+                Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
+                displayNdefIntent.putExtra("NdefMessage", TagHandler.getNdefMessage(intent));
+                startActivity(displayNdefIntent);
+                finish();
             }
         }
 
@@ -362,10 +377,12 @@ public class TagScanner extends AppCompatActivity implements IEditButton
             mTextView1.setText(R.string.scan_text_ndef_read);
             mTextView2.setText("");
 
-            if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
+            if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TAG_DISCOVERED))
             {
-                _stringPayload = TagHandler.parseStringNdefPayload(intent);
-                readTextRecord(_stringPayload);
+                Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
+                displayNdefIntent.putExtra("NdefMessage", TagHandler.getNdefMessage(intent));
+                startActivity(displayNdefIntent);
+                finish();
             }
         }
 
@@ -414,11 +431,11 @@ public class TagScanner extends AppCompatActivity implements IEditButton
 
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TECH_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TAG_DISCOVERED))
             {
-                writeToTag(intent, ndefMessage);
+                writeToTag(intent, _ndefMessage);
             }
             else
             {
-                ndefMessage = intent.getParcelableExtra("NdefMessage");
+                _ndefMessage = intent.getParcelableExtra("NdefMessage");
             }
         }
 

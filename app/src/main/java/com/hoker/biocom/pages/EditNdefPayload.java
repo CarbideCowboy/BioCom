@@ -29,7 +29,6 @@ import com.hoker.biocom.fragments.EditUri;
 import com.hoker.biocom.interfaces.IEditFragment;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class EditNdefPayload extends AppCompatActivity implements AdapterView.OnItemSelectedListener
@@ -39,6 +38,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     Toolbar mToolbar;
     Spinner mToolbarSpinner;
     IEditFragment _fragment;
+    DisplayNdefPayload.recordDataType _dataType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -47,7 +47,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         setContentView(R.layout.activity_edit_payload);
 
         setStringPayload();
-        startEditTextFragment();
+        //startEditTextFragment();
         setStatusBarColor();
         setTitleBar();
         setBroadcastReceiver();
@@ -71,7 +71,8 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     {
         if(getIntent().getExtras() != null)
         {
-            _bytePayload = getIntent().getExtras().getString("StringNDEF").getBytes();
+            _dataType = (DisplayNdefPayload.recordDataType)Objects.requireNonNull(getIntent().getExtras().get("DataType"));
+            _bytePayload = (byte[])Objects.requireNonNull(getIntent().getExtras().get("Payload"));
         }
         else
         {
@@ -136,10 +137,10 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     {
         mToolbar = findViewById(R.id.toolbar_edit);
         mToolbarSpinner = findViewById(R.id.toolbar_edit_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.mime_type_options_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.mime_type_options_array, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mToolbarSpinner.setAdapter(adapter);
-        mToolbarSpinner.setSelection(0, false);
+        //mToolbarSpinner.setSelection(0, false);
         mToolbarSpinner.setOnItemSelectedListener(this);
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -159,7 +160,15 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
         String selectedOption = (String) parent.getItemAtPosition(position);
-        fragmentSwitcher(selectedOption);
+        if(selectedOption.equals("Plain text"))
+        {
+            _dataType = DisplayNdefPayload.recordDataType.plainText;
+        }
+        else if(selectedOption.equals("URI"))
+        {
+            _dataType = DisplayNdefPayload.recordDataType.Uri;
+        }
+        fragmentSwitcher();
     }
 
     @Override
@@ -168,17 +177,17 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
 
     }
 
-    public void fragmentSwitcher(String selectedOption)
+    public void fragmentSwitcher()
     {
-        if(selectedOption.equals("Plain Text"))
+        if(_dataType.equals(DisplayNdefPayload.recordDataType.plainText))
         {
             _fragment = new EditText();
             Bundle bundle = new Bundle();
-            bundle.putString("StringNDEF", new String(_bytePayload, StandardCharsets.UTF_8));
+            bundle.putByteArray("Payload", _bytePayload);
             ((EditText)_fragment).setArguments(bundle);
             updateFragment();
         }
-        else if(selectedOption.equals("URI"))
+        else if(_dataType.equals(DisplayNdefPayload.recordDataType.Uri))
         {
             _fragment = new EditUri();
             updateFragment();

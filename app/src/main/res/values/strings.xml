@@ -4,7 +4,7 @@
     <string name="scan_text_ndef_read">Scan an NDEF formatted NFC tag</string>
     <string name="ndefRead_empty_record">No text record detected</string>
     <string name="ndef_operations">NDEF Operations</string>
-    <string name="read_ndef_records">Read NDEF Text Records</string>
+    <string name="read_ndef_records">Read NDEF Records</string>
     <string name="drawer_toggle_open">Drawer Open</string>
     <string name="drawer_toggle_close">Drawer Close</string>
     <string name="nfc_device_manager">NFC Device Manager</string>
@@ -12,8 +12,7 @@
     <string name="scan_text_encrypted">Scan an NFC tag containing an encrypted NDEF record</string>
     <string name="cryptographic_operations">Cryptographic Operations</string>
     <string name="decrypt_tag_contents">Decrypt Tag Contents</string>
-    <string name="read_ndef_records_in_edit_mode">Read NDEF Text Records as Editing</string>
-    <string name="write_ndef_text_records">Write NDEF Text Records</string>
+    <string name="write_ndef_text_records">Write NDEF Records</string>
     <string name="type_ndef_string_payload_here">Type NDEF String payload here</string>
     <string name="scan_text_writable">Scan a writeable NFC tag</string>
     <string name="scan_text_write_warning">WARNING: This will erase the tag\'s existing records</string>
@@ -37,7 +36,7 @@
     <string name="edit_icon">Edit Icon</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="uri">URI:</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="enter_uri_address">Enter URI Address</string>
     <string-array name="mime_type_options_array">
         <item>Plain Text</item>
         <item>URI</item>

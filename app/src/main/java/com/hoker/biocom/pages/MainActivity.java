@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity
         {
             Intent filterCaptureIntent = new Intent(this, TagScanner.class);
             filterCaptureIntent.putExtra("ScanType", TagScanner.scanType.mainActivity);
-            filterCaptureIntent.putExtra("StringNDEF", TagHandler.parseStringNdefPayload(intent));
+            filterCaptureIntent.putExtra("NdefMessage", TagHandler.getNdefMessage(intent));
             startActivity(filterCaptureIntent);
         }
     }

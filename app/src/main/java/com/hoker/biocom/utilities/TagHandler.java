@@ -29,6 +29,16 @@ public class TagHandler
         return "NDEF payload could not be parsed to a string";
     }
 
+    public static NdefMessage getNdefMessage(Intent intent)
+    {
+        Parcelable[] rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+        if(rawMessages != null)
+        {
+            return (NdefMessage)rawMessages[0];
+        }
+        return null;
+    }
+
     public static boolean writeNdefText(String text, Tag tag)
     {
         NdefRecord[] records = { createTextRecord(text) };
