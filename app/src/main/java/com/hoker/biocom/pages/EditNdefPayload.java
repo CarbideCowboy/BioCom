@@ -28,7 +28,6 @@ import com.hoker.biocom.fragments.EditText;
 import com.hoker.biocom.fragments.EditUri;
 import com.hoker.biocom.interfaces.IEditFragment;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class EditNdefPayload extends AppCompatActivity implements AdapterView.OnItemSelectedListener
@@ -47,24 +46,9 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         setContentView(R.layout.activity_edit_payload);
 
         setStringPayload();
-        //startEditTextFragment();
         setStatusBarColor();
         setTitleBar();
         setBroadcastReceiver();
-    }
-
-    private void startEditTextFragment()
-    {
-        Bundle bundle = new Bundle();
-        bundle.putString("StringNDEF", new String(_bytePayload, StandardCharsets.UTF_8));
-
-        _fragment = new EditText();
-        ((EditText)_fragment).setArguments(bundle);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.edit_payload_frame, (Fragment)_fragment);
-        fragmentTransaction.commit();
     }
 
     private void setStringPayload()

@@ -1,18 +1,13 @@
 package com.hoker.biocom.fragments;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
@@ -22,9 +17,6 @@ import java.util.Objects;
 
 public class ReadText extends Fragment
 {
-    private TextView mReadTextbox;
-    private byte[] _payload;
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -42,10 +34,10 @@ public class ReadText extends Fragment
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
         assert getArguments() != null;
-        _payload = getArguments().getByteArray("Payload");
+        byte[] _payload = getArguments().getByteArray("Payload");
 
         //set up views
-        mReadTextbox = Objects.requireNonNull(getView()).findViewById(R.id.read_textbox);
+        TextView mReadTextbox = Objects.requireNonNull(getView()).findViewById(R.id.read_textbox);
 
         if(_payload != null)
         {
