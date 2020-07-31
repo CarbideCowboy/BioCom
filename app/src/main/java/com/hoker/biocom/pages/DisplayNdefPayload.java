@@ -31,6 +31,7 @@ public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
     {
         plainText,
         Uri,
+        Jpeg,
         Unknown
     }
 

@@ -59,7 +59,7 @@ public class TagScanner extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scan_prompt);
+        setContentView(R.layout.activity_tag_scanner);
 
         mTextView1 = findViewById(R.id.scan_text1);
         mTextView2 = findViewById(R.id.scan_text2);

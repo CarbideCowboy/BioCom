@@ -70,7 +70,7 @@ public class EditText extends Fragment implements IEditFragment
         }
     };
 
-    public void setPayloadInterface(ITracksPayload iTracksPayload)
+    public void setPayloadTrackingInterface(ITracksPayload iTracksPayload)
     {
         this.payloadInterface = iTracksPayload;
     }

@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
+import com.hoker.biocom.fragments.EditJpeg;
 import com.hoker.biocom.fragments.EditText;
 import com.hoker.biocom.fragments.EditUri;
 import com.hoker.biocom.interfaces.ITracksPayload;
@@ -167,6 +168,10 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         {
             _dataType = DisplayNdefPayload.recordDataType.Uri;
         }
+        else if(selectedOption.equals("JPEG"))
+        {
+            _dataType = DisplayNdefPayload.recordDataType.Jpeg;
+        }
         fragmentSwitcher();
     }
 
@@ -182,13 +187,19 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
             bundle.putByteArray("Payload", _bytePayload);
             ((EditText)_fragment).setArguments(bundle);
             updateFragment();
-            ((EditText) _fragment).setPayloadInterface(this);
+            _fragment.setPayloadTrackingInterface(this);
         }
         else if(_dataType.equals(DisplayNdefPayload.recordDataType.Uri))
         {
             _fragment = new EditUri();
             updateFragment();
-            ((EditUri) _fragment).setPayloadInterface(this);
+            _fragment.setPayloadTrackingInterface(this);
+        }
+        else if(_dataType.equals(DisplayNdefPayload.recordDataType.Jpeg))
+        {
+            _fragment = new EditJpeg();
+            updateFragment();
+            _fragment.setPayloadTrackingInterface(this);
         }
     }
 

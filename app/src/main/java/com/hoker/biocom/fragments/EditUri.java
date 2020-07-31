@@ -43,7 +43,7 @@ public class EditUri extends Fragment implements IEditFragment
         setupTextChangedEvent();
     }
 
-    public void setPayloadInterface(ITracksPayload iTracksPayload)
+    public void setPayloadTrackingInterface(ITracksPayload iTracksPayload)
     {
         this.payloadInterface = iTracksPayload;
     }
