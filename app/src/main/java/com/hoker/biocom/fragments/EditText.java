@@ -72,7 +72,7 @@ public class EditText extends Fragment implements IEditFragment
     };
 
     @Override
-    public NdefRecord getPayload()
+    public NdefRecord getRecord()
     {
         return NdefRecord.createMime("text/plain", mEditText.getText().toString().getBytes());
     }

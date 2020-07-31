@@ -45,9 +45,10 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_payload);
 
-        setStringPayload();
         setStatusBarColor();
         setTitleBar();
+        setStringPayload();
+        fragmentSwitcher();
         setBroadcastReceiver();
     }
 
@@ -60,6 +61,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         }
         else
         {
+            _dataType = DisplayNdefPayload.recordDataType.plainText;
             _bytePayload = "".getBytes();
         }
     }
@@ -84,7 +86,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
 
     public void writeButton_Clicked(View view)
     {
-        _ndefRecord = _fragment.getPayload();
+        _ndefRecord = _fragment.getRecord();
         if(_ndefRecord != null)
         {
             Intent intent = new Intent(this, TagScanner.class);
@@ -124,7 +126,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.mime_type_options_array, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mToolbarSpinner.setAdapter(adapter);
-        //mToolbarSpinner.setSelection(0, false);
+        mToolbarSpinner.setSelection(0, false);
         mToolbarSpinner.setOnItemSelectedListener(this);
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -144,7 +146,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
         String selectedOption = (String) parent.getItemAtPosition(position);
-        if(selectedOption.equals("Plain text"))
+        if(selectedOption.equals("Plain Text"))
         {
             _dataType = DisplayNdefPayload.recordDataType.plainText;
         }

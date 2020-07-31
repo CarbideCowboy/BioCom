@@ -27,15 +27,12 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
-import com.hoker.biocom.fragments.ReadText;
 import com.hoker.biocom.fragments.TagInfo;
-import com.hoker.biocom.fragments.ReadToolbar;
-import com.hoker.biocom.interfaces.IEditButton;
 import com.hoker.biocom.utilities.TagHandler;
 
 import java.util.Objects;
 
-public class TagScanner extends AppCompatActivity implements IEditButton
+public class TagScanner extends AppCompatActivity
 {
     IntentFilter[] intentFiltersArray;
     PendingIntent pendingIntent;
@@ -95,15 +92,6 @@ public class TagScanner extends AppCompatActivity implements IEditButton
     {
         onBackPressed();
         return true;
-    }
-
-    @Override
-    public void buttonClicked()
-    {
-        Intent intent = new Intent(this, EditNdefPayload.class);
-        intent.putExtra("StringNDEF", _stringPayload);
-        startActivity(intent);
-        finish();
     }
 
     private void nfcPrimer()
@@ -320,34 +308,10 @@ public class TagScanner extends AppCompatActivity implements IEditButton
         finish();
     }
 
-    private void readTextRecord(String payload)
-    {
-        Bundle bundle = new Bundle();
-        bundle.putString("StringNDEF", payload);
-
-        ReadText readText = new ReadText();
-        readText.setArguments(bundle);
-
-        ReadToolbar writeToolbar = new ReadToolbar();
-        writeToolbar.setInterface(this);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.scan_prompt_frame, readText);
-        fragmentTransaction.replace(R.id.toolbar_frame, writeToolbar);
-        fragmentTransaction.commit();
-    }
-
     private void handleActionDiscovered(Intent intent)
     {
         if(_scanType == scanType.mainActivity)
         {
-            /*
-            _stringPayload = getIntent().getStringExtra("StringNDEF");
-            readTextRecord(_stringPayload);
-            attemptDecryption();
-            */
-
             Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
             _ndefMessage = (NdefMessage)Objects.requireNonNull(getIntent().getExtras()).get("NdefMessage");
             displayNdefIntent.putExtra("NdefMessage", _ndefMessage);
@@ -359,12 +323,6 @@ public class TagScanner extends AppCompatActivity implements IEditButton
         {
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
             {
-                /*
-                _stringPayload = TagHandler.parseStringNdefPayload(intent);
-                readTextRecord(_stringPayload);
-                attemptDecryption();
-                */
-
                 Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
                 displayNdefIntent.putExtra("NdefMessage", TagHandler.getNdefMessage(intent));
                 startActivity(displayNdefIntent);
@@ -394,7 +352,6 @@ public class TagScanner extends AppCompatActivity implements IEditButton
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
             {
                 _stringPayload = TagHandler.parseStringNdefPayload(intent);
-                readTextRecord(_stringPayload);
                 if(_stringPayload.length() > 27)
                 {
                     if(_stringPayload.substring(0,27).equals("-----BEGIN PGP MESSAGE-----"))

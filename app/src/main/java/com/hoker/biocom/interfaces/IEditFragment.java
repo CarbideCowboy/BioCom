@@ -4,5 +4,5 @@ import android.nfc.NdefRecord;
 
 public interface IEditFragment
 {
-    NdefRecord getPayload();
+    NdefRecord getRecord();
 }

@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void setUpNavigationDrawer()
     {
         mToolbar = findViewById(R.id.toolbar);

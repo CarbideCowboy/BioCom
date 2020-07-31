@@ -39,7 +39,7 @@ public class EditUri extends Fragment implements IEditFragment
     }
 
     @Override
-    public NdefRecord getPayload()
+    public NdefRecord getRecord()
     {
         String uri = mUriEditText.getText().toString();
         return NdefRecord.createUri(uri);
