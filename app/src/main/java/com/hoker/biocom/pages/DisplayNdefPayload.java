@@ -142,7 +142,7 @@ public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
             uri = URI_PREFIX[prefixCode] + uri;
             Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
             startActivity(uriIntent);
-            return;
+            finish();
         }
 
         bundle = new Bundle();
