@@ -80,6 +80,17 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         }
     }
 
+    private void setSpinnerText(String text)
+    {
+        for(int i=0; i<mToolbarSpinner.getAdapter().getCount(); i++)
+        {
+            if(mToolbarSpinner.getAdapter().getItem(i).toString().contains(text))
+            {
+                mToolbarSpinner.setSelection(i);
+            }
+        }
+    }
+
     private void setBroadcastReceiver()
     {
         BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
@@ -160,17 +171,17 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
         String selectedOption = (String) parent.getItemAtPosition(position);
-        if(selectedOption.equals("Plain Text"))
+        switch (selectedOption)
         {
-            _dataType = DisplayNdefPayload.recordDataType.plainText;
-        }
-        else if(selectedOption.equals("URI"))
-        {
-            _dataType = DisplayNdefPayload.recordDataType.Uri;
-        }
-        else if(selectedOption.equals("JPEG"))
-        {
-            _dataType = DisplayNdefPayload.recordDataType.Jpeg;
+            case "Plain Text":
+                _dataType = DisplayNdefPayload.recordDataType.plainText;
+                break;
+            case "URI":
+                _dataType = DisplayNdefPayload.recordDataType.Uri;
+                break;
+            case "JPEG":
+                _dataType = DisplayNdefPayload.recordDataType.Jpeg;
+                break;
         }
         fragmentSwitcher();
     }
@@ -188,12 +199,14 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
             ((EditText)_fragment).setArguments(bundle);
             updateFragment();
             _fragment.setPayloadTrackingInterface(this);
+            setSpinnerText("Plain Text");
         }
         else if(_dataType.equals(DisplayNdefPayload.recordDataType.Uri))
         {
             _fragment = new EditUri();
             updateFragment();
             _fragment.setPayloadTrackingInterface(this);
+            setSpinnerText("URI");
         }
         else if(_dataType.equals(DisplayNdefPayload.recordDataType.Jpeg))
         {
@@ -203,6 +216,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
             ((EditJpeg)_fragment).setArguments(bundle);
             updateFragment();
             _fragment.setPayloadTrackingInterface(this);
+            setSpinnerText("JPEG");
         }
     }
 

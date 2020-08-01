@@ -11,7 +11,7 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".pages.DisplayNdefPayload"></activity>
+        <activity android:name=".pages.DisplayNdefPayload"/>
         <activity
             android:name=".pages.EditNdefPayload"
             android:screenOrientation="portrait" />
@@ -33,7 +33,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="text/plain" />
-                <data android:mimeType="biocom/jpeg" />
+                <data android:mimeType="image/jpeg" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />

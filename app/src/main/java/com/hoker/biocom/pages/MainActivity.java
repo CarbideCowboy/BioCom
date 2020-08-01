@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity
         try
         {
             ndef.addDataType("text/plain");
+            ndef.addDataType("image/jpeg");
         }
         catch (IntentFilter.MalformedMimeTypeException e)
         {

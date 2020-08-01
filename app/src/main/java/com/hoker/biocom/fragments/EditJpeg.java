@@ -1,7 +1,6 @@
 package com.hoker.biocom.fragments;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -11,13 +10,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hoker.biocom.R;
@@ -36,9 +35,10 @@ public class EditJpeg extends Fragment implements IEditFragment
     Button mImageButton;
     ImageView mImageView;
     SeekBar mSeekBar;
+    TextView mCompressionTextView;
     Uri _imagePath;
     Bitmap _bitmap;
-    int _compressionLevel = 20;
+    int _qualityLevel = 80;
     ITracksPayload payloadInterface;
 
     @Override
@@ -59,17 +59,27 @@ public class EditJpeg extends Fragment implements IEditFragment
     {
         mImageButton = (Button) Objects.requireNonNull(Objects.requireNonNull(getView()).findViewById(R.id.edit_jpeg_button));
         mImageView = (ImageView) Objects.requireNonNull(getView().findViewById(R.id.edit_jpeg_image));
+        mCompressionTextView = getView().findViewById(R.id.edit_jpeg_textview);
         mSeekBar = getView().findViewById(R.id.compression_seekbar);
         setListeners();
         setupImageView();
+        setCompressionTextView();
+    }
+
+    private void setCompressionTextView()
+    {
+        String compressionAmount = getString(R.string.jpeg_compression_level) + ": " + (100 - _qualityLevel) + getString(R.string.percentage);
+        mCompressionTextView.setText(compressionAmount);
     }
 
     private void setupImageView()
     {
         assert getArguments() != null;
         byte[] payload = getArguments().getByteArray("Payload");
-        Bitmap bitmap = BitmapFactory.decodeByteArray(payload, 0, payload.length);
-        mImageView.setImageBitmap(bitmap);
+        assert payload != null;
+        _bitmap = BitmapFactory.decodeByteArray(payload, 0, payload.length);
+        mImageView.setImageBitmap(_bitmap);
+        payloadInterface.payloadChanged();
     }
 
     private void setListeners()
@@ -90,8 +100,9 @@ public class EditJpeg extends Fragment implements IEditFragment
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
             {
-                _compressionLevel = 100 - (progress * 10);
+                _qualityLevel = 100 - (progress * 10);
                 payloadInterface.payloadChanged();
+                setCompressionTextView();
             }
 
             @Override
@@ -137,14 +148,14 @@ public class EditJpeg extends Fragment implements IEditFragment
     {
         if(_bitmap == null)
         {
-            return NdefRecord.createMime("biocom/jpeg", new byte[0]);
+            return NdefRecord.createMime("image/jpeg", new byte[0]);
         }
         else
         {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            _bitmap.compress(Bitmap.CompressFormat.JPEG, _compressionLevel, stream);
+            _bitmap.compress(Bitmap.CompressFormat.JPEG, _qualityLevel, stream);
             byte[] bytes = stream.toByteArray();
-            return NdefRecord.createMime("biocom/jpeg", bytes);
+            return NdefRecord.createMime("image/jpeg", bytes);
         }
     }
 

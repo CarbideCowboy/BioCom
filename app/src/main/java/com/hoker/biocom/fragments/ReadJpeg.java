@@ -39,6 +39,7 @@ public class ReadJpeg extends Fragment
         mImageView = Objects.requireNonNull(getView()).findViewById(R.id.read_jpeg_image);
         assert getArguments() != null;
         byte[] payload = getArguments().getByteArray("Payload");
+        assert payload != null;
         Bitmap bitmap = BitmapFactory.decodeByteArray(payload, 0, payload.length);
         mImageView.setImageBitmap(bitmap);
     }
