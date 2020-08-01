@@ -39,6 +39,10 @@
     <string name="enter_uri_address">Enter URI Address</string>
     <string name="placeholder_image">Placeholder image</string>
     <string name="select_a_jpeg_image">Select a JPEG Image</string>
+    <string name="jpeg_compression_level">JPEG Compression Level</string>
+    <string name="plain_text">Plain Text</string>
+    <string name="uri_text">URI</string>
+    <string name="jpeg_text">JPEG</string>
     <string-array name="mime_type_options_array">
         <item>Plain Text</item>
         <item>URI</item>

@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.hoker.biocom.R;
+import com.hoker.biocom.fragments.ReadJpeg;
 import com.hoker.biocom.fragments.ReadText;
 import com.hoker.biocom.fragments.ReadToolbar;
 import com.hoker.biocom.interfaces.IEditButton;
@@ -83,6 +84,10 @@ public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
         {
             _fragment = new ReadText();
         }
+        else if(_recordDataType == recordDataType.Jpeg)
+        {
+            _fragment = new ReadJpeg();
+        }
 
         bundle = new Bundle();
         bundle.putByteArray("Payload", _ndefMessage.getRecords()[0].getPayload());
@@ -129,6 +134,10 @@ public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
                 if(mimeType.equals("text/plain"))
                 {
                     return recordDataType.plainText;
+                }
+                else if(mimeType.equals("biocom/jpeg"))
+                {
+                    return recordDataType.Jpeg;
                 }
             case NdefRecord.TNF_UNKNOWN:
                 return recordDataType.Unknown;

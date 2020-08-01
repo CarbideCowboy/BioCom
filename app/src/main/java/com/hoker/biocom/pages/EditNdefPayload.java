@@ -198,6 +198,9 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         else if(_dataType.equals(DisplayNdefPayload.recordDataType.Jpeg))
         {
             _fragment = new EditJpeg();
+            Bundle bundle = new Bundle();
+            bundle.putByteArray("Payload", _bytePayload);
+            ((EditJpeg)_fragment).setArguments(bundle);
             updateFragment();
             _fragment.setPayloadTrackingInterface(this);
         }
