@@ -132,23 +132,28 @@ public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
         }
         else if(_recordDataType == recordDataType.Uri)
         {
-            byte[] bytes = _ndefMessage.getRecords()[0].getPayload();
-            int prefixCode = bytes[0] & 0x0FF;
-            if(prefixCode >= URI_PREFIX.length)
-            {
-                prefixCode = 0;
-            }
-            String uri = new String(bytes, 1, bytes.length - 1, StandardCharsets.UTF_8);
-            uri = URI_PREFIX[prefixCode] + uri;
-            Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            startActivity(uriIntent);
-            finish();
+            openUriIntent();
         }
 
         bundle = new Bundle();
         bundle.putByteArray("Payload", _ndefMessage.getRecords()[0].getPayload());
         _fragment.setArguments(bundle);
         updateFragment();
+    }
+
+    private void openUriIntent()
+    {
+        byte[] bytes = _ndefMessage.getRecords()[0].getPayload();
+        int prefixCode = bytes[0] & 0x0FF;
+        if(prefixCode >= URI_PREFIX.length)
+        {
+            prefixCode = 0;
+        }
+        String uri = new String(bytes, 1, bytes.length - 1, StandardCharsets.UTF_8);
+        uri = URI_PREFIX[prefixCode] + uri;
+        Intent uriIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        startActivity(uriIntent);
+        finish();
     }
 
     private void setStatusBarColor()
