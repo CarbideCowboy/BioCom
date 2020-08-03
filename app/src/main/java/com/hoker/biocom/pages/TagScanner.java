@@ -28,7 +28,8 @@ import android.widget.TextView;
 
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.TagInfo;
-import com.hoker.biocom.utilities.TagHandler;
+import com.hoker.biocom.utilities.NdefUtilities;
+import com.hoker.biocom.utilities.TagUtilities;
 
 import java.util.Objects;
 
@@ -171,7 +172,7 @@ public class TagScanner extends AppCompatActivity
     private void writeToTag(Intent intent, NdefMessage ndefMessage)
     {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        if(TagHandler.writeNdefMessage(tag, ndefMessage))
+        if(TagUtilities.writeNdefMessage(tag, ndefMessage))
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("NDEF write operation successful");
@@ -209,7 +210,7 @@ public class TagScanner extends AppCompatActivity
     private void eraseTag(Intent intent)
     {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        if(TagHandler.eraseNfcTag(tag))
+        if(TagUtilities.eraseNfcTag(tag))
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Erase operation successful");
@@ -324,7 +325,7 @@ public class TagScanner extends AppCompatActivity
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
             {
                 Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
-                displayNdefIntent.putExtra("NdefMessage", TagHandler.getNdefMessage(intent));
+                displayNdefIntent.putExtra("NdefMessage", NdefUtilities.getNdefMessage(intent));
                 startActivity(displayNdefIntent);
                 finish();
             }
@@ -338,7 +339,7 @@ public class TagScanner extends AppCompatActivity
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TAG_DISCOVERED))
             {
                 Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
-                displayNdefIntent.putExtra("NdefMessage", TagHandler.getNdefMessage(intent));
+                displayNdefIntent.putExtra("NdefMessage", NdefUtilities.getNdefMessage(intent));
                 startActivity(displayNdefIntent);
                 finish();
             }
@@ -351,7 +352,7 @@ public class TagScanner extends AppCompatActivity
 
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
             {
-                _stringPayload = TagHandler.parseStringNdefPayload(intent);
+                _stringPayload = NdefUtilities.parseStringNdefPayloadFromIntent(intent);
                 if(_stringPayload.length() > 27)
                 {
                     if(_stringPayload.substring(0,27).equals("-----BEGIN PGP MESSAGE-----"))

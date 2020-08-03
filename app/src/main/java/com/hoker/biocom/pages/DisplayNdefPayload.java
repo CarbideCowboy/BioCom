@@ -22,6 +22,7 @@ import com.hoker.biocom.fragments.ReadToolbar;
 import com.hoker.biocom.interfaces.IEditButton;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
@@ -203,9 +204,14 @@ public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
             case NdefRecord.TNF_UNKNOWN:
                 return recordDataType.Unknown;
             case NdefRecord.TNF_WELL_KNOWN:
-                if(record.toUri()!=null)
+                byte[] type = record.getType();
+                if(Arrays.equals(type, NdefRecord.RTD_URI))
                 {
                     return recordDataType.Uri;
+                }
+                else if(Arrays.equals(type, NdefRecord.RTD_TEXT))
+                {
+                    return recordDataType.plainText;
                 }
                 break;
         }

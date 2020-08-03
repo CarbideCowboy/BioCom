@@ -27,8 +27,8 @@ import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.hoker.biocom.R;
+import com.hoker.biocom.utilities.NdefUtilities;
 import com.hoker.biocom.utilities.OnSwipeTouchListener;
-import com.hoker.biocom.utilities.TagHandler;
 
 import java.util.Objects;
 
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity
         {
             Intent filterCaptureIntent = new Intent(this, TagScanner.class);
             filterCaptureIntent.putExtra("ScanType", TagScanner.scanType.mainActivity);
-            filterCaptureIntent.putExtra("NdefMessage", TagHandler.getNdefMessage(intent));
+            filterCaptureIntent.putExtra("NdefMessage", NdefUtilities.getNdefMessage(intent));
             startActivity(filterCaptureIntent);
         }
     }

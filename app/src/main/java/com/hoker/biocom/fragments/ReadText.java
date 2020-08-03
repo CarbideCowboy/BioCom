@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
+import com.hoker.biocom.utilities.NdefUtilities;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class ReadText extends Fragment
@@ -41,7 +41,7 @@ public class ReadText extends Fragment
 
         if(_payload != null)
         {
-            mReadTextbox.setText(new String(_payload, StandardCharsets.UTF_8));
+            mReadTextbox.setText(NdefUtilities.getStringFromBytes(_payload));
         }
     }
 }

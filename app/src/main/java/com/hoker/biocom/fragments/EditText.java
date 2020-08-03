@@ -15,8 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.hoker.biocom.R;
 import com.hoker.biocom.interfaces.IEditFragment;
@@ -29,9 +27,7 @@ public class EditText extends Fragment implements IEditFragment
 {
     String _stringPayload;
     android.widget.EditText mEditText;
-    ScrollView mScrollView;
     LinearLayout mLinearLayout;
-    TextView mPayloadSizeText;
     ITracksPayload payloadInterface;
 
     @Override
@@ -51,9 +47,7 @@ public class EditText extends Fragment implements IEditFragment
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
         mEditText = Objects.requireNonNull(getView()).findViewById(R.id.ndef_edit_text);
-        mScrollView = Objects.requireNonNull(getView()).findViewById(R.id.edit_text_scroll);
         mLinearLayout = Objects.requireNonNull(getView()).findViewById(R.id.edit_text_linear);
-        mPayloadSizeText = Objects.requireNonNull(getView()).findViewById(R.id.edit_payload_size);
 
         mLinearLayout.setOnClickListener(mLinearLayout_Clicked);
 
@@ -102,14 +96,14 @@ public class EditText extends Fragment implements IEditFragment
             byte[] payload = getArguments().getByteArray("Payload");
             if(payload != null)
             {
-                return NdefRecord.createMime("text/plain", payload);
+                return NdefRecord.createTextRecord("en", new String(payload, StandardCharsets.UTF_8));
             }
             else
             {
-                return NdefRecord.createMime("text/plain", "".getBytes());
+                return NdefRecord.createTextRecord("en", "");
             }
         }
-        return NdefRecord.createMime("text/plain", mEditText.getText().toString().getBytes());
+        return NdefRecord.createTextRecord("en", mEditText.getText().toString());
     }
 
     public void focusEntry()

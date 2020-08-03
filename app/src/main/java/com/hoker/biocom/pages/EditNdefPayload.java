@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.EditJpeg;
 import com.hoker.biocom.fragments.EditText;
@@ -40,6 +41,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     Toolbar mToolbar;
     Spinner mToolbarSpinner;
     TextView mPayloadSizeText;
+    FloatingActionButton mWriteFab;
     IEditFragment _fragment;
     DisplayNdefPayload.recordDataType _dataType;
 
@@ -53,8 +55,22 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         setStatusBarColor();
         setTitleBar();
         setStringPayload();
+        setWriteButton();
         fragmentSwitcher();
         setBroadcastReceiver();
+    }
+
+    private void setWriteButton()
+    {
+        mWriteFab = findViewById(R.id.fab_write);
+        mWriteFab.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                writeButton_Clicked();
+            }
+        });
     }
 
     @Override
@@ -109,7 +125,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         registerReceiver(broadcastReceiver, new IntentFilter("finish_edit_activity"));
     }
 
-    public void writeButton_Clicked(View view)
+    public void writeButton_Clicked()
     {
         _ndefRecord = _fragment.getRecord();
         if(_ndefRecord != null)
