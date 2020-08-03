@@ -17,6 +17,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -26,14 +27,13 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
-import com.hoker.biocom.fragments.ReadText;
 import com.hoker.biocom.fragments.TagInfo;
-import com.hoker.biocom.fragments.WriteToolbar;
-import com.hoker.biocom.utilities.TagHandler;
+import com.hoker.biocom.utilities.NdefUtilities;
+import com.hoker.biocom.utilities.TagUtilities;
 
 import java.util.Objects;
 
-public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditButton
+public class TagScanner extends AppCompatActivity
 {
     IntentFilter[] intentFiltersArray;
     PendingIntent pendingIntent;
@@ -43,6 +43,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
     TextView mTextView2;
     scanType _scanType;
     String _stringPayload;
+    NdefMessage _ndefMessage = null;
 
     public enum scanType
     {
@@ -59,7 +60,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scan_prompt);
+        setContentView(R.layout.activity_tag_scanner);
 
         mTextView1 = findViewById(R.id.scan_text1);
         mTextView2 = findViewById(R.id.scan_text2);
@@ -92,15 +93,6 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
     {
         onBackPressed();
         return true;
-    }
-
-    @Override
-    public void buttonClicked()
-    {
-        Intent intent = new Intent(this, EditNdefPayload.class);
-        intent.putExtra("StringNDEF", _stringPayload);
-        startActivity(intent);
-        finish();
     }
 
     private void nfcPrimer()
@@ -177,10 +169,10 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         alert.show();
     }
 
-    private void writeToTag(Intent intent)
+    private void writeToTag(Intent intent, NdefMessage ndefMessage)
     {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        if(TagHandler.writeNdefText(_stringPayload, tag))
+        if(TagUtilities.writeNdefMessage(tag, ndefMessage))
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("NDEF write operation successful");
@@ -218,7 +210,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
     private void eraseTag(Intent intent)
     {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        if(TagHandler.eraseNfcTag(tag))
+        if(TagUtilities.eraseNfcTag(tag))
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Erase operation successful");
@@ -317,40 +309,25 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
         finish();
     }
 
-    private void readTextRecord(String payload)
-    {
-        Bundle bundle = new Bundle();
-        bundle.putString("StringNDEF", payload);
-
-        ReadText readText = new ReadText();
-        readText.setArguments(bundle);
-
-        WriteToolbar writeToolbar = new WriteToolbar();
-        writeToolbar.setInterface(this);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.scan_prompt_frame, readText);
-        fragmentTransaction.replace(R.id.toolbar_frame, writeToolbar);
-        fragmentTransaction.commit();
-    }
-
     private void handleActionDiscovered(Intent intent)
     {
         if(_scanType == scanType.mainActivity)
         {
-            _stringPayload = getIntent().getStringExtra("StringNDEF");
-            readTextRecord(_stringPayload);
-            attemptDecryption();
+            Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
+            _ndefMessage = (NdefMessage)Objects.requireNonNull(getIntent().getExtras()).get("NdefMessage");
+            displayNdefIntent.putExtra("NdefMessage", _ndefMessage);
+            startActivity(displayNdefIntent);
+            finish();
         }
 
         if(_scanType == scanType.foreGroundDispatch)
         {
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
             {
-                _stringPayload = TagHandler.parseStringNdefPayload(intent);
-                readTextRecord(_stringPayload);
-                attemptDecryption();
+                Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
+                displayNdefIntent.putExtra("NdefMessage", NdefUtilities.getNdefMessage(intent));
+                startActivity(displayNdefIntent);
+                finish();
             }
         }
 
@@ -359,10 +336,12 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
             mTextView1.setText(R.string.scan_text_ndef_read);
             mTextView2.setText("");
 
-            if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
+            if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TAG_DISCOVERED))
             {
-                _stringPayload = TagHandler.parseStringNdefPayload(intent);
-                readTextRecord(_stringPayload);
+                Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
+                displayNdefIntent.putExtra("NdefMessage", NdefUtilities.getNdefMessage(intent));
+                startActivity(displayNdefIntent);
+                finish();
             }
         }
 
@@ -373,8 +352,7 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
 
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
             {
-                _stringPayload = TagHandler.parseStringNdefPayload(intent);
-                readTextRecord(_stringPayload);
+                _stringPayload = NdefUtilities.parseStringNdefPayloadFromIntent(intent);
                 if(_stringPayload.length() > 27)
                 {
                     if(_stringPayload.substring(0,27).equals("-----BEGIN PGP MESSAGE-----"))
@@ -409,11 +387,13 @@ public class TagScanner extends AppCompatActivity implements WriteToolbar.IEditB
             mTextView1.setText(R.string.scan_text_writable);
             mTextView2.setText(R.string.scan_text_write_warning);
 
-            _stringPayload = getIntent().getStringExtra("StringNDEF");
-
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TECH_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TAG_DISCOVERED))
             {
-                writeToTag(intent);
+                writeToTag(intent, _ndefMessage);
+            }
+            else
+            {
+                _ndefMessage = intent.getParcelableExtra("NdefMessage");
             }
         }
 

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hoker.biocom">
+
     <uses-permission android:name="android.permission.NFC" />
+
     <application
         android:allowBackup="false"
         android:icon="@drawable/app_icon"
@@ -9,6 +11,8 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".pages.DisplayNdefPayload"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".pages.EditNdefPayload"
             android:screenOrientation="portrait" />
@@ -23,23 +27,27 @@
         </activity>
         <activity
             android:name=".pages.TagScanner"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="text/plain" />
+                <data android:mimeType="image/jpeg" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED"/>
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
+
             <meta-data
                 android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc_tech_list"/>
+                android:resource="@xml/nfc_tech_list" />
+
             <intent-filter>
-                <action android:name="android.nfc.action.TAG_DISCOVERED"/>
+                <action android:name="android.nfc.action.TAG_DISCOVERED" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

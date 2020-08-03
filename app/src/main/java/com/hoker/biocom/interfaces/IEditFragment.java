@@ -1,6 +1,9 @@
 package com.hoker.biocom.interfaces;
 
+import android.nfc.NdefRecord;
+
 public interface IEditFragment
 {
-    String getPayload();
+    NdefRecord getRecord();
+    void setPayloadTrackingInterface(ITracksPayload iTracksPayload);
 }
