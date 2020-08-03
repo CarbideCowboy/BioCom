@@ -29,8 +29,15 @@ public class NdefUtilities
 
     public static String getStringFromBytes(byte[] payload)
     {
-        int languageCodeLength = payload[0] & 51;
-        return new String(payload, languageCodeLength +1, payload.length - languageCodeLength - 1, StandardCharsets.UTF_8);
+        if(payload.length != 0)
+        {
+            int languageCodeLength = payload[0] & 51;
+            return new String(payload, languageCodeLength +1, payload.length - languageCodeLength - 1, StandardCharsets.UTF_8);
+        }
+        else
+        {
+            return "";
+        }
     }
 
     public static NdefMessage getNdefMessage(Intent intent)

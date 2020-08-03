@@ -19,13 +19,13 @@ import android.widget.LinearLayout;
 import com.hoker.biocom.R;
 import com.hoker.biocom.interfaces.IEditFragment;
 import com.hoker.biocom.interfaces.ITracksPayload;
+import com.hoker.biocom.utilities.NdefUtilities;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class EditText extends Fragment implements IEditFragment
 {
-    String _stringPayload;
     android.widget.EditText mEditText;
     LinearLayout mLinearLayout;
     ITracksPayload payloadInterface;
@@ -123,12 +123,11 @@ public class EditText extends Fragment implements IEditFragment
         byte[] payload = getArguments().getByteArray("Payload");
         if(payload != null)
         {
-            _stringPayload = new String(payload, StandardCharsets.UTF_8);
+            mEditText.setText(NdefUtilities.getStringFromBytes(payload));
         }
         else
         {
-            _stringPayload = "";
+            mEditText.setText(NdefUtilities.getStringFromBytes("".getBytes()));
         }
-        mEditText.setText(_stringPayload);
     }
 }
