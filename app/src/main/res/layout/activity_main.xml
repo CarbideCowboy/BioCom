@@ -32,27 +32,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:fontFamily="@font/ibmplexmono_semibold"
-            android:rotation="90"
-            android:text="@string/app_name"
-            android:textColor="@color/colorPrimary"
-            android:textSize="40sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_divider1" />
-
-        <TextView
-            android:id="@+id/main_text3"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/ibmplexmono_semibold"
-            android:text="@string/main_instructions"
+            android:rotation="0"
+            android:text="@string/app_name"
             android:textColor="@color/colorPrimary"
-            android:textSize="18sp"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/main_divider1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_divider2" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <View
             android:id="@+id/main_divider2"
@@ -86,13 +74,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="36dp"
+            android:id="@+id/imageView2"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:contentDescription="@string/application_logo"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_text3"
+            app:layout_constraintTop_toBottomOf="@+id/main_divider2"
             app:srcCompat="@drawable/app_icon_invert" />
 
         <TextView
@@ -105,6 +94,29 @@
             android:textColor="@color/colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <ImageView
+            android:id="@+id/animation_imageview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/animation_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:fontFamily="@font/ibmplexmono_semibold"
+            android:text="@string/scan_nfc_device_to_read_payload"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/animation_imageview" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.navigation.NavigationView

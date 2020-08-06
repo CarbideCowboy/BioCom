@@ -1,14 +1,11 @@
 <resources>
     <string name="app_name">BioCom</string>
     <string name="nfc_logo">nfc_logo</string>
-    <string name="scan_text_ndef_read">Scan an NDEF formatted NFC tag</string>
     <string name="ndefRead_empty_record">No text record detected</string>
     <string name="ndef_operations">NDEF Operations</string>
-    <string name="read_ndef_records">Read NDEF Records</string>
     <string name="drawer_toggle_open">Drawer Open</string>
     <string name="drawer_toggle_close">Drawer Close</string>
     <string name="nfc_device_manager">NFC Device Manager</string>
-    <string name="main_instructions">Scan an NFC device or choose an NFC operation from the left panel</string>
     <string name="scan_text_encrypted">Scan an NFC tag containing an encrypted NDEF record</string>
     <string name="cryptographic_operations">Cryptographic Operations</string>
     <string name="decrypt_tag_contents">Decrypt Tag Contents</string>
@@ -36,6 +33,8 @@
     <string name="select_a_jpeg_image">Select a JPEG Image</string>
     <string name="jpeg_compression_level">JPEG Compression Level</string>
     <string name="percentage">%</string>
+    <string name="scan_nfc_device_to_read_payload">Scan NFC device to read payload</string>
+    <string name="animation_image">animation image</string>
     <string-array name="mime_type_options_array">
         <item>Plain Text</item>
         <item>URI</item>

@@ -48,7 +48,6 @@ public class TagScanner extends AppCompatActivity
     public enum scanType
     {
         foreGroundDispatch,
-        mainActivity,
         readNdef,
         writeNdef,
         decryptNdef,
@@ -311,7 +310,7 @@ public class TagScanner extends AppCompatActivity
 
     private void handleActionDiscovered(Intent intent)
     {
-        if(_scanType == scanType.mainActivity)
+        if(_scanType == scanType.readNdef)
         {
             Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
             _ndefMessage = (NdefMessage)Objects.requireNonNull(getIntent().getExtras()).get("NdefMessage");
@@ -323,20 +322,6 @@ public class TagScanner extends AppCompatActivity
         if(_scanType == scanType.foreGroundDispatch)
         {
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
-            {
-                Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
-                displayNdefIntent.putExtra("NdefMessage", NdefUtilities.getNdefMessage(intent));
-                startActivity(displayNdefIntent);
-                finish();
-            }
-        }
-
-        if(_scanType == scanType.readNdef)
-        {
-            mTextView1.setText(R.string.scan_text_ndef_read);
-            mTextView2.setText("");
-
-            if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED)||Objects.equals(intent.getAction(), NfcAdapter.ACTION_TAG_DISCOVERED))
             {
                 Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
                 displayNdefIntent.putExtra("NdefMessage", NdefUtilities.getNdefMessage(intent));
