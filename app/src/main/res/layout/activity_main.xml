@@ -99,6 +99,9 @@
             android:id="@+id/animation_imageview"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="70dp"
             android:contentDescription="@string/animation_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -108,15 +111,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:fontFamily="@font/ibmplexmono_semibold"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="60dp"
+            android:fontFamily="@font/ibmplexmono_text"
             android:text="@string/scan_nfc_device_to_read_payload"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/animation_imageview"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/animation_imageview" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.navigation.NavigationView
