@@ -8,9 +8,6 @@
                 <group
                     android:checkableBehavior="none">
                     <item
-                        android:id="@+id/nav_ndef_read"
-                        android:title="@string/read_ndef_records"/>
-                    <item
                         android:id="@+id/nav_ndef_write"
                         android:title="@string/write_ndef_text_records"/>
                 </group>
