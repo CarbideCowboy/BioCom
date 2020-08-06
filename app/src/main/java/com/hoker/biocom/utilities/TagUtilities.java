@@ -26,7 +26,7 @@ public class TagUtilities
             String result = new AsyncConnectWrite().doInBackground(message, ndef);
             if(result.equals("Message written"))
             {
-                NdefRecord ndefRecord = NdefRecord.createTextRecord( "en", "");
+                NdefRecord ndefRecord = new NdefRecord(NdefRecord.TNF_EMPTY, null, null, null);
                 NdefMessage ndefMessage = new NdefMessage(ndefRecord);
                 return writeNdefMessage(tag, ndefMessage);
             }
