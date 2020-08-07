@@ -165,7 +165,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         mToolbar = findViewById(R.id.toolbar_edit);
         mToolbarSpinner = findViewById(R.id.toolbar_edit_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.mime_type_options_array, R.layout.spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         mToolbarSpinner.setAdapter(adapter);
         mToolbarSpinner.setSelection(0, false);
         mToolbarSpinner.setOnItemSelectedListener(this);

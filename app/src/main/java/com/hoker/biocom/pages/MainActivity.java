@@ -8,8 +8,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
-import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
@@ -19,16 +17,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
@@ -61,33 +55,6 @@ public class MainActivity extends AppCompatActivity
         setUpNavigationDrawer();
         setUpSwipeHandler();
         setVersionNumber();
-        setUpAnimation();
-    }
-
-    private void setUpAnimation()
-    {
-        ImageView mAnimatedImage = findViewById(R.id.animation_imageview);
-        final AnimatedVectorDrawableCompat animation = AnimatedVectorDrawableCompat.create(this, R.drawable.avd_transmit_pulse);
-        mAnimatedImage.setImageDrawable(animation);
-        final Handler handler = new Handler(Looper.getMainLooper());
-        assert animation != null;
-        animation.registerAnimationCallback(new Animatable2Compat.AnimationCallback()
-        {
-            @Override
-            public void onAnimationEnd(Drawable drawable)
-            {
-                handler.post(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        animation.start();
-                    }
-                });
-                super.onAnimationStart(drawable);
-            }
-        });
-        animation.start();
     }
 
     private void setVersionNumber()
