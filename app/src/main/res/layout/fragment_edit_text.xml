@@ -35,6 +35,7 @@
                     android:layout_height="wrap_content"
                     android:autofillHints=""
                     android:ems="10"
+                    android:fontFamily="@font/ibmplexmono_text"
                     android:hint="@string/type_ndef_string_payload_here"
                     android:inputType="textMultiLine|textPersonName"
                     android:textColor="@color/colorPrimary"
