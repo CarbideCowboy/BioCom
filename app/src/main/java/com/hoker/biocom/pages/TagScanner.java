@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.TagInfo;
 import com.hoker.biocom.utilities.NdefUtilities;
+import com.hoker.biocom.utilities.OpenKeychainIntents;
 import com.hoker.biocom.utilities.TagUtilities;
 
 import java.util.Objects;
@@ -267,9 +268,13 @@ public class TagScanner extends AppCompatActivity
                                 clipboard.setPrimaryClip(clipData);
 
                                 //create new intent to open OpenKeychain
-                                PackageManager manager = getBaseContext().getPackageManager();
-                                Intent decryptionIntent = manager.getLaunchIntentForPackage("org.sufficientlysecure.keychain");
+                                //PackageManager manager = getBaseContext().getPackageManager();
+                                //Intent decryptionIntent = manager.getLaunchIntentForPackage("org.sufficientlysecure.keychain");
+                                Intent decryptionIntent = new Intent(Intent.ACTION_SEND);
+                                decryptionIntent.setPackage("org.sufficientlysecure.keychain");
+                                decryptionIntent.putExtra(Intent.EXTRA_TEXT, _stringPayload);
 
+                                /*
                                 if (decryptionIntent != null) {
                                     decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 } else {
@@ -277,6 +282,8 @@ public class TagScanner extends AppCompatActivity
                                     decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     decryptionIntent.setData(Uri.parse("https://f-droid.org/en/packages/org.sufficientlysecure.keychain/"));
                                 }
+
+                                 */
                                 startActivity(decryptionIntent);
                             }
                         })
