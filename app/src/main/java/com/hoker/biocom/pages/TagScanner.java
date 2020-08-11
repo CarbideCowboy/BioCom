@@ -8,13 +8,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.PendingIntent;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.nfc.NdefMessage;
@@ -29,7 +27,6 @@ import android.widget.TextView;
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.TagInfo;
 import com.hoker.biocom.utilities.NdefUtilities;
-import com.hoker.biocom.utilities.OpenKeychainIntents;
 import com.hoker.biocom.utilities.TagUtilities;
 
 import java.util.Objects;
@@ -261,30 +258,22 @@ public class TagScanner extends AppCompatActivity
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
-                                //copy string ndef payload to system clipboard
-                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clipData = ClipData.newPlainText("payload", _stringPayload);
-                                assert clipboard != null;
-                                clipboard.setPrimaryClip(clipData);
-
-                                //create new intent to open OpenKeychain
-                                //PackageManager manager = getBaseContext().getPackageManager();
-                                //Intent decryptionIntent = manager.getLaunchIntentForPackage("org.sufficientlysecure.keychain");
-                                Intent decryptionIntent = new Intent(Intent.ACTION_SEND);
-                                decryptionIntent.setPackage("org.sufficientlysecure.keychain");
-                                decryptionIntent.putExtra(Intent.EXTRA_TEXT, _stringPayload);
-
-                                /*
-                                if (decryptionIntent != null) {
+                                try
+                                {
+                                    Intent decryptionIntent = new Intent(Intent.ACTION_SEND);
+                                    decryptionIntent.putExtra(Intent.EXTRA_TEXT, _stringPayload);
+                                    ComponentName componentName = new ComponentName("org.sufficientlysecure.keychain", "org.sufficientlysecure.keychain.ui.DecryptActivity");
+                                    decryptionIntent.setComponent(componentName);
                                     decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                } else {
-                                    decryptionIntent = new Intent(Intent.ACTION_VIEW);
-                                    decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    decryptionIntent.setData(Uri.parse("https://f-droid.org/en/packages/org.sufficientlysecure.keychain/"));
+                                    startActivity(decryptionIntent);
                                 }
-
-                                 */
-                                startActivity(decryptionIntent);
+                                catch(ActivityNotFoundException e)
+                                {
+                                    Intent fdroidIntent = new Intent(Intent.ACTION_VIEW);
+                                    fdroidIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    fdroidIntent.setData(Uri.parse("https://f-droid.org/en/packages/org.sufficientlysecure.keychain/"));
+                                    startActivity(fdroidIntent);
+                                }
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener()
