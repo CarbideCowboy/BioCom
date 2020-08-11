@@ -116,7 +116,7 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
             {
                 String action = intent.getAction();
                 assert action != null;
-                if(action.equals("finish_edit_activity"))
+                if(action.equals("finish_activity"))
                 {
                     finish();
                 }

@@ -266,6 +266,7 @@ public class TagScanner extends AppCompatActivity
                                     decryptionIntent.setComponent(componentName);
                                     decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(decryptionIntent);
+                                    finish();
                                 }
                                 catch(ActivityNotFoundException e)
                                 {
@@ -273,6 +274,7 @@ public class TagScanner extends AppCompatActivity
                                     fdroidIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     fdroidIntent.setData(Uri.parse("https://f-droid.org/en/packages/org.sufficientlysecure.keychain/"));
                                     startActivity(fdroidIntent);
+                                    finish();
                                 }
                             }
                         })
@@ -299,7 +301,7 @@ public class TagScanner extends AppCompatActivity
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-        Intent broadcastIntent = new Intent("finish_edit_activity");
+        Intent broadcastIntent = new Intent("finish_activity");
         sendBroadcast(broadcastIntent);
         finish();
     }

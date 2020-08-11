@@ -7,8 +7,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.net.Uri;
@@ -56,6 +59,7 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
         setStatusBarColor();
         setTitleBar();
         setWriteButton();
+        setBroadcastReceiver();
 
         mServiceConnection = new OpenPgpServiceConnection(this, "org.sufficientlysecure.keychain");
         mServiceConnection.bindToService();
@@ -170,6 +174,24 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
                 encrypt();
             }
         }
+    }
+
+    private void setBroadcastReceiver()
+    {
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(Context context, Intent intent)
+            {
+                String action = intent.getAction();
+                assert action != null;
+                if(action.equals("finish_activity"))
+                {
+                    finish();
+                }
+            }
+        };
+        registerReceiver(broadcastReceiver, new IntentFilter("finish_edit_activity"));
     }
 
     public void setStatusBarColor()
