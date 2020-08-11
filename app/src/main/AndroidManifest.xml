@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hoker.biocom">
-
     <uses-permission android:name="android.permission.NFC" />
-
     <application
         android:allowBackup="false"
         android:icon="@drawable/app_icon"
@@ -11,7 +9,11 @@
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".pages.DisplayNdefPayload"
+        <activity
+            android:name=".pages.EncryptNdefText"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".pages.DisplayNdefPayload"
             android:screenOrientation="portrait" />
         <activity
             android:name=".pages.EditNdefPayload"
@@ -40,13 +42,13 @@
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
 
-            <meta-data
-                android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc_tech_list" />
-
             <intent-filter>
                 <action android:name="android.nfc.action.TAG_DISCOVERED" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_list" />
         </activity>
     </application>
 

@@ -87,6 +87,11 @@ public class EditText extends Fragment implements IEditFragment
         });
     }
 
+    public String getEntryText()
+    {
+        return mEditText.getText().toString();
+    }
+
     @Override
     public NdefRecord getRecord()
     {
@@ -119,11 +124,17 @@ public class EditText extends Fragment implements IEditFragment
 
     private void setupTextView()
     {
-        assert getArguments() != null;
-        byte[] payload = getArguments().getByteArray("Payload");
-        if(payload != null)
+        if(getArguments() != null)
         {
-            mEditText.setText(NdefUtilities.getStringFromBytes(payload));
+            byte[] payload = getArguments().getByteArray("Payload");
+            if(payload != null)
+            {
+                mEditText.setText(NdefUtilities.getStringFromBytes(payload));
+            }
+            else
+            {
+                mEditText.setText(NdefUtilities.getStringFromBytes("".getBytes()));
+            }
         }
         else
         {
