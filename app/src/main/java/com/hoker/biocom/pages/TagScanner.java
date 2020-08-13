@@ -40,7 +40,6 @@ public class TagScanner extends AppCompatActivity
     TextView mTextView1;
     TextView mTextView2;
     scanType _scanType;
-    String _stringPayload;
     NdefMessage _ndefMessage = null;
 
     public enum scanType
@@ -244,7 +243,6 @@ public class TagScanner extends AppCompatActivity
 
     private boolean attemptDecryption(final String textPayload)
     {
-        //set title, message and yes/no functionality for the dialog
         if(textPayload.length() > 27)
         {
             if (textPayload.substring(0, 27).equals("-----BEGIN PGP MESSAGE-----"))
