@@ -242,12 +242,12 @@ public class TagScanner extends AppCompatActivity
         }
     }
 
-    private void attemptDecryption()
+    private boolean attemptDecryption(final String textPayload)
     {
         //set title, message and yes/no functionality for the dialog
-        if(_stringPayload.length() > 27)
+        if(textPayload.length() > 27)
         {
-            if (_stringPayload.substring(0, 27).equals("-----BEGIN PGP MESSAGE-----"))
+            if (textPayload.substring(0, 27).equals("-----BEGIN PGP MESSAGE-----"))
             {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
                 dialogBuilder
@@ -261,7 +261,7 @@ public class TagScanner extends AppCompatActivity
                                 try
                                 {
                                     Intent decryptionIntent = new Intent(Intent.ACTION_SEND);
-                                    decryptionIntent.putExtra(Intent.EXTRA_TEXT, _stringPayload);
+                                    decryptionIntent.putExtra(Intent.EXTRA_TEXT, textPayload);
                                     ComponentName componentName = new ComponentName("org.sufficientlysecure.keychain", "org.sufficientlysecure.keychain.ui.DecryptActivity");
                                     decryptionIntent.setComponent(componentName);
                                     decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -284,6 +284,10 @@ public class TagScanner extends AppCompatActivity
                             public void onClick(DialogInterface dialog, int which)
                             {
                                 dialog.cancel();
+                                if(_scanType == scanType.foreGroundDispatch)
+                                {
+                                    readNdefPayload();
+                                }
                             }
                         });
 
@@ -292,8 +296,19 @@ public class TagScanner extends AppCompatActivity
 
                 //display dialog
                 alertDialog.show();
+                return false;
             }
+            return true;
         }
+        return true;
+    }
+
+    private void readNdefPayload()
+    {
+        Intent displayNdefIntent = new Intent(TagScanner.this, DisplayNdefPayload.class);
+        displayNdefIntent.putExtra("NdefMessage", _ndefMessage);
+        startActivity(displayNdefIntent);
+        finish();
     }
 
     private void popBack()
@@ -310,21 +325,19 @@ public class TagScanner extends AppCompatActivity
     {
         if(_scanType == scanType.readNdef)
         {
-            Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
             _ndefMessage = (NdefMessage)Objects.requireNonNull(getIntent().getExtras()).get("NdefMessage");
-            displayNdefIntent.putExtra("NdefMessage", _ndefMessage);
-            startActivity(displayNdefIntent);
-            finish();
+            readNdefPayload();
         }
 
         if(_scanType == scanType.foreGroundDispatch)
         {
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
             {
-                Intent displayNdefIntent = new Intent(this, DisplayNdefPayload.class);
-                displayNdefIntent.putExtra("NdefMessage", NdefUtilities.getNdefMessage(intent));
-                startActivity(displayNdefIntent);
-                finish();
+                _ndefMessage = NdefUtilities.getNdefMessage(intent);
+                if(attemptDecryption(NdefUtilities.parseStringNdefPayloadFromIntent(intent)))
+                {
+                    readNdefPayload();
+                }
             }
         }
 
@@ -335,19 +348,7 @@ public class TagScanner extends AppCompatActivity
 
             if(Objects.equals(intent.getAction(), NfcAdapter.ACTION_NDEF_DISCOVERED))
             {
-                _stringPayload = NdefUtilities.parseStringNdefPayloadFromIntent(intent);
-                if(_stringPayload.length() > 27)
-                {
-                    if(_stringPayload.substring(0,27).equals("-----BEGIN PGP MESSAGE-----"))
-                    {
-                        attemptDecryption();
-                    }
-                    else
-                    {
-                        badEncryptedPayload();
-                    }
-                }
-                else
+                if(attemptDecryption(NdefUtilities.parseStringNdefPayloadFromIntent(intent)))
                 {
                     badEncryptedPayload();
                 }
