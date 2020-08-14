@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:foregroundTint="@color/colorPrimaryDark"
-    tools:context=".pages.EditNdefPayload">
+    tools:context=".pages.EditNdefPayload"
+    tools:ignore="Overdraw">
 
     <FrameLayout
         android:id="@+id/edit_payload_frame"
