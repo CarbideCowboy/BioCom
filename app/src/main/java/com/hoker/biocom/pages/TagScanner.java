@@ -9,26 +9,37 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.graphics.Color;
 import android.net.Uri;
 import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.TagInfo;
 import com.hoker.biocom.utilities.NdefUtilities;
 import com.hoker.biocom.utilities.TagUtilities;
 
+import org.openintents.openpgp.OpenPgpError;
+import org.openintents.openpgp.util.OpenPgpApi;
+import org.openintents.openpgp.util.OpenPgpServiceConnection;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class TagScanner extends AppCompatActivity
@@ -41,6 +52,8 @@ public class TagScanner extends AppCompatActivity
     TextView mTextView2;
     scanType _scanType;
     NdefMessage _ndefMessage = null;
+    String _decryptionPayload;
+    OpenPgpServiceConnection mServiceConnection;
 
     public enum scanType
     {
@@ -65,6 +78,9 @@ public class TagScanner extends AppCompatActivity
         setStatusBarColor();
         setTitleBar();
         nfcPrimer();
+
+        mServiceConnection = new OpenPgpServiceConnection(this, "org.sufficientlysecure.keychain");
+        mServiceConnection.bindToService();
     }
 
     private void getScanType()
@@ -243,6 +259,7 @@ public class TagScanner extends AppCompatActivity
 
     private boolean attemptDecryption(final String textPayload)
     {
+        _decryptionPayload = textPayload;
         if(textPayload.length() > 27)
         {
             if (textPayload.substring(0, 27).equals("-----BEGIN PGP MESSAGE-----"))
@@ -258,13 +275,9 @@ public class TagScanner extends AppCompatActivity
                             {
                                 try
                                 {
-                                    Intent decryptionIntent = new Intent(Intent.ACTION_SEND);
-                                    decryptionIntent.putExtra(Intent.EXTRA_TEXT, textPayload);
-                                    ComponentName componentName = new ComponentName("org.sufficientlysecure.keychain", "org.sufficientlysecure.keychain.ui.DecryptActivity");
-                                    decryptionIntent.setComponent(componentName);
-                                    decryptionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(decryptionIntent);
-                                    finish();
+                                    Intent data = new Intent();
+                                    data.setAction(OpenPgpApi.ACTION_DECRYPT_VERIFY);
+                                    openPgpDecryptText(data);
                                 }
                                 catch(ActivityNotFoundException e)
                                 {
@@ -299,6 +312,66 @@ public class TagScanner extends AppCompatActivity
             return true;
         }
         return true;
+    }
+
+    private void openPgpDecryptText(Intent data)
+    {
+        InputStream inputStream = new ByteArrayInputStream(_decryptionPayload.getBytes(StandardCharsets.UTF_8));
+        OpenPgpApi api = new OpenPgpApi(TagScanner.this, mServiceConnection.getService());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Intent result = api.executeApi(data, inputStream, outputStream);
+        switch (result.getIntExtra(OpenPgpApi.RESULT_CODE, OpenPgpApi.RESULT_CODE_ERROR)) {
+            case OpenPgpApi.RESULT_CODE_SUCCESS:
+                String decryptedMessage = outputStream.toString();
+                _ndefMessage = new NdefMessage(NdefRecord.createTextRecord("en", decryptedMessage));
+                readNdefPayload();
+                break;
+            case OpenPgpApi.RESULT_CODE_USER_INTERACTION_REQUIRED:
+                PendingIntent pi = result.getParcelableExtra(OpenPgpApi.RESULT_INTENT);
+                try
+                {
+                    assert pi != null;
+                    startIntentSenderForResult(pi.getIntentSender(), 42, null, 0, 0, 0);
+                }
+                catch (IntentSender.SendIntentException e)
+                {
+                    Log.e("Tag", "SendIntentException", e);
+                }
+                break;
+            case OpenPgpApi.RESULT_CODE_ERROR:
+                OpenPgpError error = result.getParcelableExtra(OpenPgpApi.RESULT_ERROR);
+                assert error != null;
+                if(error.getErrorId() == OpenPgpError.CLIENT_SIDE_ERROR)
+                {
+                    Intent fdroidIntent = new Intent(Intent.ACTION_VIEW);
+                    fdroidIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    fdroidIntent.setData(Uri.parse("https://f-droid.org/en/packages/org.sufficientlysecure.keychain/"));
+                    startActivity(fdroidIntent);
+                }
+                else
+                {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Error Decrypting: Possibly missing key", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+                break;
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        // try again after user interaction
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK)
+        {
+            if (requestCode == 42)
+            {
+                openPgpDecryptText(data);
+            }
+        }
+        else
+        {
+            readNdefPayload();
+        }
     }
 
     private void readNdefPayload()

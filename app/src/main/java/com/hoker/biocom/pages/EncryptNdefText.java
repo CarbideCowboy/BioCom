@@ -29,10 +29,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.EditText;
 import com.hoker.biocom.interfaces.ITracksPayload;
-import com.hoker.biocom.utilities.OpenPgpApi;
-import com.hoker.biocom.utilities.OpenPgpError;
-import com.hoker.biocom.utilities.OpenPgpServiceConnection;
-import com.hoker.biocom.utilities.OpenPgpSignatureResult;
+
+import org.openintents.openpgp.OpenPgpError;
+import org.openintents.openpgp.util.OpenPgpApi;
+import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -84,7 +84,11 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
                         _userID = input.getText().toString();
-                        encrypt();
+                        Intent data = new Intent();
+                        data.setAction(OpenPgpApi.ACTION_ENCRYPT);
+                        data.putExtra(OpenPgpApi.EXTRA_USER_IDS, new String[]{_userID});
+                        data.putExtra(OpenPgpApi.EXTRA_REQUEST_ASCII_ARMOR, true);
+                        encrypt(data);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
@@ -100,13 +104,8 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
         });
     }
 
-    private void encrypt()
+    private void encrypt(Intent data)
     {
-        Intent data = new Intent();
-        data.setAction(OpenPgpApi.ACTION_ENCRYPT);
-        data.putExtra(OpenPgpApi.EXTRA_USER_IDS, new String[]{_userID});
-        data.putExtra(OpenPgpApi.EXTRA_REQUEST_ASCII_ARMOR, true);
-
         InputStream inputStream = new ByteArrayInputStream(_fragment.getEntryText().getBytes(StandardCharsets.UTF_8));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -114,7 +113,7 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
         Intent result = api.executeApi(data, inputStream, outputStream);
 
         switch (result.getIntExtra(OpenPgpApi.RESULT_CODE, OpenPgpApi.RESULT_CODE_ERROR)) {
-            case OpenPgpApi.RESULT_CODE_SUCCESS: {
+            case OpenPgpApi.RESULT_CODE_SUCCESS:
                 try
                 {
                     Log.d(OpenPgpApi.TAG, "output: " + outputStream.toString("UTF-8"));
@@ -127,25 +126,20 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
                 {
                     Log.e("Tag", "UnsupportedEncodingException", e);
                 }
-
-                if (result.hasExtra(OpenPgpApi.RESULT_SIGNATURE)) {
-                    OpenPgpSignatureResult sigResult = result.getParcelableExtra(OpenPgpApi.RESULT_SIGNATURE);
-                    assert sigResult != null;
-                    Log.d("SigResult", sigResult.toString());
-                }
                 break;
-            }
-            case OpenPgpApi.RESULT_CODE_USER_INTERACTION_REQUIRED: {
+            case OpenPgpApi.RESULT_CODE_USER_INTERACTION_REQUIRED:
                 PendingIntent pi = result.getParcelableExtra(OpenPgpApi.RESULT_INTENT);
-                try {
+                try
+                {
                     assert pi != null;
                     startIntentSenderForResult(pi.getIntentSender(), 42, null, 0, 0, 0);
-                } catch (IntentSender.SendIntentException e) {
+                }
+                catch (IntentSender.SendIntentException e)
+                {
                     Log.e("Tag", "SendIntentException", e);
                 }
                 break;
-            }
-            case OpenPgpApi.RESULT_CODE_ERROR: {
+            case OpenPgpApi.RESULT_CODE_ERROR:
                 OpenPgpError error = result.getParcelableExtra(OpenPgpApi.RESULT_ERROR);
                 assert error != null;
                 if(error.getErrorId() == OpenPgpError.CLIENT_SIDE_ERROR)
@@ -161,7 +155,6 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
                     toast.show();
                 }
                 break;
-            }
         }
     }
 
@@ -171,7 +164,7 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 42) {
-                encrypt();
+                encrypt(data);
             }
         }
     }
