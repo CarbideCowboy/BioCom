@@ -20,9 +20,9 @@
             android:id="@+id/read_textbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/ibmplexmono_semibold"
+            android:fontFamily="@font/ibmplexmono_text"
             android:text="@string/ndefRead_empty_record"
             android:textColor="@color/colorTextPrimary"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
