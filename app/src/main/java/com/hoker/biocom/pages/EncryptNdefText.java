@@ -5,11 +5,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -18,7 +16,6 @@ import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -36,8 +33,9 @@ import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
@@ -47,7 +45,7 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
     EditText _fragment;
     Toolbar mToolbar;
     FloatingActionButton mWriteFab;
-    String _userID;
+    long _keyID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -73,58 +71,36 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
             @Override
             public void onClick(View v)
             {
-                AlertDialog.Builder builder = new AlertDialog.Builder(EncryptNdefText.this);
-                builder.setTitle(R.string.enter_pgp_id);
-                final android.widget.EditText input = new android.widget.EditText(EncryptNdefText.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                        _userID = input.getText().toString();
-                        Intent data = new Intent();
-                        data.setAction(OpenPgpApi.ACTION_ENCRYPT);
-                        data.putExtra(OpenPgpApi.EXTRA_USER_IDS, new String[]{_userID});
-                        data.putExtra(OpenPgpApi.EXTRA_REQUEST_ASCII_ARMOR, true);
-                        encrypt(data);
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                        dialogInterface.cancel();
-                    }
-                });
-                builder.show();
+                Intent data = new Intent();
+                data.setAction(OpenPgpApi.ACTION_GET_SIGN_KEY_ID);
+                openPgpGetKeyEncrypt(data, null, null);
             }
         });
     }
 
-    private void encrypt(Intent data)
+    private void openPgpGetKeyEncrypt(Intent data, InputStream inputStream, OutputStream outputStream)
     {
-        InputStream inputStream = new ByteArrayInputStream(_fragment.getEntryText().getBytes(StandardCharsets.UTF_8));
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
         OpenPgpApi api = new OpenPgpApi(this, mServiceConnection.getService());
         Intent result = api.executeApi(data, inputStream, outputStream);
 
         switch (result.getIntExtra(OpenPgpApi.RESULT_CODE, OpenPgpApi.RESULT_CODE_ERROR)) {
             case OpenPgpApi.RESULT_CODE_SUCCESS:
-                try
+                if(data.getAction().equals(OpenPgpApi.ACTION_ENCRYPT))
                 {
-                    Log.d(OpenPgpApi.TAG, "output: " + outputStream.toString("UTF-8"));
                     Intent intent = new Intent(this, TagScanner.class);
                     intent.putExtra("ScanType", TagScanner.scanType.writeNdef);
                     intent.putExtra("NdefMessage", new NdefMessage(NdefRecord.createTextRecord("en", outputStream.toString())));
                     startActivity(intent);
                 }
-                catch (UnsupportedEncodingException e)
+                else if(data.getAction().equals(OpenPgpApi.ACTION_GET_SIGN_KEY_ID))
                 {
-                    Log.e("Tag", "UnsupportedEncodingException", e);
+                    Intent encryptData = new Intent();
+                    encryptData.setAction(OpenPgpApi.ACTION_ENCRYPT);
+                    //TODO
+                    encryptData.putExtra(OpenPgpApi.EXTRA_SIGN_KEY_ID, )
+                    InputStream encryptInputStream = new ByteArrayInputStream(_fragment.getEntryText().getBytes(StandardCharsets.UTF_8));
+                    ByteArrayOutputStream encryptOutputStream = new ByteArrayOutputStream();
+                    openPgpGetKeyEncrypt(encryptData, encryptInputStream, encryptOutputStream);
                 }
                 break;
             case OpenPgpApi.RESULT_CODE_USER_INTERACTION_REQUIRED:
@@ -164,7 +140,12 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 42) {
-                encrypt(data);
+                if (data.getAction().equals(OpenPgpApi.ACTION_GET_SIGN_KEY_ID))
+                {
+                    _keyID = data.getLongExtra(OpenPgpApi.EXTRA_SIGN_KEY_ID, 0);
+
+                }
+                openPgpGetKeyEncrypt(data, null, null);
             }
         }
     }
