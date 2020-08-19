@@ -33,7 +33,6 @@ import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -85,19 +84,18 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
 
         switch (result.getIntExtra(OpenPgpApi.RESULT_CODE, OpenPgpApi.RESULT_CODE_ERROR)) {
             case OpenPgpApi.RESULT_CODE_SUCCESS:
-                if(data.getAction().equals(OpenPgpApi.ACTION_ENCRYPT))
+                if(Objects.equals(data.getAction(), OpenPgpApi.ACTION_ENCRYPT))
                 {
                     Intent intent = new Intent(this, TagScanner.class);
                     intent.putExtra("ScanType", TagScanner.scanType.writeNdef);
                     intent.putExtra("NdefMessage", new NdefMessage(NdefRecord.createTextRecord("en", outputStream.toString())));
                     startActivity(intent);
                 }
-                else if(data.getAction().equals(OpenPgpApi.ACTION_GET_SIGN_KEY_ID))
+                else if(Objects.equals(data.getAction(), OpenPgpApi.ACTION_GET_SIGN_KEY_ID))
                 {
                     Intent encryptData = new Intent();
                     encryptData.setAction(OpenPgpApi.ACTION_ENCRYPT);
-                    //TODO
-                    encryptData.putExtra(OpenPgpApi.EXTRA_SIGN_KEY_ID, )
+                    encryptData.putExtra(OpenPgpApi.EXTRA_KEY_IDS, new long[]{_keyID});
                     InputStream encryptInputStream = new ByteArrayInputStream(_fragment.getEntryText().getBytes(StandardCharsets.UTF_8));
                     ByteArrayOutputStream encryptOutputStream = new ByteArrayOutputStream();
                     openPgpGetKeyEncrypt(encryptData, encryptInputStream, encryptOutputStream);
@@ -136,14 +134,17 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        // try again after user interaction
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 42) {
-                if (data.getAction().equals(OpenPgpApi.ACTION_GET_SIGN_KEY_ID))
+                if (Objects.equals(data.getAction(), OpenPgpApi.ACTION_GET_SIGN_KEY_ID))
                 {
                     _keyID = data.getLongExtra(OpenPgpApi.EXTRA_SIGN_KEY_ID, 0);
-
+                    if(_keyID == 0)
+                    {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Select a valid key to encrypt NDEF text", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
                 }
                 openPgpGetKeyEncrypt(data, null, null);
             }
@@ -216,6 +217,5 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
     @Override
     public void payloadChanged()
     {
-
     }
 }

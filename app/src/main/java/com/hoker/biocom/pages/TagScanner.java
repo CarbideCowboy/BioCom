@@ -24,7 +24,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -317,8 +316,6 @@ public class TagScanner extends AppCompatActivity
 
     private void openPgpDecryptText(Intent data)
     {
-        ProgressBar progressBar = new ProgressBar(this);
-
         InputStream inputStream = new ByteArrayInputStream(_decryptionPayload.getBytes(StandardCharsets.UTF_8));
         OpenPgpApi api = new OpenPgpApi(TagScanner.this, mServiceConnection.getService());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
