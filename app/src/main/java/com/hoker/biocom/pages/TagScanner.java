@@ -370,7 +370,10 @@ public class TagScanner extends AppCompatActivity
         }
         else
         {
-            readNdefPayload();
+            if(_scanType == scanType.foreGroundDispatch)
+            {
+                readNdefPayload();
+            }
         }
     }
 
