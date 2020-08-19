@@ -140,17 +140,16 @@ public class EncryptNdefText extends AppCompatActivity implements ITracksPayload
                 if (Objects.equals(data.getAction(), OpenPgpApi.ACTION_GET_KEY_IDS))
                 {
                     _keyID = data.getLongArrayExtra(OpenPgpApi.EXTRA_KEY_IDS_SELECTED);
-                    assert _keyID != null;
-                    if(_keyID.length == 0)
+                    if(_keyID != null)
                     {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Select a valid key to encrypt NDEF text", Toast.LENGTH_LONG);
-                        toast.show();
+                        if (_keyID.length == 0)
+                        {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Select a valid key to encrypt NDEF text", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
                     }
                 }
-                if(_keyID.length != 0)
-                {
-                    openPgpGetKeyEncrypt(data, null, null);
-                }
+                openPgpGetKeyEncrypt(data, null, null);
             }
         }
     }
