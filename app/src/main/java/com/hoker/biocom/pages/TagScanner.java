@@ -304,6 +304,7 @@ public class TagScanner extends AppCompatActivity
 
                 //create alert dialog
                 AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.setCanceledOnTouchOutside(false);
 
                 //display dialog
                 alertDialog.show();
