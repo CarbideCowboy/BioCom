@@ -5,6 +5,8 @@ import android.nfc.NdefRecord;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 
+import java.io.IOException;
+
 import static com.hoker.biocom.utilities.NdefUtilities.createRandomByteRecord;
 
 public class TagUtilities
@@ -12,29 +14,57 @@ public class TagUtilities
     public static boolean writeNdefMessage(Tag tag, NdefMessage ndefMessage)
     {
         Ndef ndef = Ndef.get(tag);
-        String result = new AsyncConnectWrite().doInBackground(ndefMessage, ndef);
-        return result.equals("Message written");
+        try
+        {
+            if(ndef != null)
+            {
+                ndef.connect();
+                if(ndef.isConnected())
+                {
+                    ndef.writeNdefMessage(ndefMessage);
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            try
+            {
+                ndef.close();
+                return false;
+            } catch (IOException ex)
+            {
+                return false;
+            }
+        }
+        try
+        {
+            if(ndef != null)
+            {
+                ndef.close();
+                return true;
+            }
+        }
+        catch(IOException e)
+        {
+            return false;
+        }
+        return true;
     }
 
     public static boolean eraseNfcTag(Tag tag)
     {
         Ndef ndef = Ndef.get(tag);
-        if(ndef != null)
+        NdefRecord[] randomByteRecord = { createRandomByteRecord(ndef.getMaxSize()-10) };
+        NdefMessage message = new NdefMessage(randomByteRecord);
+        if(writeNdefMessage(tag, message))
         {
-            NdefRecord[] randomByteRecord = { createRandomByteRecord(ndef.getMaxSize()-10) };
-            NdefMessage message = new NdefMessage(randomByteRecord);
-            String result = new AsyncConnectWrite().doInBackground(message, ndef);
-            if(result.equals("Message written"))
-            {
-                NdefRecord ndefRecord = new NdefRecord(NdefRecord.TNF_EMPTY, null, null, null);
-                NdefMessage ndefMessage = new NdefMessage(ndefRecord);
-                return writeNdefMessage(tag, ndefMessage);
-            }
-            else
-            {
-                return false;
-            }
+            NdefRecord ndefRecord = new NdefRecord(NdefRecord.TNF_EMPTY, null, null, null);
+            NdefMessage ndefMessage = new NdefMessage(ndefRecord);
+            return writeNdefMessage(tag, ndefMessage);
         }
-        return false;
+        else
+        {
+            return false;
+        }
     }
 }
