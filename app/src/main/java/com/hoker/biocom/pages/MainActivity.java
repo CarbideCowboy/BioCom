@@ -228,6 +228,11 @@ public class MainActivity extends AppCompatActivity
                 startActivity(tagInfoIntent);
                 mDrawer.closeDrawer(GravityCompat.START);
                 break;
+            case R.id.nav_ndef_encrypt:
+                Intent ndefEncryptIntent = new Intent(this, EncryptNdefText.class);
+                startActivity(ndefEncryptIntent);
+                mDrawer.closeDrawer(GravityCompat.START);
+                break;
         }
     }
 

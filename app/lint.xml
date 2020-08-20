@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="IconLauncherShape">
+        <ignore path="src/main/res/drawable-hdpi/app_icon.png" />
+        <ignore path="src/main/res/drawable-mdpi/app_icon.png" />
+        <ignore path="src/main/res/drawable-xhdpi/app_icon.png" />
+        <ignore path="src/main/res/drawable-xhdpi/app_icon.png" />
+        <ignore path="src/main/res/drawable-xxhdpi/app_icon.png" />
+        <ignore path="src/main/res/drawable-xxxhdpi/app_icon.png" />
+    </issue>
+    <issue id="IconXmlAndPng">
+        <ignore path="src/main/res/drawable-hdpi/ic_lock_dark.png" />
+        <ignore path="src/main/res/drawable-hdpi/ic_nfc_dark.png" />
+        <ignore path="src/main/res/drawable-hdpi/ic_write.png" />
+        <ignore path="src/main/res/drawable-mdpi/ic_lock_dark.png" />
+        <ignore path="src/main/res/drawable-mdpi/ic_nfc_dark.png" />
+        <ignore path="src/main/res/drawable-mdpi/ic_write.png" />
+        <ignore path="src/main/res/drawable-xhdpi/ic_lock_dark.png" />
+        <ignore path="src/main/res/drawable-xhdpi/ic_nfc_dark.png" />
+        <ignore path="src/main/res/drawable-xhdpi/ic_write.png" />
+        <ignore path="src/main/res/drawable-xxhdpi/ic_lock_dark.png" />
+        <ignore path="src/main/res/drawable-xxhdpi/ic_nfc_dark.png" />
+        <ignore path="src/main/res/drawable-xxhdpi/ic_write.png" />
+    </issue>
+</lint>

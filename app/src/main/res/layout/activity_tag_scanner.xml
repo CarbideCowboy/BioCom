@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:textAlignment="center"
-    tools:context=".pages.TagScanner">
+    tools:context=".pages.TagScanner"
+    tools:ignore="Overdraw">
 
     <FrameLayout
         android:id="@+id/toolbar_frame"

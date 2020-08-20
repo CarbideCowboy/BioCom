@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    tools:context=".pages.DisplayNdefPayload">
+    tools:context=".pages.DisplayNdefPayload"
+    tools:ignore="Overdraw">
 
     <FrameLayout
         android:id="@+id/display_toolbar_frame"
