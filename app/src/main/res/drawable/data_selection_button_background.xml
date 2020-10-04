@@ -7,10 +7,14 @@
     <solid android:color="@color/colorMuave" />
 
     <padding
-        android:left="5dp"
-        android:right="5dp"
+        android:left="6dp"
+        android:right="6dp"
         android:bottom="1dp"
         android:top="1dp" />
 
-    <corners android:radius="6dp" />
+    <corners
+        android:bottomLeftRadius="8dp"
+        android:topLeftRadius="8dp"
+        android:bottomRightRadius="0.1dp"
+        android:topRightRadius="0.1dp"/>
 </shape>

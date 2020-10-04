@@ -12,11 +12,13 @@
     android:background="?attr/colorPrimary"
     tools:ignore="Overdraw">
 
-    <Spinner
-        android:id="@+id/toolbar_edit_spinner"
-        android:background="@drawable/muave_rounded_background"
+    <Button
+        android:id="@+id/button_data_selection_toolbar_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginEnd="15dp" />
+        android:layout_marginEnd="0dp"
+        android:background="@drawable/data_selection_button_background"
+        android:fontFamily="@font/ibmplexmono_semibold"
+        android:textColor="@color/colorPrimary" />
 </androidx.appcompat.widget.Toolbar>

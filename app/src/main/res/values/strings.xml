@@ -35,9 +35,7 @@
     <string name="scan_nfc_device_to_read_payload">Scan NFC device to read payload</string>
     <string name="animation_image">animation image</string>
     <string name="encrypt_ndef_text">Encrypt PGP NDEF Text</string>
-    <string-array name="mime_type_options_array">
-        <item>Plain Text</item>
-        <item>URI</item>
-        <item>JPEG</item>
-    </string-array>
+    <string name="plain_text">Plain Text</string>
+    <string name="jpeg">JPEG</string>
+    <string name="uri_text">URI</string>
 </resources>
