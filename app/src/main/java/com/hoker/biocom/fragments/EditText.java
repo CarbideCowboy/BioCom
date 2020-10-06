@@ -46,8 +46,8 @@ public class EditText extends Fragment implements IEditFragment
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        mEditText = Objects.requireNonNull(getView()).findViewById(R.id.ndef_edit_text);
-        mLinearLayout = Objects.requireNonNull(getView()).findViewById(R.id.edit_text_linear);
+        mEditText = Objects.requireNonNull(getView()).findViewById(R.id.edittext_edit_text);
+        mLinearLayout = Objects.requireNonNull(getView()).findViewById(R.id.linear_edit_text);
 
         mLinearLayout.setOnClickListener(mLinearLayout_Clicked);
 
@@ -111,7 +111,7 @@ public class EditText extends Fragment implements IEditFragment
         return NdefRecord.createTextRecord("en", mEditText.getText().toString());
     }
 
-    public void focusEntry()
+    private void focusEntry()
     {
         mEditText.requestFocus();
         InputMethodManager inputMethodManager = (InputMethodManager)Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);

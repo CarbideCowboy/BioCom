@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginEnd="0dp"
+        android:textAllCaps="false"
         android:background="@drawable/data_selection_button_background"
         android:fontFamily="@font/ibmplexmono_semibold"
         android:textColor="@color/colorPrimary" />

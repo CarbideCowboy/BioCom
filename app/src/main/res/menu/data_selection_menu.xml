@@ -6,6 +6,9 @@
             android:id="@+id/nav_plaintext"
             android:title="@string/plain_text"/>
         <item
+            android:id="@+id/nav_markdown"
+            android:title="@string/markdown"/>
+        <item
             android:id="@+id/nav_jpeg"
             android:title="@string/jpeg"/>
         <item

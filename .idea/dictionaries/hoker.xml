@@ -4,6 +4,7 @@
       <w>autocrypt</w>
       <w>btgoep</w>
       <w>btspp</w>
+      <w>edittext</w>
       <w>fdroid</w>
       <w>formatable</w>
       <w>imageview</w>
@@ -15,6 +16,7 @@
       <w>peerentity</w>
       <w>rtsp</w>
       <w>seekbar</w>
+      <w>strikethrough</w>
       <w>tcpobex</w>
       <w>textview</w>
       <w>tftp</w>

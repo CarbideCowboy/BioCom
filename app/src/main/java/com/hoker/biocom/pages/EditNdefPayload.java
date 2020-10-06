@@ -30,6 +30,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.EditJpeg;
+import com.hoker.biocom.fragments.EditMarkdown;
 import com.hoker.biocom.fragments.EditText;
 import com.hoker.biocom.fragments.EditUri;
 import com.hoker.biocom.interfaces.ITracksPayload;
@@ -218,6 +219,14 @@ public class EditNdefPayload extends AppCompatActivity implements ITracksPayload
             mDataSelectionButton.setText(R.string.jpeg);
             mDrawer.closeDrawers();
         }
+        else if(_dataType.equals(DisplayNdefPayload.recordDataType.Markdown))
+        {
+            _fragment = new EditMarkdown();
+            updateFragment();
+            _fragment.setPayloadTrackingInterface(this);
+            mDataSelectionButton.setText(R.string.markdown);
+            mDrawer.closeDrawers();
+        }
     }
 
     private void updateFragment()
@@ -260,7 +269,10 @@ public class EditNdefPayload extends AppCompatActivity implements ITracksPayload
                 _dataType = DisplayNdefPayload.recordDataType.Jpeg;
                 fragmentSwitcher();
                 break;
-
+            case R.id.nav_markdown:
+                _dataType = DisplayNdefPayload.recordDataType.Markdown;
+                fragmentSwitcher();
+                break;
         }
     }
 }

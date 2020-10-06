@@ -38,4 +38,13 @@
     <string name="plain_text">Plain Text</string>
     <string name="jpeg">JPEG</string>
     <string name="uri_text">URI</string>
+    <string name="edit_markdown_text_here">Edit Markdown text here</string>
+    <string name="markdown">Markdown</string>
+    <string name="markdown_bold_button">Markdown bold button</string>
+    <string name="markdown_italicize_button">Markdown italicize button</string>
+    <string name="markdown_code_button">Markdown code button</string>
+    <string name="markdown_link_button">Markdown link button</string>
+    <string name="markdown_strikethrough_button">Markdown strikethrough button</string>
+    <string name="markdown_bulleted_list_button">Markdown bulleted list button</string>
+    <string name="markdown_quote_button">Markdown quote button</string>
 </resources>
