@@ -20,6 +20,7 @@ import com.hoker.biocom.R;
 import com.hoker.biocom.interfaces.IEditFragment;
 import com.hoker.biocom.interfaces.ITracksPayload;
 
+import java.text.BreakIterator;
 import java.util.Objects;
 
 public class EditMarkdown extends Fragment implements IEditFragment
@@ -92,7 +93,7 @@ public class EditMarkdown extends Fragment implements IEditFragment
             @Override
             public void onClick(View v)
             {
-
+                insertTextAroundCursor("**");
             }
         });
 
@@ -101,7 +102,7 @@ public class EditMarkdown extends Fragment implements IEditFragment
             @Override
             public void onClick(View v)
             {
-
+                insertTextAroundCursor("_");
             }
         });
 
@@ -110,7 +111,7 @@ public class EditMarkdown extends Fragment implements IEditFragment
             @Override
             public void onClick(View v)
             {
-
+                insertTextAroundCursor("`");
             }
         });
 
@@ -128,7 +129,7 @@ public class EditMarkdown extends Fragment implements IEditFragment
             @Override
             public void onClick(View v)
             {
-
+                insertTextAroundCursor("~~");
             }
         });
 
@@ -160,5 +161,25 @@ public class EditMarkdown extends Fragment implements IEditFragment
         int position = mEditText.length();
         Editable editable = mEditText.getText();
         Selection.setSelection(editable, position);
+    }
+
+    private void insertTextAroundCursor(String text)
+    {
+        int cursorPosition = mEditText.getSelectionStart();
+        BreakIterator iterator = BreakIterator.getWordInstance();
+        iterator.setText(mEditText.getText().toString());
+        int wordStart;
+        if(iterator.isBoundary(cursorPosition))
+        {
+            wordStart = cursorPosition;
+        }
+        else
+        {
+            wordStart = iterator.preceding(cursorPosition);
+        }
+        int wordEnd = iterator.following(cursorPosition);
+
+        mEditText.getText().insert(wordStart, text);
+        mEditText.getText().insert(wordEnd+text.length(), text);
     }
 }
