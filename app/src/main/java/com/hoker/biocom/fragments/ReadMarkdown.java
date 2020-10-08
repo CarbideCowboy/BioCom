@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
@@ -20,6 +21,8 @@ import io.noties.markwon.ext.strikethrough.StrikethroughPlugin;
 
 public class ReadMarkdown extends Fragment
 {
+    ImageButton mHidePreviewButton;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -35,6 +38,19 @@ public class ReadMarkdown extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
+        mHidePreviewButton = Objects.requireNonNull(getView()).findViewById(R.id.button_hide_preview_markdown);
+
+        mHidePreviewButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Objects.requireNonNull(getActivity()).onBackPressed();
+            }
+        });
+
+        setHidePreviewButtonVisibility();
+
         assert getArguments() != null;
         byte[] _payload = getArguments().getByteArray("Payload");
 
@@ -47,6 +63,19 @@ public class ReadMarkdown extends Fragment
         if(_payload != null)
         {
             markwon.setMarkdown(mReadMarkdownTextbox, NdefUtilities.getStringFromBytes(_payload));
+        }
+    }
+
+    private void setHidePreviewButtonVisibility()
+    {
+        switch(Objects.requireNonNull(getActivity()).getClass().getSimpleName())
+        {
+            case "DisplayNdefPayload":
+                mHidePreviewButton.setVisibility(View.INVISIBLE);
+                break;
+            case "EditNdefPayload":
+                mHidePreviewButton.setVisibility(View.VISIBLE);
+                break;
         }
     }
 }

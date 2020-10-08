@@ -120,7 +120,7 @@ public class TagScanner extends AppCompatActivity
         IntentFilter tag = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         try
         {
-            ndef.addDataType("text/plain");
+            ndef.addDataType("*/*");
         }
         catch (IntentFilter.MalformedMimeTypeException e)
         {

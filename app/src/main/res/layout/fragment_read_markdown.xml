@@ -26,4 +26,16 @@
             android:textColor="@color/colorTextPrimary"
             android:textSize="18sp" />
     </ScrollView>
+
+    <ImageButton
+        android:id="@+id/button_hide_preview_markdown"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/white_rounded_background"
+        android:contentDescription="@string/hide_preview_button"
+        android:src="@drawable/ic_eye_closed"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

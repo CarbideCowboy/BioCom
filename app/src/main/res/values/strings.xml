@@ -48,4 +48,5 @@
     <string name="markdown_bulleted_list_button">Markdown bulleted list button</string>
     <string name="markdown_quote_button">Markdown quote button</string>
     <string name="button_for_previewing_markdown_text">Button for previewing markdown text</string>
+    <string name="hide_preview_button">Hide preview button</string>
 </resources>
