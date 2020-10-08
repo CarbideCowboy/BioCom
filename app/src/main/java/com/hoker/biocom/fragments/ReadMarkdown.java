@@ -15,7 +15,9 @@ import com.hoker.biocom.utilities.NdefUtilities;
 
 import java.util.Objects;
 
-public class ReadText extends Fragment
+import io.noties.markwon.Markwon;
+
+public class ReadMarkdown extends Fragment
 {
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -24,10 +26,9 @@ public class ReadText extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_read_text, container, false);
+        return inflater.inflate(R.layout.fragment_read_markdown, container, false);
     }
 
     @Override
@@ -36,12 +37,13 @@ public class ReadText extends Fragment
         assert getArguments() != null;
         byte[] _payload = getArguments().getByteArray("Payload");
 
-        //set up views
-        TextView mReadTextbox = Objects.requireNonNull(getView()).findViewById(R.id.read_textbox);
+        TextView mReadMarkdownTextbox = Objects.requireNonNull(getView()).findViewById(R.id.textview_read_markdown);
+
+        final Markwon markwon = Markwon.create(Objects.requireNonNull(getActivity()));
 
         if(_payload != null)
         {
-            mReadTextbox.setText(NdefUtilities.getEnStringFromBytes(_payload));
+            markwon.setMarkdown(mReadMarkdownTextbox, NdefUtilities.getStringFromBytes(_payload));
         }
     }
 }

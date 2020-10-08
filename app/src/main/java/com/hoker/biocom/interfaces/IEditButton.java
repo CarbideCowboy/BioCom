@@ -2,5 +2,5 @@ package com.hoker.biocom.interfaces;
 
 public interface IEditButton
 {
-    void buttonClicked();
+    void editButtonClicked();
 }

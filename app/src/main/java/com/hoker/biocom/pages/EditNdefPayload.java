@@ -222,6 +222,9 @@ public class EditNdefPayload extends AppCompatActivity implements ITracksPayload
         else if(_dataType.equals(DisplayNdefPayload.recordDataType.Markdown))
         {
             _fragment = new EditMarkdown();
+            Bundle bundle = new Bundle();
+            bundle.putByteArray("Payload", _bytePayload);
+            ((EditMarkdown)_fragment).setArguments(bundle);
             updateFragment();
             _fragment.setPayloadTrackingInterface(this);
             mDataSelectionButton.setText(R.string.markdown);

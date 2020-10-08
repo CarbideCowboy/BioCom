@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity
         {
             ndef.addDataType("text/plain");
             ndef.addDataType("image/jpeg");
+            ndef.addDataType("text/markdown");
         }
         catch (IntentFilter.MalformedMimeTypeException e)
         {

@@ -37,8 +37,7 @@ public class EditText extends Fragment implements IEditFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         return inflater.inflate(R.layout.fragment_edit_text, container, false);
     }
@@ -51,7 +50,7 @@ public class EditText extends Fragment implements IEditFragment
 
         mLinearLayout.setOnClickListener(mLinearLayout_Clicked);
 
-        setupTextView();
+        setupEditText();
         setupTextChangedEvent();
     }
 
@@ -122,23 +121,23 @@ public class EditText extends Fragment implements IEditFragment
         Selection.setSelection(editable, position);
     }
 
-    private void setupTextView()
+    private void setupEditText()
     {
         if(getArguments() != null)
         {
             byte[] payload = getArguments().getByteArray("Payload");
             if(payload != null)
             {
-                mEditText.setText(NdefUtilities.getStringFromBytes(payload));
+                mEditText.setText(NdefUtilities.getEnStringFromBytes(payload));
             }
             else
             {
-                mEditText.setText(NdefUtilities.getStringFromBytes("".getBytes()));
+                mEditText.setText(NdefUtilities.getEnStringFromBytes("".getBytes()));
             }
         }
         else
         {
-            mEditText.setText(NdefUtilities.getStringFromBytes("".getBytes()));
+            mEditText.setText(NdefUtilities.getEnStringFromBytes("".getBytes()));
         }
     }
 }
