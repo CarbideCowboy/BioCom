@@ -14,6 +14,7 @@ tools:context=".fragments.EditText">
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         android:background="@color/colorPrimaryDark"
         android:clickable="true"
         android:fillViewport="true"
