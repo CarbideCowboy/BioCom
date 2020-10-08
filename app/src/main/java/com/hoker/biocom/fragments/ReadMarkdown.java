@@ -16,6 +16,7 @@ import com.hoker.biocom.utilities.NdefUtilities;
 import java.util.Objects;
 
 import io.noties.markwon.Markwon;
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin;
 
 public class ReadMarkdown extends Fragment
 {
@@ -39,7 +40,9 @@ public class ReadMarkdown extends Fragment
 
         TextView mReadMarkdownTextbox = Objects.requireNonNull(getView()).findViewById(R.id.textview_read_markdown);
 
-        final Markwon markwon = Markwon.create(Objects.requireNonNull(getActivity()));
+        final Markwon markwon = Markwon.builder(Objects.requireNonNull(getActivity()))
+                .usePlugin(StrikethroughPlugin.create())
+                .build();
 
         if(_payload != null)
         {

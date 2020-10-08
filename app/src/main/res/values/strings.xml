@@ -4,7 +4,7 @@
     <string name="ndef_operations">NDEF Operations</string>
     <string name="drawer_toggle_open">Drawer Open</string>
     <string name="drawer_toggle_close">Drawer Close</string>
-    <string name="nfc_device_manager">NFC Device Manager</string>
+    <string name="nfc_device_manager">NFC Implant NDEF Manager</string>
     <string name="scan_text_encrypted">Scan an NFC tag containing an encrypted NDEF record</string>
     <string name="cryptographic_operations">Cryptographic Operations</string>
     <string name="decrypt_ndef_text">Decrypt PGP NDEF Text</string>

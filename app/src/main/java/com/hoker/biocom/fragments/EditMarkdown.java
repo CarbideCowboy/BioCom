@@ -26,6 +26,8 @@ import com.hoker.biocom.interfaces.ITracksPayload;
 import com.hoker.biocom.utilities.NdefUtilities;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.noties.markwon.Markwon;
 import io.noties.markwon.editor.MarkwonEditor;
@@ -161,7 +163,7 @@ public class EditMarkdown extends Fragment implements IEditFragment
             @Override
             public void onClick(View v)
             {
-                insertTextAroundSelection("**");
+                insertTextAroundSelection("**", "**");
             }
         });
 
@@ -170,7 +172,7 @@ public class EditMarkdown extends Fragment implements IEditFragment
             @Override
             public void onClick(View v)
             {
-                insertTextAroundSelection("_");
+                insertTextAroundSelection("_", "_");
             }
         });
 
@@ -179,7 +181,7 @@ public class EditMarkdown extends Fragment implements IEditFragment
             @Override
             public void onClick(View v)
             {
-                insertTextAroundSelection("`");
+                insertTextAroundSelection("`", "`");
             }
         });
 
@@ -188,7 +190,25 @@ public class EditMarkdown extends Fragment implements IEditFragment
             @Override
             public void onClick(View v)
             {
+                int selectionStart = mEditText.getSelectionStart();
+                int selectionEnd = mEditText.getSelectionEnd();
 
+                if(selectionStart == selectionEnd)
+                {
+                    insertTextAroundSelection("[", "]()");
+                }
+                else
+                {
+                    String urlRegex = "(http://|https://)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?";
+                    if(isRegexMatch(mEditText.getText().toString().substring(selectionStart, selectionEnd), urlRegex))
+                    {
+                        insertTextAroundSelection("[](", ")");
+                    }
+                    else
+                    {
+                        insertTextAroundSelection("[", "]()");
+                    }
+                }
             }
         });
 
@@ -197,7 +217,7 @@ public class EditMarkdown extends Fragment implements IEditFragment
             @Override
             public void onClick(View v)
             {
-                insertTextAroundSelection("~~");
+                insertTextAroundSelection("~~", "~~");
             }
         });
 
@@ -206,7 +226,7 @@ public class EditMarkdown extends Fragment implements IEditFragment
             @Override
             public void onClick(View v)
             {
-
+                insertTextAroundSelection("- ", "");
             }
         });
 
@@ -215,7 +235,7 @@ public class EditMarkdown extends Fragment implements IEditFragment
             @Override
             public void onClick(View v)
             {
-
+                insertTextAroundSelection("> ", "");
             }
         });
     }
@@ -231,15 +251,29 @@ public class EditMarkdown extends Fragment implements IEditFragment
         Selection.setSelection(editable, position);
     }
 
-    private void insertTextAroundSelection(String text)
+    private void insertTextAroundSelection(String textLeft, String textRight)
     {
         int selectionStart = mEditText.getSelectionStart();
         int selectionEnd = mEditText.getSelectionEnd();
 
-        mEditText.getText().insert(selectionStart, text);
-        mEditText.getText().insert(selectionEnd+text.length(), text);
+        mEditText.getText().insert(selectionStart, textLeft);
+        mEditText.getText().insert(selectionEnd+textLeft.length(), textRight);
 
-        Selection.setSelection(mEditText.getText(), selectionEnd+text.length());
+        Selection.setSelection(mEditText.getText(), selectionEnd+textLeft.length());
+    }
+
+    private boolean isRegexMatch(String text, String regex)
+    {
+        try
+        {
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(text);
+            return matcher.matches();
+        }
+        catch(RuntimeException e)
+        {
+            return false;
+        }
     }
 
     private void setupEditText()
