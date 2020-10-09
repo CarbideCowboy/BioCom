@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.hoker.biocom.R;
 import com.hoker.biocom.utilities.FingerprintUtilities;
 import com.hoker.biocom.utilities.HexUtilities;
+import com.hoker.biocom.utilities.TagUtilities;
 
 import java.util.EnumMap;
 import java.util.Objects;
@@ -30,6 +31,7 @@ public class TagInfo extends Fragment
     TextView mManufacturerTextView;
     TextView mIsWriteTextView;
     TextView mCanReadOnlyTextView;
+    TextView mTagCapacity;
 
     public enum infoType
     {
@@ -37,7 +39,8 @@ public class TagInfo extends Fragment
         tagManufacturer,
         tagType,
         isWriteable,
-        canBeMadeReadOnly
+        canBeMadeReadOnly,
+        tagCapacity
     }
 
     @Override
@@ -67,10 +70,11 @@ public class TagInfo extends Fragment
     private void findViewsById()
     {
         mUIDTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_uid);
-        mTypeTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_type);
-        mManufacturerTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_manufacturer);
-        mIsWriteTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_is_write);
-        mCanReadOnlyTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_can_be_read_only);
+        mTypeTextView = getView().findViewById(R.id.info_tag_type);
+        mManufacturerTextView = getView().findViewById(R.id.info_manufacturer);
+        mIsWriteTextView = getView().findViewById(R.id.info_tag_is_write);
+        mCanReadOnlyTextView = getView().findViewById(R.id.info_tag_can_be_read_only);
+        mTagCapacity = getView().findViewById(R.id.info_tag_capacity);
     }
 
     private void getTagInfo()
@@ -81,6 +85,7 @@ public class TagInfo extends Fragment
         mTypeTextView.setText(tagInfo.get(infoType.tagType));
         mIsWriteTextView.setText(tagInfo.get(infoType.isWriteable));
         mCanReadOnlyTextView.setText(tagInfo.get(infoType.canBeMadeReadOnly));
+        mTagCapacity.setText(tagInfo.get(infoType.tagCapacity));
     }
 
     private EnumMap<infoType, String> fingerprintTag()
@@ -90,13 +95,16 @@ public class TagInfo extends Fragment
         //get manufacturer
         byte[] UIDBytes = _tag.getId();
         byte manufacturerByte = UIDBytes[0];
-        info.put(infoType.tagManufacturer, getManufacturerFromByte(manufacturerByte));
+        info.put(infoType.tagManufacturer, FingerprintUtilities.getManufacturerFromByte(manufacturerByte));
 
         //get UID
         info.put(infoType.UID, HexUtilities.bytesToHex(UIDBytes));
 
         //get tag type
         info.put(infoType.tagType, FingerprintUtilities.fingerprintNfcTag(_tag));
+
+        //get tag capacity
+        info.put(infoType.tagCapacity, TagUtilities.getTagCapacity(_tag) + " bytes");
 
         //pull isWritable and canBeMadeReadOnly
         Ndef ndef = Ndef.get(_tag);
@@ -121,17 +129,5 @@ public class TagInfo extends Fragment
         }
 
         return info;
-    }
-
-    private String getManufacturerFromByte(byte manufacturerByte)
-    {
-        if(manufacturerByte == (byte)0x04)
-        {
-            return "NXP Semiconductors";
-        }
-        else
-        {
-            return "Unknown Tag Manufacturer";
-        }
     }
 }

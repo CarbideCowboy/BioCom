@@ -4,12 +4,12 @@
     <string name="ndef_operations">NDEF Operations</string>
     <string name="drawer_toggle_open">Drawer Open</string>
     <string name="drawer_toggle_close">Drawer Close</string>
-    <string name="nfc_device_manager">NFC Implant NDEF Manager</string>
+    <string name="nfc_device_manager">NDEF Payload Manager</string>
     <string name="scan_text_encrypted">Scan an NFC tag containing an encrypted NDEF record</string>
     <string name="cryptographic_operations">Cryptographic Operations</string>
     <string name="decrypt_ndef_text">Decrypt PGP NDEF Text</string>
     <string name="write_ndef_text_records">Write NDEF Records</string>
-    <string name="type_ndef_string_payload_here">Type NDEF String payload here</string>
+    <string name="type_ndef_string_payload_here">Enter text here</string>
     <string name="scan_text_writable">Scan a writeable NFC tag</string>
     <string name="scan_text_write_warning">WARNING: This will erase the tag\'s existing records</string>
     <string name="nfc_tag_operations">NFC Tag Operations</string>
@@ -38,7 +38,7 @@
     <string name="plain_text">Plain Text</string>
     <string name="jpeg">JPEG</string>
     <string name="uri_text">URI</string>
-    <string name="edit_markdown_text_here">Edit Markdown text here</string>
+    <string name="edit_markdown_text_here">Enter Markdown text here</string>
     <string name="markdown">Markdown</string>
     <string name="markdown_bold_button">Markdown bold button</string>
     <string name="markdown_italicize_button">Markdown italicize button</string>
@@ -49,4 +49,5 @@
     <string name="markdown_quote_button">Markdown quote button</string>
     <string name="button_for_previewing_markdown_text">Button for previewing markdown text</string>
     <string name="hide_preview_button">Hide preview button</string>
+    <string name="memory_capacity">NDEF Capacity:</string>
 </resources>

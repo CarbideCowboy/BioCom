@@ -34,9 +34,9 @@ public class FingerprintUtilities
             case GET_VERSION_RESULT_DESFIRE_EV1_8K:
                 return "DESFire EV1 8K";
             case GET_VERSION_RESULT_SMARTMX2_P60:
-                return "SmartMX2 P60-D144";
+                return "SmartMX2 P60";
             case GET_VERSION_RESULT_NTAG_I2C_PLUS:
-                return "NTAG I2C Plus 2k";
+                return "NTAG I2C Plus 2K";
             case GET_VERSION_RESULT_DESFIRE_EV2_8K:
                 return "DESFire EV2 8K";
             default:
@@ -74,6 +74,18 @@ public class FingerprintUtilities
         catch(IOException e)
         {
             return null;
+        }
+    }
+
+    public static String getManufacturerFromByte(byte manufacturerByte)
+    {
+        if(manufacturerByte == (byte)0x04)
+        {
+            return "NXP Semiconductors";
+        }
+        else
+        {
+            return "Unknown Manufacturer";
         }
     }
 }
