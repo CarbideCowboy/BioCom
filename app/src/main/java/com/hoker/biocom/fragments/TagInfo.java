@@ -32,6 +32,7 @@ public class TagInfo extends Fragment
     TextView mIsWriteTextView;
     TextView mCanReadOnlyTextView;
     TextView mTagCapacity;
+    TextView mGetVersion;
 
     public enum infoType
     {
@@ -40,7 +41,8 @@ public class TagInfo extends Fragment
         tagType,
         isWriteable,
         canBeMadeReadOnly,
-        tagCapacity
+        tagCapacity,
+        getVersion
     }
 
     @Override
@@ -69,12 +71,13 @@ public class TagInfo extends Fragment
 
     private void findViewsById()
     {
-        mUIDTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_uid);
-        mTypeTextView = getView().findViewById(R.id.info_tag_type);
-        mManufacturerTextView = getView().findViewById(R.id.info_manufacturer);
-        mIsWriteTextView = getView().findViewById(R.id.info_tag_is_write);
-        mCanReadOnlyTextView = getView().findViewById(R.id.info_tag_can_be_read_only);
-        mTagCapacity = getView().findViewById(R.id.info_tag_capacity);
+        mUIDTextView = Objects.requireNonNull(getView()).findViewById(R.id.textview_info_uid);
+        mTypeTextView = getView().findViewById(R.id.textview_info_tag_type);
+        mManufacturerTextView = getView().findViewById(R.id.textview_info_manufacturer);
+        mIsWriteTextView = getView().findViewById(R.id.textview_info_tag_is_write);
+        mCanReadOnlyTextView = getView().findViewById(R.id.textview_info_tag_can_be_read_only);
+        mTagCapacity = getView().findViewById(R.id.textview_info_tag_capacity);
+        mGetVersion = getView().findViewById(R.id.textview_info_get_version);
     }
 
     private void getTagInfo()
@@ -86,6 +89,7 @@ public class TagInfo extends Fragment
         mIsWriteTextView.setText(tagInfo.get(infoType.isWriteable));
         mCanReadOnlyTextView.setText(tagInfo.get(infoType.canBeMadeReadOnly));
         mTagCapacity.setText(tagInfo.get(infoType.tagCapacity));
+        mGetVersion.setText(tagInfo.get(infoType.getVersion));
     }
 
     private EnumMap<infoType, String> fingerprintTag()
@@ -105,6 +109,17 @@ public class TagInfo extends Fragment
 
         //get tag capacity
         info.put(infoType.tagCapacity, TagUtilities.getTagCapacity(_tag) + " bytes");
+
+        //get_version command result
+        String getVersion = FingerprintUtilities.sendNfcHexCommand(FingerprintUtilities.GET_VERSION, _tag);
+        if(getVersion != null)
+        {
+            info.put(infoType.getVersion, getVersion);
+        }
+        else
+        {
+            info.put(infoType.getVersion, "Not Applicable");
+        }
 
         //pull isWritable and canBeMadeReadOnly
         Ndef ndef = Ndef.get(_tag);

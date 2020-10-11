@@ -20,7 +20,6 @@
     <string name="get_tag_info">Tag Info</string>
     <string name="scan_nfc">Scan an NFC Tag</string>
     <string name="uid">UID:</string>
-    <string name="tag_type">Tag Type:</string>
     <string name="ic_manufacturer">IC Manufacturer:</string>
     <string name="is_writeable">Is Writeable:</string>
     <string name="can_be_read_only">Can be made Read-Only:</string>
@@ -50,4 +49,6 @@
     <string name="button_for_previewing_markdown_text">Button for previewing markdown text</string>
     <string name="hide_preview_button">Hide preview button</string>
     <string name="memory_capacity">NDEF Capacity:</string>
+    <string name="get_version">get_version:</string>
+    <string name="unknown_tag_type">Unknown Tag Type</string>
 </resources>
