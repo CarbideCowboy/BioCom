@@ -103,7 +103,6 @@ public class FingerprintUtilities
         }
     }
 
-    @SuppressWarnings("SameParameterValue")
     public static String sendNfcHexCommand(String command, Tag tag)
     {
         String tech = tag.getTechList()[0];
