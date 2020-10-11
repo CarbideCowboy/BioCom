@@ -48,6 +48,7 @@ public class EditMarkdown extends Fragment implements IEditFragment
     ImageButton mStrikethroughButton;
     ImageButton mListButton;
     ImageButton mQuoteButton;
+    ImageButton mThematicBreakButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -138,6 +139,7 @@ public class EditMarkdown extends Fragment implements IEditFragment
         mStrikethroughButton = getView().findViewById(R.id.button_markdown_strikethrough);
         mListButton = getView().findViewById(R.id.button_markdown_bullet_list);
         mQuoteButton = getView().findViewById(R.id.button_markdown_quote);
+        mThematicBreakButton = getView().findViewById(R.id.button_markdown_thematic_break);
 
         mPreviewButton.setOnClickListener(new View.OnClickListener()
         {
@@ -236,6 +238,15 @@ public class EditMarkdown extends Fragment implements IEditFragment
             public void onClick(View v)
             {
                 insertTextAroundSelection("> ", "");
+            }
+        });
+
+        mThematicBreakButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                insertTextAroundSelection("***\n", "");
             }
         });
     }

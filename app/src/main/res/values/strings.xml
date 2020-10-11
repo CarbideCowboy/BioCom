@@ -51,4 +51,5 @@
     <string name="memory_capacity">NDEF Capacity:</string>
     <string name="get_version">get_version:</string>
     <string name="unknown_tag_type">Unknown Tag Type</string>
+    <string name="thematic_break_button">Thematic break button</string>
 </resources>

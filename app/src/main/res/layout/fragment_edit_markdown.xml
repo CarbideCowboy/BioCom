@@ -118,6 +118,14 @@ tools:context=".fragments.EditText">
                 android:layout_weight="1"
                 android:contentDescription="@string/markdown_quote_button"
                 android:src="@drawable/ic_quote" />
+
+            <ImageButton
+                android:id="@+id/button_markdown_thematic_break"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/thematic_break_button"
+                android:src="@drawable/ic_horizontal_line" />
         </LinearLayout>
     </HorizontalScrollView>
 
