@@ -17,6 +17,7 @@ import android.view.WindowManager;
 
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.ReadJpeg;
+import com.hoker.biocom.fragments.ReadMarkdown;
 import com.hoker.biocom.fragments.ReadText;
 import com.hoker.biocom.fragments.ReadToolbar;
 import com.hoker.biocom.interfaces.IEditButton;
@@ -36,6 +37,7 @@ public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
         plainText,
         Uri,
         Jpeg,
+        Markdown,
         Unknown
     }
 
@@ -111,7 +113,7 @@ public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
     }
 
     @Override
-    public void buttonClicked()
+    public void editButtonClicked()
     {
         Intent intent = new Intent(this, EditNdefPayload.class);
         intent.putExtra("DataType", _recordDataType);
@@ -134,6 +136,10 @@ public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
         else if(_recordDataType == recordDataType.Uri)
         {
             openUriIntent();
+        }
+        else if(_recordDataType == recordDataType.Markdown)
+        {
+            _fragment = new ReadMarkdown();
         }
 
         bundle = new Bundle();
@@ -193,13 +199,14 @@ public class DisplayNdefPayload extends AppCompatActivity implements IEditButton
                 break;
             case NdefRecord.TNF_MIME_MEDIA:
                 mimeType = record.toMimeType();
-                if(mimeType.equals("text/plain"))
+                switch (mimeType)
                 {
-                    return recordDataType.plainText;
-                }
-                else if(mimeType.equals("image/jpeg"))
-                {
-                    return recordDataType.Jpeg;
+                    case "text/plain":
+                        return recordDataType.plainText;
+                    case "image/jpeg":
+                        return recordDataType.Jpeg;
+                    case "text/markdown":
+                        return recordDataType.Markdown;
                 }
             case NdefRecord.TNF_UNKNOWN:
                 return recordDataType.Unknown;

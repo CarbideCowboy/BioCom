@@ -1,8 +1,11 @@
 package com.hoker.biocom.pages;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,17 +19,18 @@ import android.graphics.Color;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.hoker.biocom.R;
 import com.hoker.biocom.fragments.EditJpeg;
+import com.hoker.biocom.fragments.EditMarkdown;
 import com.hoker.biocom.fragments.EditText;
 import com.hoker.biocom.fragments.EditUri;
 import com.hoker.biocom.interfaces.ITracksPayload;
@@ -34,16 +38,19 @@ import com.hoker.biocom.interfaces.IEditFragment;
 
 import java.util.Objects;
 
-public class EditNdefPayload extends AppCompatActivity implements AdapterView.OnItemSelectedListener, ITracksPayload
+public class EditNdefPayload extends AppCompatActivity implements ITracksPayload
 {
     NdefRecord _ndefRecord;
     byte[] _bytePayload;
     Toolbar mToolbar;
-    Spinner mToolbarSpinner;
     TextView mPayloadSizeText;
     FloatingActionButton mWriteFab;
     IEditFragment _fragment;
     DisplayNdefPayload.recordDataType _dataType;
+    Button mDataSelectionButton;
+
+    //data type selection drawer
+    private DrawerLayout mDrawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,6 +58,20 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_payload);
         mPayloadSizeText = findViewById(R.id.edit_payload_size);
+        NavigationView mNavigationView = findViewById(R.id.edit_navigation_view);
+        mDrawer = findViewById(R.id.edit_drawer_layout);
+        mDataSelectionButton = findViewById(R.id.button_data_selection_toolbar_edit);
+
+        mDataSelectionButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mDrawer.openDrawer(GravityCompat.END);
+            }
+        });
+
+        setupDrawerContent(mNavigationView);
 
         setStatusBarColor();
         setTitleBar();
@@ -93,17 +114,6 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         {
             _dataType = DisplayNdefPayload.recordDataType.plainText;
             _bytePayload = "".getBytes();
-        }
-    }
-
-    private void setSpinnerText(String text)
-    {
-        for(int i=0; i<mToolbarSpinner.getAdapter().getCount(); i++)
-        {
-            if(mToolbarSpinner.getAdapter().getItem(i).toString().contains(text))
-            {
-                mToolbarSpinner.setSelection(i);
-            }
         }
     }
 
@@ -163,12 +173,6 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
     private void setTitleBar()
     {
         mToolbar = findViewById(R.id.toolbar_edit);
-        mToolbarSpinner = findViewById(R.id.toolbar_edit_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.mime_type_options_array, R.layout.spinner_item);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        mToolbarSpinner.setAdapter(adapter);
-        mToolbarSpinner.setSelection(0, false);
-        mToolbarSpinner.setOnItemSelectedListener(this);
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -183,28 +187,6 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-    {
-        String selectedOption = (String) parent.getItemAtPosition(position);
-        switch (selectedOption)
-        {
-            case "Plain Text":
-                _dataType = DisplayNdefPayload.recordDataType.plainText;
-                break;
-            case "URI":
-                _dataType = DisplayNdefPayload.recordDataType.Uri;
-                break;
-            case "JPEG":
-                _dataType = DisplayNdefPayload.recordDataType.Jpeg;
-                break;
-        }
-        fragmentSwitcher();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) { }
-
     public void fragmentSwitcher()
     {
         if(_dataType.equals(DisplayNdefPayload.recordDataType.plainText))
@@ -215,14 +197,16 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
             ((EditText)_fragment).setArguments(bundle);
             updateFragment();
             _fragment.setPayloadTrackingInterface(this);
-            setSpinnerText("Plain Text");
+            mDataSelectionButton.setText(R.string.plain_text);
+            mDrawer.closeDrawers();
         }
         else if(_dataType.equals(DisplayNdefPayload.recordDataType.Uri))
         {
             _fragment = new EditUri();
             updateFragment();
             _fragment.setPayloadTrackingInterface(this);
-            setSpinnerText("URI");
+            mDataSelectionButton.setText(R.string.uri_text);
+            mDrawer.closeDrawers();
         }
         else if(_dataType.equals(DisplayNdefPayload.recordDataType.Jpeg))
         {
@@ -232,7 +216,19 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
             ((EditJpeg)_fragment).setArguments(bundle);
             updateFragment();
             _fragment.setPayloadTrackingInterface(this);
-            setSpinnerText("JPEG");
+            mDataSelectionButton.setText(R.string.jpeg);
+            mDrawer.closeDrawers();
+        }
+        else if(_dataType.equals(DisplayNdefPayload.recordDataType.Markdown))
+        {
+            _fragment = new EditMarkdown();
+            Bundle bundle = new Bundle();
+            bundle.putByteArray("Payload", _bytePayload);
+            ((EditMarkdown)_fragment).setArguments(bundle);
+            updateFragment();
+            _fragment.setPayloadTrackingInterface(this);
+            mDataSelectionButton.setText(R.string.markdown);
+            mDrawer.closeDrawers();
         }
     }
 
@@ -243,5 +239,43 @@ public class EditNdefPayload extends AppCompatActivity implements AdapterView.On
         fragmentTransaction.replace(R.id.edit_payload_frame, (Fragment)_fragment);
         fragmentTransaction.commit();
         payloadChanged();
+    }
+
+    private void setupDrawerContent(NavigationView navigationView)
+    {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener()
+                {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
+                    {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                }
+        );
+    }
+
+    private void selectDrawerItem(MenuItem menuItem)
+    {
+        switch(menuItem.getItemId())
+        {
+            case R.id.nav_plaintext:
+                _dataType = DisplayNdefPayload.recordDataType.plainText;
+                fragmentSwitcher();
+                break;
+            case R.id.nav_uri:
+                _dataType = DisplayNdefPayload.recordDataType.Uri;
+                fragmentSwitcher();
+                break;
+            case R.id.nav_jpeg:
+                _dataType = DisplayNdefPayload.recordDataType.Jpeg;
+                fragmentSwitcher();
+                break;
+            case R.id.nav_markdown:
+                _dataType = DisplayNdefPayload.recordDataType.Markdown;
+                fragmentSwitcher();
+                break;
+        }
     }
 }

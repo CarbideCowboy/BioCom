@@ -3,9 +3,6 @@ package com.hoker.biocom.fragments;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.nfc.tech.IsoDep;
-import android.nfc.tech.MifareClassic;
-import android.nfc.tech.MifareUltralight;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
 
@@ -18,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hoker.biocom.R;
+import com.hoker.biocom.utilities.FingerprintUtilities;
+import com.hoker.biocom.utilities.HexUtilities;
+import com.hoker.biocom.utilities.TagUtilities;
 
 import java.util.EnumMap;
 import java.util.Objects;
@@ -31,6 +31,8 @@ public class TagInfo extends Fragment
     TextView mManufacturerTextView;
     TextView mIsWriteTextView;
     TextView mCanReadOnlyTextView;
+    TextView mTagCapacity;
+    TextView mGetVersion;
 
     public enum infoType
     {
@@ -38,7 +40,9 @@ public class TagInfo extends Fragment
         tagManufacturer,
         tagType,
         isWriteable,
-        canBeMadeReadOnly
+        canBeMadeReadOnly,
+        tagCapacity,
+        getVersion
     }
 
     @Override
@@ -67,131 +71,78 @@ public class TagInfo extends Fragment
 
     private void findViewsById()
     {
-        mUIDTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_uid);
-        mTypeTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_type);
-        mManufacturerTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_manufacturer);
-        mIsWriteTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_is_write);
-        mCanReadOnlyTextView = Objects.requireNonNull(getView()).findViewById(R.id.info_tag_can_be_read_only);
+        mUIDTextView = Objects.requireNonNull(getView()).findViewById(R.id.textview_info_uid);
+        mTypeTextView = getView().findViewById(R.id.textview_info_tag_type);
+        mManufacturerTextView = getView().findViewById(R.id.textview_info_manufacturer);
+        mIsWriteTextView = getView().findViewById(R.id.textview_info_tag_is_write);
+        mCanReadOnlyTextView = getView().findViewById(R.id.textview_info_tag_can_be_read_only);
+        mTagCapacity = getView().findViewById(R.id.textview_info_tag_capacity);
+        mGetVersion = getView().findViewById(R.id.textview_info_get_version);
     }
 
     private void getTagInfo()
     {
-        EnumMap<infoType, String> tagInfo = fingerprintTag(_tag.getTechList());
+        EnumMap<infoType, String> tagInfo = fingerprintTag();
         mUIDTextView.setText(tagInfo.get(infoType.UID));
         mManufacturerTextView.setText(tagInfo.get(infoType.tagManufacturer));
         mTypeTextView.setText(tagInfo.get(infoType.tagType));
         mIsWriteTextView.setText(tagInfo.get(infoType.isWriteable));
         mCanReadOnlyTextView.setText(tagInfo.get(infoType.canBeMadeReadOnly));
+        mTagCapacity.setText(tagInfo.get(infoType.tagCapacity));
+        mGetVersion.setText(tagInfo.get(infoType.getVersion));
     }
 
-    private EnumMap<infoType, String> fingerprintTag(String[] techList)
+    private EnumMap<infoType, String> fingerprintTag()
     {
-        // String[] info = new String[5];
         EnumMap<infoType, String> info = new EnumMap<>(infoType.class);
-        info.put(infoType.tagType, "Unknown Tag Type");
-        info.put(infoType.isWriteable, "Tag is read only");
 
         //get manufacturer
         byte[] UIDBytes = _tag.getId();
         byte manufacturerByte = UIDBytes[0];
-        info.put(infoType.tagManufacturer, getManufacturerFromByte(manufacturerByte));
+        info.put(infoType.tagManufacturer, FingerprintUtilities.getManufacturerFromByte(manufacturerByte));
 
         //get UID
-        info.put(infoType.UID, bytesToHexString(UIDBytes));
+        info.put(infoType.UID, HexUtilities.bytesToHex(UIDBytes));
 
-        for (String s : techList)
-        {
-            if (s.equals(MifareClassic.class.getName()))
-            {
-                MifareClassic mifareClassicTag = MifareClassic.get(_tag);
-                switch (mifareClassicTag.getType())
-                {
-                    case MifareClassic.TYPE_CLASSIC:
-                        //Type classic
-                        info.put(infoType.tagType, "Mifare Classic");
-                        info.put(infoType.tagManufacturer, "NXP Semiconductors");
-                        break;
-                    case MifareClassic.TYPE_PLUS:
-                        //Type plus
-                        info.put(infoType.tagType, "Mifare Classic Plus");
-                        info.put(infoType.tagManufacturer, "NXP Semiconductors");
-                        break;
-                    case MifareClassic.TYPE_PRO:
-                        //Type pro
-                        info.put(infoType.tagType, "Mifare Classic Pro");
-                        info.put(infoType.tagManufacturer, "NXP Semiconductors");
-                        break;
-                }
-            }
-            else if (s.equals(MifareUltralight.class.getName()))
-            {
-                MifareUltralight mifareUltralightTag = MifareUltralight.get(_tag);
-                switch (mifareUltralightTag.getType())
-                {
-                    case MifareUltralight.TYPE_ULTRALIGHT:
-                        //Type ultralight
-                        info.put(infoType.tagType, "Mifare Ultralight");
-                        info.put(infoType.tagManufacturer, "NXP Semiconductors");
-                        break;
-                    case MifareUltralight.TYPE_ULTRALIGHT_C:
-                        //Type ultralight c
-                        info.put(infoType.tagType, "Mifare Ultralight C");
-                        info.put(infoType.tagManufacturer, "NXP Semiconductors");
-                        break;
-                }
-            }
-            else if (s.equals(Ndef.class.getName()))
-            {
-                Ndef ndefTag = Ndef.get(_tag);
-                if (ndefTag.isWritable())
-                {
-                    info.put(infoType.isWriteable, "True");
-                } else
-                {
-                    info.put(infoType.isWriteable, "False");
-                }
-                if (ndefTag.canMakeReadOnly())
-                {
-                    info.put(infoType.canBeMadeReadOnly, "True");
-                } else
-                {
-                    info.put(infoType.canBeMadeReadOnly, "False");
-                }
-            }
-            else if (s.equals(IsoDep.class.getName()))
-            {
-                info.put(infoType.tagType, "IsoDep");
-            }
-        }
-        return info;
-    }
+        //get tag type
+        info.put(infoType.tagType, FingerprintUtilities.fingerprintNfcTag(_tag));
 
-    private String getManufacturerFromByte(byte manufacturerByte)
-    {
-        if(manufacturerByte == (byte)0x04)
+        //get tag capacity
+        info.put(infoType.tagCapacity, TagUtilities.getTagCapacity(_tag) + " bytes");
+
+        //get_version command result
+        String getVersion = FingerprintUtilities.sendNfcHexCommand(FingerprintUtilities.GET_VERSION, _tag);
+        if(getVersion != null)
         {
-            return "NXP Semiconductors";
+            info.put(infoType.getVersion, getVersion);
         }
         else
         {
-            return "Unknown Tag Manufacturer";
+            info.put(infoType.getVersion, "Not Applicable");
         }
-    }
 
-    private String bytesToHexString(byte[] src)
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-        if(src == null || src.length <= 0)
+        //pull isWritable and canBeMadeReadOnly
+        Ndef ndef = Ndef.get(_tag);
+        if(ndef != null)
         {
-            return null;
+            if(ndef.isWritable())
+            {
+                info.put(infoType.isWriteable, "Yes");
+            }
+            else
+            {
+                info.put(infoType.isWriteable, "No");
+            }
+            if(ndef.canMakeReadOnly())
+            {
+                info.put(infoType.canBeMadeReadOnly, "Yes");
+            }
+            else
+            {
+                info.put(infoType.canBeMadeReadOnly, "No");
+            }
         }
-        char[] buffer = new char[2];
-        for (byte b : src)
-        {
-            buffer[0] = Character.forDigit((b >>> 4) & 0x0F, 16);
-            buffer[1] = Character.forDigit(b & 0x0F, 16);
-            stringBuilder.append(buffer);
-        }
-        return stringBuilder.toString();
+
+        return info;
     }
 }

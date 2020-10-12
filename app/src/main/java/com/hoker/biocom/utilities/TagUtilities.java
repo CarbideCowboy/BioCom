@@ -53,8 +53,7 @@ public class TagUtilities
 
     public static boolean eraseNfcTag(Tag tag)
     {
-        Ndef ndef = Ndef.get(tag);
-        NdefRecord[] randomByteRecord = { createRandomByteRecord(ndef.getMaxSize()-10) };
+        NdefRecord[] randomByteRecord = { createRandomByteRecord(getTagCapacity(tag)-10) };
         NdefMessage message = new NdefMessage(randomByteRecord);
         if(writeNdefMessage(tag, message))
         {
@@ -66,5 +65,15 @@ public class TagUtilities
         {
             return false;
         }
+    }
+
+    public static int getTagCapacity(Tag tag)
+    {
+        Ndef ndef = Ndef.get(tag);
+        if(ndef != null)
+        {
+            return ndef.getMaxSize();
+        }
+        return 0;
     }
 }

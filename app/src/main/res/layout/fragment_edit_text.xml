@@ -24,13 +24,13 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/edit_text_linear"
+                android:id="@+id/linear_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/ndef_edit_text"
+                    android:id="@+id/edittext_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints=""

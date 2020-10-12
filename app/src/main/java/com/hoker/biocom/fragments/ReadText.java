@@ -41,7 +41,7 @@ public class ReadText extends Fragment
 
         if(_payload != null)
         {
-            mReadTextbox.setText(NdefUtilities.getStringFromBytes(_payload));
+            mReadTextbox.setText(NdefUtilities.getEnStringFromBytes(_payload));
         }
     }
 }

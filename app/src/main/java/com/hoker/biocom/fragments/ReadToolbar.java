@@ -64,7 +64,7 @@ public class ReadToolbar extends Fragment
             @Override
             public void onClick(View v)
             {
-                buttonInterface.buttonClicked();
+                buttonInterface.editButtonClicked();
             }
         });
     }

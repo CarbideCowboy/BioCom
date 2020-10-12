@@ -21,23 +21,29 @@ public class NdefUtilities
                 NdefMessage ndefMessage = (NdefMessage)rawMessages[0];
                 NdefRecord ndefRecord = ndefMessage.getRecords()[0];
                 byte[] payload = ndefRecord.getPayload();
-                return getStringFromBytes(payload);
+                return getEnStringFromBytes(payload);
             }
         }
         return "NDEF payload could not be parsed to a string";
     }
 
-    public static String getStringFromBytes(byte[] payload)
+    public static String getEnStringFromBytes(byte[] payload)
     {
         if(payload.length != 0)
         {
             int languageCodeLength = payload[0] & 51;
             return new String(payload, languageCodeLength +1, payload.length - languageCodeLength - 1, StandardCharsets.UTF_8);
         }
-        else
+        return "";
+    }
+
+    public static String getStringFromBytes(byte[] payload)
+    {
+        if(payload.length != 0)
         {
-            return "";
+            return new String(payload);
         }
+        return "";
     }
 
     public static NdefMessage getNdefMessage(Intent intent)
